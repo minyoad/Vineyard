@@ -21,8 +21,16 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import static java.lang.System.in;
 
 /**
  *  Modified from AOSP sample source code, by corochann on 2/7/2015.
@@ -31,6 +39,24 @@ import java.net.URISyntaxException;
 public class Movie implements Comparable<Movie>, Parcelable{
 
     private static final String TAG = Movie.class.getSimpleName();
+
+    public static class PlayUrlInfo implements Serializable {
+        public String title;
+        public String url;
+    }
+
+    private List<String> mPlaySrcList;
+
+    private HashMap<String,List<PlayUrlInfo>> mPlayUrlMap;
+
+    public List<String> getmPlaySrcList() {
+        return mPlaySrcList;
+    }
+
+    public HashMap<String, List<PlayUrlInfo>> getmPlayUrlMap() {
+        return mPlayUrlMap;
+    }
+
 
 //    public String vod_id;
     public String vod_cid;
@@ -117,7 +143,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     }
 
     public String getBackgroundImageUrl() {
-        return bgImageUrl;
+        return getCardImageUrl();
     }
 
     public void setBackgroundImageUrl(String bgImageUrl) {
@@ -150,11 +176,13 @@ public class Movie implements Comparable<Movie>, Parcelable{
     }
 
     public String getVideoUrl() {
-        return videoUrl;
+        return getDefaultVideoUrl();
+//        return videoUrl;
     }
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
+        updatePlayUrls();
     }
 
     public String getCategory() { return category; }
@@ -219,4 +247,105 @@ public class Movie implements Comparable<Movie>, Parcelable{
         return (int)(movie.id-this.id);
     }
     /*** auto generated codes by Parcelable plugin end ***/
+
+
+    private void updatePlayUrls(){
+
+        if(vod_play==null)
+            return;;
+
+        String[] playNameList=vod_play.split("\\$\\$\\$");
+        mPlaySrcList =Arrays.asList(playNameList);
+
+        String[] urlList=videoUrl.split("\\$\\$\\$");
+        mPlayUrlMap =new HashMap();
+
+
+        for (int i = 0; i< mPlaySrcList.size(); i++){
+            String name= mPlaySrcList.get(i);
+
+            String urlStr=urlList[i];
+
+            String[] NameUrls=urlStr.split("\\r");
+
+
+            ArrayList<PlayUrlInfo> urlLists=new ArrayList<>();
+            for(String nameurl:NameUrls){
+
+                String[] infos= nameurl.split("\\$");
+
+                PlayUrlInfo playUrlInfo=new PlayUrlInfo();
+
+                if(infos.length>1) {
+                    playUrlInfo.title = infos[0];
+                    playUrlInfo.url = infos[1];
+                }
+                else{
+                    playUrlInfo.title = name;
+                    playUrlInfo.url = infos[0];
+                }
+
+                urlLists.add(playUrlInfo);
+
+            }
+
+            mPlayUrlMap.put(name,urlLists);
+
+        }
+
+    }
+
+
+    public List<String> getPlayNameList(){
+        String[] playNameList=vod_play.split("\\$\\$\\$");
+
+        return Arrays.asList(playNameList);
+
+    }
+
+    public String getDefaultVideoUrl(){
+
+        if (mPlaySrcList==null || mPlayUrlMap==null){
+            updatePlayUrls();
+        }
+
+
+        String url="";
+
+        List<String> nameList=getPlayNameList();
+
+        final String[] PLAYERS = {"qq","youku","iqiyi","ku6"};
+
+        url= getPlayUrl(nameList.get(0),0).url;
+
+        for (String name:nameList) {
+
+            if ( Arrays.asList(PLAYERS).contains("id" ) ) {
+                // Do some stuff.
+                PlayUrlInfo playUrlInfo=getPlayUrl(name,0);
+                url=playUrlInfo.url;
+                break;
+            }
+
+        }
+
+        return url;
+
+    }
+
+
+    public PlayUrlInfo getPlayUrl(String playName,int index){
+
+        if (mPlaySrcList.contains(playName)){
+            List<PlayUrlInfo> urls= mPlayUrlMap.get(playName);
+
+            if(urls!=null && index<urls.size()){
+                return urls.get(index);
+            }
+        }
+
+
+        return  null;
+
+    }
 }

@@ -55,7 +55,7 @@ public class CardPresenter extends Presenter {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    cardView.startVideo();
+//                    cardView.startVideo();
                 } else {
                     if (mContext instanceof PostGridActivity) {
                         if (((PostGridActivity) mContext).isFragmentActive()) {
