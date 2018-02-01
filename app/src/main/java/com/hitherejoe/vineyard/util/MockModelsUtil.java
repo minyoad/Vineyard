@@ -1,7 +1,7 @@
 package com.hitherejoe.vineyard.util;
 
 import com.hitherejoe.vineyard.data.model.Authentication;
-import com.hitherejoe.vineyard.data.model.Post;
+//import com.hitherejoe.vineyard.data.model.Post;
 import com.hitherejoe.vineyard.data.model.User;
 
 import java.util.ArrayList;
@@ -60,24 +60,24 @@ public class MockModelsUtil {
         return user;
     }
 
-    public static Post createMockPost() {
-        Post post = new Post();
-        post.avatarUrl = generateRandomString();
-        post.created = new Date().toString();
-        post.description = generateRandomString();
-        post.postId = generateRandomString();
-        post.thumbnailUrl = generateRandomString();
-        post.username = generateRandomString();
-        post.videoUrl = generateRandomString();
-        return post;
-    }
-
-    public static List<Post> createMockListOfPosts(int count) {
-        List<Post> mockPosts = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
-            mockPosts.add(createMockPost());
-        }
-        return mockPosts;
-    }
+//    public static Post createMockPost() {
+//        Post post = new Post();
+//        post.avatarUrl = generateRandomString();
+//        post.created = new Date().toString();
+//        post.description = generateRandomString();
+//        post.postId = generateRandomString();
+//        post.thumbnailUrl = generateRandomString();
+//        post.username = generateRandomString();
+//        post.videoUrl = generateRandomString();
+//        return post;
+//    }
+//
+//    public static List<Post> createMockListOfPosts(int count) {
+//        List<Post> mockPosts = new ArrayList<>(count);
+//        for (int i = 0; i < count; i++) {
+//            mockPosts.add(createMockPost());
+//        }
+//        return mockPosts;
+//    }
 
 }

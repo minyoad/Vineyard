@@ -34,7 +34,7 @@ import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.BusEvent;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.presenter.CardPresenter;
@@ -67,7 +67,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     public static final String CUSTOM_ACTION_SKIP_VIDEO = "custom_action_skip_video";
     public static final int STATE_LOOPING = 2323;
 
-    private ArrayList<Post> mItems;
+    private ArrayList<Movie> mItems;
 
     private ArrayObjectAdapter mRowsAdapter;
     private ArrayObjectAdapter mPrimaryActionsAdapter;
@@ -75,7 +75,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     private Handler mClickTrackingHandler;
     private PlaybackControlsRow mPlaybackControlsRow;
     private PlayPauseAction mPlayPauseAction;
-    private Post mSelectedPost;
+    private Movie mSelectedPost;
     private PreferencesHelper mPreferencesHelper;
     private RepeatAction mRepeatAction;
     private SkipNextAction mSkipNextAction;
@@ -109,7 +109,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         mItems = getActivity().getIntent().getParcelableArrayListExtra(PlaybackActivity.POST_LIST);
         if (mItems == null || mSelectedPost == null) {
             throw new IllegalArgumentException(
-                    "PlaybackOverlayFragment requires both a Post object and list of posts!");
+                    "PlaybackOverlayFragment requires both a Movie object and list of posts!");
         }
 
         setBackgroundType(BACKGROUND_TYPE);
@@ -267,10 +267,12 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     }
 
     private void updatePostView(String title, String studio, String cardImageUrl, long duration) {
-        Post item = (Post) mPlaybackControlsRow.getItem();
+        Movie item = (Movie) mPlaybackControlsRow.getItem();
         if (item != null) {
-            item.description = title;
-            item.username = studio;
+            item.setDescription(title);
+            item.setStudio(studio);
+//            item.description = title;
+//            item.username = studio;
         }
         mPlaybackControlsRow.setTotalTime((int) duration);
 
@@ -371,8 +373,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     static class DescriptionPresenter extends AbstractDetailsDescriptionPresenter {
         @Override
         protected void onBindDescription(ViewHolder viewHolder, Object item) {
-            viewHolder.getTitle().setText(((Post) item).description);
-            viewHolder.getSubtitle().setText(((Post) item).username);
+            viewHolder.getTitle().setText(((Movie) item).getDescription());
+            viewHolder.getSubtitle().setText(((Movie) item).vod_actor);
         }
     }
 

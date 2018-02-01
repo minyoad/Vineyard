@@ -14,7 +14,8 @@ import com.bumptech.glide.Glide;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.DataManager;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
+//import com.hitherejoe.vineyard.data.model.Post;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 
@@ -46,18 +47,18 @@ public class UpdateRecommendationsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Timber.i("Retrieving popular posts for recommendations...");
         DataManager mDataManager = VineyardApplication.get(this).getComponent().dataManager();
-        Call<VineyardService.PostResponse> popularPosts = mDataManager.getPopularPostsSynchronous();
+        Call<VineyardService.MovieResponse> popularPosts = mDataManager.getPopularPostsSynchronous();
         try {
-            Response<VineyardService.PostResponse> response = popularPosts.execute();
-            VineyardService.PostResponse postResponse = response.body();
-            handleRecommendations(postResponse.data.records);
+            Response<VineyardService.MovieResponse> response = popularPosts.execute();
+            VineyardService.MovieResponse movieResponse = response.body();
+            handleRecommendations(movieResponse.data);
         } catch (IOException e) {
             Timber.e("There was an error retrieving the posts", e);
         }
 
     }
 
-    private void handleRecommendations(List<Post> recommendations) {
+    private void handleRecommendations(List<Movie> recommendations) {
         Timber.i("Building recommendations...");
         Resources res = getResources();
         int cardWidth = res.getDimensionPixelSize(R.dimen.card_width);
@@ -77,24 +78,24 @@ public class UpdateRecommendationsService extends IntentService {
         Collections.sort(recommendations);
 
         for (int i = 0; i < recommendations.size() && i < MAX_RECOMMENDATIONS; i++) {
-            Post post = recommendations.get(i);
+            Movie post = recommendations.get(i);
             builder.setIdTag("Post" + i + 1)
-                    .setTitle(post.description)
+                    .setTitle(post.getTitle())
                     .setProgress(100, 0)
                     .setSortKey("1.0")
                     .setAutoDismiss(true)
                     .setColor(ContextCompat.getColor(this, R.color.primary))
-                    .setBackgroundImageUri(post.thumbnailUrl)
+                    .setBackgroundImageUri(post.getBackgroundImageUrl())
                     .setGroup("Trending")
                     .setStatus(ContentRecommendation.CONTENT_STATUS_READY)
                     .setContentTypes(new String[]{ContentRecommendation.CONTENT_TYPE_VIDEO})
                     .setText(getString(R.string.header_text_popular))
                     .setContentIntentData(ContentRecommendation.INTENT_TYPE_ACTIVITY,
-                            buildPendingIntent((ArrayList<Post>) recommendations, post), 0, null);
+                            buildPendingIntent((ArrayList<Movie>) recommendations, post), 0, null);
 
             try {
                 Bitmap bitmap = Glide.with(getApplication())
-                        .load(post.thumbnailUrl)
+                        .load(post.getCardImageUrl())
                         .asBitmap()
                         .into(cardWidth, cardHeight) // Only use for synchronous .get()
                         .get();
@@ -119,11 +120,11 @@ public class UpdateRecommendationsService extends IntentService {
         }
     }
 
-    private Intent buildPendingIntent(ArrayList<Post> recommendations, Post post) {
+    private Intent buildPendingIntent(ArrayList<Movie> recommendations, Movie post) {
         Intent detailsIntent = new Intent(this, PlaybackActivity.class);
         detailsIntent.putExtra(PlaybackActivity.POST, post);
         detailsIntent.putParcelableArrayListExtra(PlaybackActivity.POST_LIST, recommendations);
-        detailsIntent.setAction(post.postId);
+        detailsIntent.setAction(post.getTitle());
 
         return detailsIntent;
     }

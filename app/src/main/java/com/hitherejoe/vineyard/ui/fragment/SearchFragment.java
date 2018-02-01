@@ -34,7 +34,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.model.Option;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
@@ -42,7 +42,7 @@ import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
-import com.hitherejoe.vineyard.ui.adapter.PostAdapter;
+import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.ui.adapter.TagAdapter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
@@ -75,7 +75,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     private Handler mHandler;
     private HeaderItem mResultsHeader;
     private Object mSelectedTag;
-    private PostAdapter mPostResultsAdapter;
+    private MovieAdapter mPostResultsAdapter;
     private Runnable mBackgroundRunnable;
     private Subscription mSearchResultsSubscription;
     private Subscription mTagSubscription;
@@ -320,7 +320,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<VineyardService.PostResponse>() {
+                .subscribe(new Subscriber<VineyardService.MovieResponse>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -341,14 +341,14 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                     }
 
                     @Override
-                    public void onNext(VineyardService.PostResponse postResponse) {
+                    public void onNext(VineyardService.MovieResponse movieResponse) {
                         adapter.removeLoadingIndicator();
-                        if (adapter.size() == 0 && postResponse.data.records.isEmpty()) {
+                        if (adapter.size() == 0 && movieResponse.data.isEmpty()) {
                             adapter.showReloadCard();
                         } else {
-                            adapter.setAnchor(postResponse.data.anchorStr);
-                            adapter.setNextPage(postResponse.data.nextPage);
-                            adapter.addAllItems(postResponse.data.records);
+//                            adapter.setAnchor(movieResponse.data.anchorStr);
+                            adapter.setNextPage(movieResponse.page.pageindex+1);
+                            adapter.addAllItems(movieResponse.data);
                         }
                     }
                 });
@@ -367,7 +367,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<VineyardService.PostResponse>() {
+                .subscribe(new Subscriber<VineyardService.MovieResponse>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -388,14 +388,14 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                     }
 
                     @Override
-                    public void onNext(VineyardService.PostResponse postResponse) {
+                    public void onNext(VineyardService.MovieResponse movieResponse) {
                         adapter.removeLoadingIndicator();
-                        if (adapter.size() == 0 && postResponse.data.records.isEmpty()) {
+                        if (adapter.size() == 0 && movieResponse.data.isEmpty()) {
                             adapter.showReloadCard();
                         } else {
-                            adapter.setAnchor(postResponse.data.anchorStr);
-                            adapter.setNextPage(postResponse.data.nextPage);
-                            adapter.addAllItems(postResponse.data.records);
+//                            adapter.setAnchor(movieResponse.data.anchorStr);
+                            adapter.setNextPage(movieResponse.page.pageindex+1);
+                            adapter.addAllItems(movieResponse.data);
                         }
                     }
                 });
@@ -419,7 +419,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
             mResultsAdapter.remove(mPostResultsAdapter);
         }
         if (mPostResultsAdapter == null) {
-            mPostResultsAdapter = new PostAdapter(getActivity(), tag);
+            mPostResultsAdapter = new MovieAdapter(getActivity(), tag);
         }
         mResultsAdapter.removeItems(1, 1);
         final HeaderItem postResultsHeader = new HeaderItem(1, getString(R.string.text_post_results_title, title));
@@ -444,13 +444,13 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Post) {
+            if (item instanceof Movie) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
-                    Post post = (Post) item;
+                    Movie post = (Movie) item;
                     int index = mResultsAdapter.indexOf(row);
-                    PostAdapter arrayObjectAdapter =
-                            ((PostAdapter) ((ListRow) mResultsAdapter.get(index)).getAdapter());
-                    ArrayList<Post> postList = (ArrayList<Post>) arrayObjectAdapter.getAllItems();
+                    MovieAdapter arrayObjectAdapter =
+                            ((MovieAdapter) ((ListRow) mResultsAdapter.get(index)).getAdapter());
+                    ArrayList<Movie> postList = (ArrayList<Movie>) arrayObjectAdapter.getAllItems();
                     startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
                 } else {
                     showNetworkUnavailableToast();
@@ -474,8 +474,8 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                 if (option.title.equals(getString(R.string.message_check_again)) ||
                         option.title.equals(getString(R.string.message_try_again))) {
                     int index = mResultsAdapter.indexOf(row);
-                    PostAdapter adapter =
-                            ((PostAdapter) ((ListRow) mResultsAdapter.get(index)).getAdapter());
+                    MovieAdapter adapter =
+                            ((MovieAdapter) ((ListRow) mResultsAdapter.get(index)).getAdapter());
                     adapter.removeReloadCard();
                     if (mSelectedTag instanceof Tag) {
                         addPageLoadSubscriptionByTag(adapter);
@@ -516,8 +516,8 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                         addPageLoadSubscriptionByUser(mPostResultsAdapter);
                     }
                 }
-            } else if (item instanceof Post) {
-                String backgroundUrl = ((Post) item).thumbnailUrl;
+            } else if (item instanceof Movie) {
+                String backgroundUrl = ((Movie) item).getBackgroundImageUrl();
                 if (backgroundUrl != null) startBackgroundTimer(URI.create(backgroundUrl));
             }
         }

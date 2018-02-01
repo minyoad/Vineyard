@@ -19,7 +19,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.DataManager;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.ui.fragment.PlaybackOverlayFragment;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
@@ -56,18 +56,18 @@ public class PlaybackActivity extends BaseActivity {
         PLAYING, PAUSED, IDLE
     }
 
-    private ArrayList<Post> mPostsList;
+    private ArrayList<Movie> mPostsList;
     private LeanbackPlaybackState mPlaybackState;
     private MediaPlayer mMediaPlayer;
     private MediaSession mSession;
-    private Post mCurrentPost;
+    private Movie mCurrentPost;
 
     private int mPosition;
     private int mCurrentItem;
     private long mStartTimeMillis;
     private long mDuration;
 
-    public static Intent newStartIntent(Context context, Post post, ArrayList<Post> postList) {
+    public static Intent newStartIntent(Context context, Movie post, ArrayList<Movie> postList) {
         Intent intent = new Intent(context, PlaybackActivity.class);
         intent.putExtra(POST, post);
         intent.putParcelableArrayListExtra(POST_LIST, postList);
@@ -90,7 +90,7 @@ public class PlaybackActivity extends BaseActivity {
 
         mCurrentPost = getIntent().getParcelableExtra(PlaybackActivity.POST);
         if (mCurrentPost == null) {
-            throw new IllegalArgumentException("PlaybackActivity requires a Post object!");
+            throw new IllegalArgumentException("PlaybackActivity requires a Movie object!");
         }
 
         mPostsList = getIntent().getExtras().getParcelableArrayList(POST_LIST);
@@ -160,7 +160,7 @@ public class PlaybackActivity extends BaseActivity {
     private void loadViews() {
         mVideoView.setFocusable(false);
         mVideoView.setFocusableInTouchMode(false);
-        setVideoPath(mCurrentPost.videoUrl);
+        setVideoPath(mCurrentPost.getVideoUrl());
     }
 
     private void setPosition(int position) {
@@ -231,26 +231,26 @@ public class PlaybackActivity extends BaseActivity {
         return actions;
     }
 
-    private void updateMetadata(Post post) {
+    private void updateMetadata(Movie post) {
         final MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
 
-        String title = post.description.replace("_", " -");
-                metadataBuilder.putString(MediaMetadata.METADATA_KEY_MEDIA_ID, post.postId);
+        String title = post.getDescription().replace("_", " -");
+                metadataBuilder.putString(MediaMetadata.METADATA_KEY_MEDIA_ID, String.valueOf(post.getId()));
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title);
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE,
-                post.username);
+                post.getStudio());
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION,
-                post.description);
+                post.getDescription());
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
-                post.avatarUrl);
+                post.getCardImageUrl());
         metadataBuilder.putLong(MediaMetadata.METADATA_KEY_DURATION, mVideoView.getDuration());
 
         // And at minimum the title and artist for legacy support
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, post.username);
+        metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, post.vod_actor);
 
         Glide.with(this)
-                .load(post.avatarUrl)
+                .load(post.getCardImageUrl())
                 .asBitmap()
                 .into(new SimpleTarget<Bitmap>(500, 500) {
                     @Override
@@ -327,10 +327,10 @@ public class PlaybackActivity extends BaseActivity {
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
             if (mWasSkipPressed || !mIsAutoLoopEnabled) {
                 if (NetworkUtil.isNetworkConnected(PlaybackActivity.this)) {
-                    for (Post post : mPostsList) {
-                        if (post.postId.equals(mediaId)) {
+                    for (Movie post : mPostsList) {
+                        if (String.valueOf(post.getId()).equals(mediaId)) {
                             mCurrentPost = post;
-                            setVideoPath(mCurrentPost.videoUrl);
+                            setVideoPath(mCurrentPost.getVideoUrl());
                             mPlaybackState = LeanbackPlaybackState.PAUSED;
                             playPause(extras.getBoolean(AUTO_PLAY));
                         }
@@ -358,7 +358,7 @@ public class PlaybackActivity extends BaseActivity {
                 Bundle bundle = new Bundle(1);
                 bundle.putBoolean(PlaybackActivity.AUTO_PLAY, true);
 
-                String nextId = mPostsList.get(mCurrentItem).postId;
+                String nextId = String.valueOf(mPostsList.get(mCurrentItem).getId());
                 getMediaController().getTransportControls().playFromMediaId(nextId, bundle);
             }
         }
@@ -375,7 +375,7 @@ public class PlaybackActivity extends BaseActivity {
                 Bundle bundle = new Bundle(1);
                 bundle.putBoolean(PlaybackActivity.AUTO_PLAY, true);
 
-                String prevId = mPostsList.get(mCurrentItem).postId;
+                String prevId = String.valueOf(mPostsList.get(mCurrentItem).getId());
                 getMediaController().getTransportControls().playFromMediaId(prevId, bundle);
             }
         }

@@ -32,15 +32,15 @@ import com.hitherejoe.vineyard.data.BusEvent;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Option;
-import com.hitherejoe.vineyard.data.model.Post;
-import com.hitherejoe.vineyard.data.remote.VineyardService.PostResponse;
+import com.hitherejoe.vineyard.data.model.Movie;
+import com.hitherejoe.vineyard.data.remote.VineyardService.MovieResponse;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.GuidedStepActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.adapter.OptionsAdapter;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
-import com.hitherejoe.vineyard.ui.adapter.PostAdapter;
+import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.ui.presenter.IconHeaderItemPresenter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
@@ -214,7 +214,7 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadPostsFromCategory(String tag, int headerPosition) {
-        PostAdapter listRowAdapter = new PostAdapter(getActivity(), tag);
+        MovieAdapter listRowAdapter = new MovieAdapter(getActivity(), tag);
         addPostLoadSubscription(listRowAdapter);
         HeaderItem header = new HeaderItem(headerPosition, tag);
         mRowsAdapter.add(new ListRow(header, listRowAdapter));
@@ -241,7 +241,7 @@ public class MainFragment extends BrowseFragment {
         mHandler.postDelayed(mBackgroundRunnable, BACKGROUND_UPDATE_DELAY);
     }
 
-    private void addPostLoadSubscription(final PostAdapter adapter) {
+    private void addPostLoadSubscription(final MovieAdapter adapter) {
         if (adapter.shouldShowLoadingIndicator()) adapter.showLoadingIndicator();
 
         Map<String, String> options = adapter.getAdapterOptions();
@@ -249,7 +249,7 @@ public class MainFragment extends BrowseFragment {
         final String anchor = options.get(PaginationAdapter.KEY_ANCHOR);
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
-        Observable<PostResponse> observable;
+        Observable<MovieResponse> observable;
         if (tag.equals(mPopularText)) {
             observable = mDataManager.getPopularPosts(nextPage, anchor);
         } else if (tag.equals(mEditorsPicksText)) {
@@ -262,7 +262,7 @@ public class MainFragment extends BrowseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<PostResponse>() {
+                .subscribe(new Subscriber<MovieResponse>() {
                     @Override
                     public void onCompleted() { }
 
@@ -282,14 +282,14 @@ public class MainFragment extends BrowseFragment {
                     }
 
                     @Override
-                    public void onNext(PostResponse postResponse) {
+                    public void onNext(MovieResponse movieResponse) {
                         adapter.removeLoadingIndicator();
-                        if (adapter.size() == 0 && postResponse.data.records.isEmpty()) {
+                        if (adapter.size() == 0 && (movieResponse.data==null || movieResponse.data.isEmpty())) {
                             adapter.showReloadCard();
                         } else {
-                            if (anchor == null) adapter.setAnchor(postResponse.data.anchorStr);
-                            adapter.setNextPage(postResponse.data.nextPage);
-                            adapter.addAllItems(postResponse.data.records);
+//                            if (anchor == null) adapter.setAnchor(movieResponse.data.anchorStr);
+                            adapter.setNextPage(movieResponse.page.pageindex+1);
+                            adapter.addAllItems(movieResponse.data);
                         }
                     }
                 }));
@@ -299,13 +299,13 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Post) {
+            if (item instanceof Movie) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
-                    Post post = (Post) item;
+                    Movie post = (Movie) item;
                     int index = mRowsAdapter.indexOf(row);
-                    PostAdapter adapter =
-                            ((PostAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
-                    ArrayList<Post> postList = (ArrayList<Post>) adapter.getAllItems();
+                    MovieAdapter adapter =
+                            ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
+                    ArrayList<Movie> postList = (ArrayList<Movie>) adapter.getAllItems();
                     startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
                 } else {
                     ToastFactory.createWifiErrorToast(getActivity()).show();
@@ -315,8 +315,8 @@ public class MainFragment extends BrowseFragment {
                 if (option.title.equals(getString(R.string.title_no_videos)) ||
                         option.title.equals(getString(R.string.title_oops))) {
                     int index = mRowsAdapter.indexOf(row);
-                    PostAdapter adapter =
-                            ((PostAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
+                    MovieAdapter adapter =
+                            ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
                     adapter.removeReloadCard();
                     addPostLoadSubscription(adapter);
                 } else {
@@ -330,12 +330,12 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Post) {
-                String backgroundUrl = ((Post) item).thumbnailUrl;
+            if (item instanceof Movie) {
+                String backgroundUrl = ((Movie) item).getBackgroundImageUrl();
                 if (backgroundUrl != null) startBackgroundTimer(URI.create(backgroundUrl));
                 int index = mRowsAdapter.indexOf(row);
-                PostAdapter adapter =
-                        ((PostAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
+                MovieAdapter adapter =
+                        ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
                 if (adapter.get(adapter.size() - 1).equals(item) && adapter.shouldLoadNextPage()) {
                     addPostLoadSubscription(adapter);
                 }

@@ -2,7 +2,7 @@ package com.hitherejoe.vineyard.ui.adapter;
 
 import android.content.Context;
 
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
 import com.hitherejoe.vineyard.ui.presenter.CardPresenter;
 
@@ -10,20 +10,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PostAdapter extends PaginationAdapter {
+public class MovieAdapter extends PaginationAdapter {
 
-    public PostAdapter(Context context, String tag) {
+    public MovieAdapter(Context context, String tag) {
         super(context, new CardPresenter(context), tag);
     }
 
     @Override
     public void addAllItems(List<?> items) {
-        List<Post> currentPosts = getAllItems();
-        ArrayList<Post> posts = new ArrayList<>();
+        List<Movie> currentPosts = getAllItems();
+        ArrayList<Movie> posts = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
-            if (object instanceof Post && !currentPosts.contains(object)) {
-                posts.add((Post) object);
+            if (object instanceof Movie && !currentPosts.contains(object)) {
+                posts.add((Movie) object);
             }
         }
         Collections.sort(posts);
@@ -31,12 +31,12 @@ public class PostAdapter extends PaginationAdapter {
     }
 
     @Override
-    public List<Post> getAllItems() {
+    public List<Movie> getAllItems() {
         List<Object> itemList = getItems();
-        ArrayList<Post> posts = new ArrayList<>();
+        ArrayList<Movie> posts = new ArrayList<>();
         for (int i = 0; i < itemList.size(); i++) {
             Object object = itemList.get(i);
-            if (object instanceof Post) posts.add((Post) object);
+            if (object instanceof Movie) posts.add((Movie) object);
         }
         return posts;
     }

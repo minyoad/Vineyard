@@ -68,9 +68,9 @@
     <string-array name="categories">
         <item>@string/header_text_popular</item>
         <item>@string/header_text_editors_picks</item>
-        <item>Scary</item>
-        <item>Comedy</item>
-        <item>Animals</item>
+        <item>香港剧</item>
+        <item>美剧</item>
+        <item>动漫</item>
         <item>Music</item>
         <item>Art</item>
         <item>Dance</item>

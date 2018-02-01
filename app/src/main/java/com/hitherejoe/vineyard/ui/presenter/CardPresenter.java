@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.hitherejoe.vineyard.R;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.ui.activity.MainActivity;
 import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
@@ -92,18 +92,18 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        if (item instanceof Post) {
-            Post post = (Post) item;
+        if (item instanceof Movie) {
+            Movie post = (Movie) item;
 
             final VideoCardView cardView = (VideoCardView) viewHolder.view;
-            if (post.videoUrl != null) {
-                cardView.setTitleText(post.description);
-                cardView.setContentText(post.username);
+            if (post.getVideoUrl() != null) {
+                cardView.setTitleText(post.getDescription());
+                cardView.setContentText(post.vod_actor);
                 cardView.setMainContainerDimensions(CARD_WIDTH, CARD_HEIGHT);
-                cardView.setVideoUrl(post.videoUrl);
+                cardView.setVideoUrl(post.getVideoUrl());
 
                 Glide.with(cardView.getContext())
-                        .load(post.thumbnailUrl)
+                        .load(post.getCardImageUrl())
                         .centerCrop()
                         .error(mDefaultCardImage)
                         .into(cardView.getMainImageView());

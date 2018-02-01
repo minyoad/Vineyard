@@ -1,7 +1,9 @@
 package com.hitherejoe.vineyard.data.remote;
 
+import com.google.gson.annotations.SerializedName;
 import com.hitherejoe.vineyard.data.model.Authentication;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
+//import com.hitherejoe.vineyard.data.model.Post;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.squareup.okhttp.Interceptor;
@@ -27,7 +29,7 @@ import rx.Observable;
 
 public interface VineyardService {
 
-    String ENDPOINT = "https://api.vineapp.com/";
+    String ENDPOINT = "https://www.ssvip.cf/";
 
     @FormUrlEncoded
     @POST("users/authenticate")
@@ -40,25 +42,28 @@ public interface VineyardService {
     Observable<User> getUser(@Path("userid") String userId);
 
     @GET("timelines/users/{userid}")
-    Observable<VineyardService.PostResponse> getUserTimeline(@Path("userid") String userId, @Query("page") String page, @Query("anchorStr") String anchor);
+    Observable<MovieResponse> getUserTimeline(@Path("userid") String userId, @Query("page") String page, @Query("anchorStr") String anchor);
 
-    @GET("timelines/popular")
-    Observable<PostResponse> getPopularPosts(@Query("page") String page, @Query("anchorStr") String anchor);
+    @GET("index.php?s=plus-api-json")
+    Observable<MovieResponse> getPopularPosts(@Query("page") String page, @Query("anchorStr") String anchor);
 
-    @GET("timelines/popular")
-    Call<PostResponse> getPopularPosts();
+    @GET("index.php?s=plus-api-json-order-vod_hits")
+    Call<MovieResponse> getPopularPosts();
 
     @GET("timelines/promoted")
-    Observable<PostResponse> getEditorsPicksPosts(@Query("page") String page, @Query("anchorStr") String anchor);
+    Observable<MovieResponse> getEditorsPicksPosts(@Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("timelines/tags/{tag}")
-    Observable<PostResponse> getPostsByTag(@Path("tag") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
+    Observable<MovieResponse> getPostsByTag(@Path("tag") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("search/tags/{tag}")
     Observable<TagResponse> searchByTag(@Path("tag") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("search/users/{query}")
     Observable<UserResponse> searchByUser(@Path("query") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
+
+    @GET("index.php")
+    Observable<MovieResponse> getPosts(@Query("s") String params);
 
     /********
      * Helper class that sets up a new services
@@ -89,15 +94,27 @@ public interface VineyardService {
         }
     }
 
-    class PostResponse {
-        public String code;
-        public Data data;
+    class MovieResponse {
+        @SerializedName("status")
+        public String status;
 
-        public static class Data {
-            public String anchorStr;
-            public int nextPage;
-            public List<Post> records;
+        public Page page;
+        public List<Category> list;
+        public List<Movie> data;
+
+        public static class Page{
+            public int pageindex;
+            public int pagecount;
+            public int pagesize;
+            public int recordcount;
         }
+
+        public static class Category{
+            public String list_id;
+            public String list_name;
+        }
+
+
     }
 
     class TagResponse {

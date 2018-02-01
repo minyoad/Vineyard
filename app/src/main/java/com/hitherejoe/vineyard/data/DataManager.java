@@ -57,28 +57,34 @@ public class DataManager {
         return mVineyardService.getUser(userId);
     }
 
-    public Observable<VineyardService.PostResponse> getPopularPosts(String page, String anchor) {
-        return mVineyardService.getPopularPosts(page, anchor);
+    public Observable<VineyardService.MovieResponse> getPopularPosts(String page, String anchor) {
+        String wd=anchor!=null?"-wd-"+anchor:"";
+        return mVineyardService.getPosts("plus-api-json-order-vod_hits-p-"+page+wd);
+//        return mVineyardService.getPopularPosts(page, anchor);
     }
 
-    public Call<VineyardService.PostResponse> getPopularPostsSynchronous() {
+    public Call<VineyardService.MovieResponse> getPopularPostsSynchronous() {
         return mVineyardService.getPopularPosts();
     }
 
-    public Observable<VineyardService.PostResponse> getEditorsPicksPosts(String page, String anchor) {
+    public Observable<VineyardService.MovieResponse> getEditorsPicksPosts(String page, String anchor) {
         return mVineyardService.getEditorsPicksPosts(page, anchor);
     }
 
-    public Observable<VineyardService.PostResponse> getPostsByTag(String tag, String page, String anchor) {
-        return mVineyardService.getPostsByTag(tag, page, anchor);
+    public Observable<VineyardService.MovieResponse> getPostsByTag(String tag, String page, String anchor) {
+        String wd=anchor!=null?"-wd-"+anchor:"";
+        return mVineyardService.getPosts("plus-api-json-type-"+tag+"-p-"+page+wd);
+
+//        return mVineyardService.getPostsByTag(tag, page, anchor);
     }
 
-    public Observable<VineyardService.PostResponse> getPostsByUser(String userId, String page, String anchor) {
+    public Observable<VineyardService.MovieResponse> getPostsByUser(String userId, String page, String anchor) {
         return mVineyardService.getUserTimeline(userId, page, anchor);
     }
 
     public Observable<VineyardService.TagResponse> searchByTag(String tag, String page, String anchor) {
         return mVineyardService.searchByTag(tag, page, anchor);
+
     }
 
     public Observable<VineyardService.UserResponse> searchByUser(String query, String page, String anchor) {

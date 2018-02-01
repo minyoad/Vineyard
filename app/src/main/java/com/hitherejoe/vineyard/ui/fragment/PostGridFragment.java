@@ -24,7 +24,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.model.Option;
-import com.hitherejoe.vineyard.data.model.Post;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
@@ -32,7 +32,7 @@ import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
-import com.hitherejoe.vineyard.ui.adapter.PostAdapter;
+import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
 
@@ -65,7 +65,7 @@ public class PostGridFragment extends VerticalGridFragment {
     private DisplayMetrics mMetrics;
     private Drawable mDefaultBackground;
     private Handler mHandler;
-    private PostAdapter mPostAdapter;
+    private MovieAdapter mPostAdapter;
     private Runnable mBackgroundRunnable;
     private String mSelectedType;
     private boolean mIsStopping;
@@ -145,7 +145,7 @@ public class PostGridFragment extends VerticalGridFragment {
             tag = ((Tag) selectedItem).tag;
             setTitle(String.format("#%s", tag));
         }
-        mPostAdapter = new PostAdapter(getActivity(), tag);
+        mPostAdapter = new MovieAdapter(getActivity(), tag);
         setAdapter(mPostAdapter);
         addPageLoadSubscription();
     }
@@ -206,7 +206,7 @@ public class PostGridFragment extends VerticalGridFragment {
         final String anchor = options.get(PaginationAdapter.KEY_ANCHOR);
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
-        Observable<VineyardService.PostResponse> observable = null;
+        Observable<VineyardService.MovieResponse> observable = null;
 
         if (mSelectedType.equals(TYPE_TAG)) {
             observable = mDataManager.getPostsByTag(tag, nextPage, anchor);
@@ -218,7 +218,7 @@ public class PostGridFragment extends VerticalGridFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .unsubscribeOn(Schedulers.io())
-                    .subscribe(new Subscriber<VineyardService.PostResponse>() {
+                    .subscribe(new Subscriber<VineyardService.MovieResponse>() {
                         @Override
                         public void onCompleted() { }
 
@@ -238,16 +238,16 @@ public class PostGridFragment extends VerticalGridFragment {
                         }
 
                         @Override
-                        public void onNext(VineyardService.PostResponse postResponse) {
+                        public void onNext(VineyardService.MovieResponse movieResponse) {
                             mPostAdapter.removeLoadingIndicator();
-                            if (mPostAdapter.size() == 0 && postResponse.data.records.isEmpty()) {
+                            if (mPostAdapter.size() == 0 && movieResponse.data.isEmpty()) {
                                 mPostAdapter.showReloadCard();
                             } else {
                                 if (anchor == null) {
-                                    mPostAdapter.setAnchor(postResponse.data.anchorStr);
+//                                    mPostAdapter.setAnchor(movieResponse.data.anchorStr);
                                 }
-                                mPostAdapter.setNextPage(postResponse.data.nextPage);
-                                mPostAdapter.addAllItems(postResponse.data.records);
+                                mPostAdapter.setNextPage(movieResponse.page.pageindex+1);
+                                mPostAdapter.addAllItems(movieResponse.data);
                             }
                         }
                     }));
@@ -258,10 +258,10 @@ public class PostGridFragment extends VerticalGridFragment {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Post) {
+            if (item instanceof Movie) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
-                    Post post = (Post) item;
-                    ArrayList<Post> postList = (ArrayList<Post>) mPostAdapter.getAllItems();
+                    Movie post = (Movie) item;
+                    ArrayList<Movie> postList = (ArrayList<Movie>) mPostAdapter.getAllItems();
                     startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
                 } else {
                     ToastFactory.createWifiErrorToast(getActivity()).show();
@@ -281,10 +281,10 @@ public class PostGridFragment extends VerticalGridFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Post) {
-                String backgroundUrl = ((Post) item).thumbnailUrl;
+            if (item instanceof Movie) {
+                String backgroundUrl = ((Movie) item).getBackgroundImageUrl();
                 if (backgroundUrl != null) startBackgroundTimer(URI.create(backgroundUrl));
-                ArrayList<Post> posts = (ArrayList<Post>) mPostAdapter.getAllItems();
+                ArrayList<Movie> posts = (ArrayList<Movie>) mPostAdapter.getAllItems();
 
                 // If any item on the bottom row is selected...
                 int itemIndex = mPostAdapter.indexOf(item);

@@ -1,8 +1,6 @@
 package com.hitherejoe.vineyard;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,7 +12,6 @@ import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 import com.hitherejoe.vineyard.test.common.TestDataFactory;
 import com.hitherejoe.vineyard.test.common.rules.TestComponentRule;
-import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 
 import org.junit.Rule;
@@ -192,25 +189,25 @@ public class SearchActivityTest {
 
         List<Post> mockPostsOne = TestDataFactory.createMockListOfPosts(5);
         Collections.sort(mockPostsOne);
-        VineyardService.PostResponse postResponseOne = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data dataOne = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse movieResponseOne = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data dataOne = new VineyardService.MovieResponse.Data();
         dataOne.records = mockPostsOne;
-        postResponseOne.data = dataOne;
+        movieResponseOne.data = dataOne;
 
         List<Post> mockPostsTwo = TestDataFactory.createMockListOfPosts(5);
         Collections.sort(mockPostsTwo);
-        VineyardService.PostResponse postResponseTwo = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data dataTwo = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse movieResponseTwo = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data dataTwo = new VineyardService.MovieResponse.Data();
         dataTwo.records = mockPostsTwo;
-        postResponseTwo.data = dataTwo;
+        movieResponseTwo.data = dataTwo;
 
         String tag = tags.get(0).tag;
         User user = users.get(0);
         when(component.getMockDataManager().getPostsByUser(eq(user.userId), anyString(), anyString()))
-                .thenReturn(Observable.just(postResponseOne));
+                .thenReturn(Observable.just(movieResponseOne));
 
         when(component.getMockDataManager().getPostsByTag(eq(tag), anyString(), anyString()))
-                .thenReturn(Observable.just(postResponseTwo));
+                .thenReturn(Observable.just(movieResponseTwo));
 
         onView(withId(R.id.lb_search_text_editor))
                 .perform(replaceText("cat"));
@@ -295,16 +292,16 @@ public class SearchActivityTest {
 
     private void stubTagUserAndPostData(ArrayList<Object> list) {
         List<Post> mockPosts = TestDataFactory.createMockListOfPosts(10);
-        VineyardService.PostResponse postResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse movieResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data data = new VineyardService.MovieResponse.Data();
         data.records = mockPosts;
-        postResponse.data = data;
+        movieResponse.data = data;
 
         when(component.getMockDataManager().getPostsByUser(anyString(), anyString(), anyString()))
-                .thenReturn(Observable.just(postResponse));
+                .thenReturn(Observable.just(movieResponse));
 
         when(component.getMockDataManager().getPostsByTag(anyString(), anyString(), anyString()))
-                .thenReturn(Observable.just(postResponse));
+                .thenReturn(Observable.just(movieResponse));
 
         VineyardService.KeywordSearchResponse keywordSearchResponse = new VineyardService.KeywordSearchResponse();
 

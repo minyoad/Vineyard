@@ -105,13 +105,13 @@ public class DataManagerTest {
         String anchor = "anchor";
 
         List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
-        VineyardService.PostResponse popularResponse = new VineyardService.PostResponse();
-        popularResponse.data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse popularResponse = new VineyardService.MovieResponse();
+        popularResponse.data = new VineyardService.MovieResponse.Data();
         popularResponse.data.records = mockPostLists;
         when(mMockVineyardService.getPopularPosts(eq(page), eq(anchor)))
                 .thenReturn(Observable.just(popularResponse));
 
-        TestSubscriber<VineyardService.PostResponse> result = new TestSubscriber<>();
+        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
         mDataManager.getPopularPosts(page, anchor).subscribe(result);
         result.assertNoErrors();
         result.assertValue(popularResponse);
@@ -123,13 +123,13 @@ public class DataManagerTest {
         String anchor = "anchor";
 
         List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
-        VineyardService.PostResponse editorsPicksResponse = new VineyardService.PostResponse();
-        editorsPicksResponse.data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
+        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
         editorsPicksResponse.data.records = mockPostLists;
         when(mMockVineyardService.getEditorsPicksPosts(eq(page), eq(anchor)))
                 .thenReturn(Observable.just(editorsPicksResponse));
 
-        TestSubscriber<VineyardService.PostResponse> result = new TestSubscriber<>();
+        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
         mDataManager.getEditorsPicksPosts(page, anchor).subscribe(result);
         result.assertNoErrors();
         result.assertValue(editorsPicksResponse);
@@ -142,13 +142,13 @@ public class DataManagerTest {
         String anchor = "anchor";
 
         List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
-        VineyardService.PostResponse editorsPicksResponse = new VineyardService.PostResponse();
-        editorsPicksResponse.data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
+        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
         editorsPicksResponse.data.records = mockPostLists;
         when(mMockVineyardService.getPostsByTag(eq(tag), eq(page), eq(anchor)))
                 .thenReturn(Observable.just(editorsPicksResponse));
 
-        TestSubscriber<VineyardService.PostResponse> result = new TestSubscriber<>();
+        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
         mDataManager.getPostsByTag(tag, page, anchor).subscribe(result);
         result.assertNoErrors();
         result.assertValue(editorsPicksResponse);
@@ -161,13 +161,13 @@ public class DataManagerTest {
         String anchor = "anchor";
 
         List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
-        VineyardService.PostResponse editorsPicksResponse = new VineyardService.PostResponse();
-        editorsPicksResponse.data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
+        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
         editorsPicksResponse.data.records = mockPostLists;
         when(mMockVineyardService.getUserTimeline(eq(userId), eq(page), eq(anchor)))
                 .thenReturn(Observable.just(editorsPicksResponse));
 
-        TestSubscriber<VineyardService.PostResponse> result = new TestSubscriber<>();
+        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
         mDataManager.getPostsByUser(userId, page, anchor).subscribe(result);
         result.assertNoErrors();
         result.assertValue(editorsPicksResponse);

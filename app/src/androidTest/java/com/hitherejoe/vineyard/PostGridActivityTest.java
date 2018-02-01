@@ -77,8 +77,8 @@ public class PostGridActivityTest {
     public void listOfTagPostsShowsAndIsScrollable() {
         List<Post> tagList = TestDataFactory.createMockListOfPosts(10);
         Collections.sort(tagList);
-        VineyardService.PostResponse postTagResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data tagData = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse postTagResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data tagData = new VineyardService.MovieResponse.Data();
         tagData.records = tagList;
         postTagResponse.data = tagData;
 
@@ -101,31 +101,31 @@ public class PostGridActivityTest {
         List<Post> postList = TestDataFactory.createMockListOfPosts(10);
         Collections.sort(postList);
 
-        VineyardService.PostResponse postResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse movieResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data data = new VineyardService.MovieResponse.Data();
         data.records = postList;
-        postResponse.data = data;
+        movieResponse.data = data;
         data.nextPage = 2;
         data.anchorStr = "anchor_string";
 
         when(component.getMockDataManager().getPostsByUser(anyString(), eq("1"), anyString()))
-                .thenReturn(Observable.just(postResponse));
+                .thenReturn(Observable.just(movieResponse));
 
         List<Post> postListTwo = TestDataFactory.createMockListOfPosts(10);
         Collections.sort(postListTwo);
 
-        VineyardService.PostResponse postResponseTwo = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data dataTwo = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse movieResponseTwo = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data dataTwo = new VineyardService.MovieResponse.Data();
         dataTwo.records = postListTwo;
-        postResponseTwo.data = dataTwo;
+        movieResponseTwo.data = dataTwo;
         dataTwo.nextPage = 0;
         dataTwo.anchorStr = "anchor_string";
 
         when(component.getMockDataManager().getPostsByUser(anyString(), eq("2"), anyString()))
-                .thenReturn(Observable.just(postResponseTwo));
+                .thenReturn(Observable.just(movieResponseTwo));
 
         when(component.getMockDataManager().getPostsByUser(anyString(), eq("0"), anyString()))
-                .thenReturn(Observable.<VineyardService.PostResponse>empty());
+                .thenReturn(Observable.<VineyardService.MovieResponse>empty());
 
         Context context = InstrumentationRegistry.getTargetContext();
         User mockUser = TestDataFactory.createMockUser();
@@ -176,8 +176,8 @@ public class PostGridActivityTest {
 
         List<Post> tagList = TestDataFactory.createMockListOfPosts(10);
         Collections.sort(tagList);
-        VineyardService.PostResponse postTagResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data tagData = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse postTagResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data tagData = new VineyardService.MovieResponse.Data();
         tagData.records = tagList;
         postTagResponse.data = tagData;
         when(component.getMockDataManager().getPostsByTag(eq("cat"), anyString(), anyString()))
@@ -196,8 +196,8 @@ public class PostGridActivityTest {
     public void tryAgainCardFetchesContentOnFocus() {
         List<Post> tagList = TestDataFactory.createMockListOfPosts(10);
         Collections.sort(tagList);
-        VineyardService.PostResponse postTagResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data tagData = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse postTagResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data tagData = new VineyardService.MovieResponse.Data();
         tagData.records = tagList;
         postTagResponse.data = tagData;
         postTagResponse.data.nextPage = 2;
@@ -239,7 +239,7 @@ public class PostGridActivityTest {
                 .when(component.getMockDataManager())
                 .getPostsByTag(eq("cat"), eq("2"), anyString());
         when(component.getMockDataManager().getPostsByUser(anyString(), eq("0"), anyString()))
-                .thenReturn(Observable.<VineyardService.PostResponse>empty());
+                .thenReturn(Observable.<VineyardService.MovieResponse>empty());
 
         onView(withId(R.id.browse_grid))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(secondTagList.size() - 5, click()));
@@ -251,8 +251,8 @@ public class PostGridActivityTest {
     public void reloadCardIsDisplayed() {
         List<Post> tagList = TestDataFactory.createMockListOfPosts(0);
         Collections.sort(tagList);
-        VineyardService.PostResponse postTagResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data tagData = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse postTagResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data tagData = new VineyardService.MovieResponse.Data();
         tagData.records = tagList;
         postTagResponse.data = tagData;
 
@@ -275,8 +275,8 @@ public class PostGridActivityTest {
     public void reloadCardReloadsContentWhenClicked() {
         List<Post> emptyTagList = TestDataFactory.createMockListOfPosts(0);
         Collections.sort(emptyTagList);
-        VineyardService.PostResponse postTagResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data tagData = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse postTagResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data tagData = new VineyardService.MovieResponse.Data();
         tagData.records = emptyTagList;
         postTagResponse.data = tagData;
 
@@ -355,13 +355,13 @@ public class PostGridActivityTest {
     }
 
     private void stubPostGridData(List<Post> postList) {
-        VineyardService.PostResponse postResponse = new VineyardService.PostResponse();
-        VineyardService.PostResponse.Data data = new VineyardService.PostResponse.Data();
+        VineyardService.MovieResponse movieResponse = new VineyardService.MovieResponse();
+        VineyardService.MovieResponse.Data data = new VineyardService.MovieResponse.Data();
         data.records = postList;
-        postResponse.data = data;
+        movieResponse.data = data;
 
         when(component.getMockDataManager().getPostsByUser(anyString(), eq("1"), anyString()))
-                .thenReturn(Observable.just(postResponse));
+                .thenReturn(Observable.just(movieResponse));
     }
 
     /**
