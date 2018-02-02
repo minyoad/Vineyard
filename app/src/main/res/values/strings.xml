@@ -64,6 +64,8 @@
     <string name="message_try_again">Try again?</string>
     <string name="message_check_again">Check again?</string>
     <string name="text_close">Close</string>
+    <string name="action_settings">Settings</string>
+
 
     <string-array name="categories">
         <item>@string/header_text_popular</item>

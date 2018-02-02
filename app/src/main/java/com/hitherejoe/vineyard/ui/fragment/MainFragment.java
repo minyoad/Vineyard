@@ -35,6 +35,7 @@ import com.hitherejoe.vineyard.data.model.Option;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.remote.VineyardService.MovieResponse;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
+import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.activity.GuidedStepActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
@@ -301,12 +302,17 @@ public class MainFragment extends BrowseFragment {
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof Movie) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
-                    Movie post = (Movie) item;
-                    int index = mRowsAdapter.indexOf(row);
-                    MovieAdapter adapter =
-                            ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
-                    ArrayList<Movie> postList = (ArrayList<Movie>) adapter.getAllItems();
-                    startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
+                    Movie movie = (Movie) item;
+//                    int index = mRowsAdapter.indexOf(row);
+//                    MovieAdapter adapter =
+//                            ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
+//                    ArrayList<Movie> postList = (ArrayList<Movie>) adapter.getAllItems();
+//                    startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
+
+                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra(DetailsActivity.MOVIE, movie);
+                    getActivity().startActivity(intent);
+
                 } else {
                     ToastFactory.createWifiErrorToast(getActivity()).show();
                 }

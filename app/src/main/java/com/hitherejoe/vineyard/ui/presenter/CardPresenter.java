@@ -97,7 +97,7 @@ public class CardPresenter extends Presenter {
 
             final VideoCardView cardView = (VideoCardView) viewHolder.view;
             if (post.getVideoUrl() != null) {
-                cardView.setTitleText(post.getDescription());
+                cardView.setTitleText(post.getTitle());
                 cardView.setContentText(post.vod_actor);
                 cardView.setMainContainerDimensions(CARD_WIDTH, CARD_HEIGHT);
                 cardView.setVideoUrl(post.getVideoUrl());
