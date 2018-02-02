@@ -22,15 +22,12 @@ import com.google.gson.annotations.SerializedName;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import static java.lang.System.in;
 
 /**
  *  Modified from AOSP sample source code, by corochann on 2/7/2015.
@@ -74,6 +71,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     public String vod_addtime;
     public String vod_filmtime;
     public String vod_server;
+    @SerializedName("vod_play")
     public String vod_play;
 //    public String vod_url;
     public String vod_inputer;
@@ -109,6 +107,9 @@ public class Movie implements Comparable<Movie>, Parcelable{
     private String videoUrl;
     @SerializedName("list_name")
     private String category;
+
+
+    private String currentSource;
 
     public long getId() {
         return id;
@@ -176,7 +177,10 @@ public class Movie implements Comparable<Movie>, Parcelable{
     }
 
     public String getVideoUrl() {
-        return getDefaultVideoUrl();
+
+//        PlayUrlInfo playUrlInfo=getVideoUrlInfo();
+//        return getProxyUrlByPlayer(playUrlInfo.title)
+        return getVideoUrlInfo().url;
 //        return videoUrl;
     }
 
@@ -203,45 +207,6 @@ public class Movie implements Comparable<Movie>, Parcelable{
                 '}';
     }
 
-    /*** auto generated codes by Parcelable plugin start ***/
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this.id);
-        dest.writeString(this.title);
-        dest.writeString(this.studio);
-        dest.writeString(this.description);
-        dest.writeString(this.bgImageUrl);
-        dest.writeString(this.cardImageUrl);
-        dest.writeString(this.videoUrl);
-        dest.writeString(this.category);
-    }
-
-    protected Movie(Parcel in) {
-        this.id = in.readLong();
-        this.title = in.readString();
-        this.studio = in.readString();
-        this.description = in.readString();
-        this.bgImageUrl = in.readString();
-        this.cardImageUrl = in.readString();
-        this.videoUrl = in.readString();
-        this.category = in.readString();
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
     @Override
     public int compareTo(@NonNull Movie movie) {
         return (int)(movie.id-this.id);
@@ -252,7 +217,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     private void updatePlayUrls(){
 
         if(vod_play==null)
-            return;;
+            return;
 
         String[] playNameList=vod_play.split("\\$\\$\\$");
         mPlaySrcList =Arrays.asList(playNameList);
@@ -295,48 +260,67 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     }
 
+    public String getProxyUrlByPlayer(String playerName){
+        String proxyurl="";
+        switch (playerName){
+            case "kkyun":
+            case "kuyun":
 
-    public List<String> getPlayNameList(){
+                break;
+
+            default:
+                proxyurl="http://api.avtv.fun/vip/?url=";
+                break;
+        }
+        return  proxyurl;
+
+    }
+
+    public List<String> getPlaySourceList(){
+
+        if (vod_play==null)
+        {
+            return null;
+        }
+
         String[] playNameList=vod_play.split("\\$\\$\\$");
 
         return Arrays.asList(playNameList);
 
     }
 
-    public String getDefaultVideoUrl(){
+    public PlayUrlInfo getVideoUrlInfo(){
 
         if (mPlaySrcList==null || mPlayUrlMap==null){
             updatePlayUrls();
         }
 
 
-        String url="";
-
-        List<String> nameList=getPlayNameList();
+        List<String> nameList= getPlaySourceList();
 
         final String[] PLAYERS = {"qq","youku","iqiyi","ku6"};
 
-        url= getPlayUrl(nameList.get(0),0).url;
+        PlayUrlInfo playUrlInfo= getPlayUrl(nameList.get(0),0);
 
         for (String name:nameList) {
 
-            if ( Arrays.asList(PLAYERS).contains("id" ) ) {
+            if ( Arrays.asList(PLAYERS).contains(name) ) {
                 // Do some stuff.
-                PlayUrlInfo playUrlInfo=getPlayUrl(name,0);
-                url=playUrlInfo.url;
+                playUrlInfo=getPlayUrl(name,0);
+
                 break;
             }
 
         }
 
-        return url;
+        return playUrlInfo;
 
     }
 
 
     public PlayUrlInfo getPlayUrl(String playName,int index){
 
-        if (mPlaySrcList.contains(playName)){
+        if (mPlaySrcList!=null && mPlaySrcList.contains(playName)){
             List<PlayUrlInfo> urls= mPlayUrlMap.get(playName);
 
             if(urls!=null && index<urls.size()){
@@ -348,4 +332,102 @@ public class Movie implements Comparable<Movie>, Parcelable{
         return  null;
 
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringList(this.mPlaySrcList);
+        dest.writeSerializable(this.mPlayUrlMap);
+        dest.writeString(this.vod_cid);
+        dest.writeString(this.vod_type);
+        dest.writeString(this.vod_keywords);
+        dest.writeString(this.vod_actor);
+        dest.writeString(this.vod_area);
+        dest.writeString(this.vod_language);
+        dest.writeString(this.vod_year);
+        dest.writeString(this.vod_addtime);
+        dest.writeString(this.vod_filmtime);
+        dest.writeString(this.vod_server);
+        dest.writeString(this.vod_play);
+        dest.writeString(this.vod_inputer);
+        dest.writeString(this.vod_reurl);
+        dest.writeString(this.vod_length);
+        dest.writeString(this.vod_weekday);
+        dest.writeString(this.vod_copyright);
+        dest.writeString(this.vod_state);
+        dest.writeString(this.vod_version);
+        dest.writeString(this.vod_tv);
+        dest.writeString(this.vod_total);
+        dest.writeString(this.vod_continu);
+        dest.writeString(this.vod_status);
+        dest.writeString(this.vod_stars);
+        dest.writeString(this.vod_hits);
+        dest.writeString(this.vod_isend);
+        dest.writeString(this.vod_douban_id);
+        dest.writeString(this.vod_series);
+        dest.writeLong(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.studio);
+        dest.writeString(this.description);
+        dest.writeString(this.bgImageUrl);
+        dest.writeString(this.cardImageUrl);
+        dest.writeString(this.videoUrl);
+        dest.writeString(this.category);
+    }
+
+    protected Movie(Parcel in) {
+        this.mPlaySrcList = in.createStringArrayList();
+        this.mPlayUrlMap = (HashMap<String, List<PlayUrlInfo>>) in.readSerializable();
+        this.vod_cid = in.readString();
+        this.vod_type = in.readString();
+        this.vod_keywords = in.readString();
+        this.vod_actor = in.readString();
+        this.vod_area = in.readString();
+        this.vod_language = in.readString();
+        this.vod_year = in.readString();
+        this.vod_addtime = in.readString();
+        this.vod_filmtime = in.readString();
+        this.vod_server = in.readString();
+        this.vod_play = in.readString();
+        this.vod_inputer = in.readString();
+        this.vod_reurl = in.readString();
+        this.vod_length = in.readString();
+        this.vod_weekday = in.readString();
+        this.vod_copyright = in.readString();
+        this.vod_state = in.readString();
+        this.vod_version = in.readString();
+        this.vod_tv = in.readString();
+        this.vod_total = in.readString();
+        this.vod_continu = in.readString();
+        this.vod_status = in.readString();
+        this.vod_stars = in.readString();
+        this.vod_hits = in.readString();
+        this.vod_isend = in.readString();
+        this.vod_douban_id = in.readString();
+        this.vod_series = in.readString();
+        this.id = in.readLong();
+        this.title = in.readString();
+        this.studio = in.readString();
+        this.description = in.readString();
+        this.bgImageUrl = in.readString();
+        this.cardImageUrl = in.readString();
+        this.videoUrl = in.readString();
+        this.category = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

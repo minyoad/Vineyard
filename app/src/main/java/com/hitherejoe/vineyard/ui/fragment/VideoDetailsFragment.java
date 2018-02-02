@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v17.leanback.app.DetailsFragment;
@@ -263,10 +264,20 @@ public class VideoDetailsFragment extends DetailsFragment {
         @Override
         public void onActionClicked(Action action) {
             if (action.getId() == ACTION_PLAY_VIDEO) {
-                Intent intent = new Intent(getActivity(), PlaybackActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
-//                intent.putExtra(getResources().getString(R.string.should_start), true);
-                startActivity(intent);
+
+
+//                final String PROXY="http://api.avtv.fun/vip/?url=";
+
+
+                String url=mSelectedMovie.getVideoUrl();
+
+                Intent intent1=new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+                startActivity(intent1);
+//                Intent intent = new Intent(getActivity(), PlaybackActivity.class);
+//                intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
+////                intent.putExtra(getResources().getString(R.string.should_start), true);
+//                startActivity(intent);
             }
         }
     }

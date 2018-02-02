@@ -188,22 +188,7 @@ public class MainFragment extends BrowseFragment {
             }
         });
 
-        boolean shouldAutoLoop = mPreferencesHelper.getShouldAutoLoop();
-        String optionValue = shouldAutoLoop
-                ? getString(R.string.text_auto_loop_enabled)
-                : getString(R.string.text_auto_loop_disabled);
 
-        mAutoLoopOption = new Option(
-                getString(R.string.text_auto_loop_title),
-                optionValue,
-                R.drawable.lopp);
-
-
-        HeaderItem gridHeader =
-                new HeaderItem(mRowsAdapter.size(), getString(R.string.header_text_options));
-        mOptionsAdapter = new OptionsAdapter(getActivity());
-        mOptionsAdapter.addOption(mAutoLoopOption);
-        mRowsAdapter.add(new ListRow(gridHeader, mOptionsAdapter));
     }
 
     private void setupListeners() {
@@ -232,10 +217,23 @@ public class MainFragment extends BrowseFragment {
 
         }
 
-//        String[] categories = getResources().getStringArray(R.array.categories);
-//
-//        for (int i = 0; i < categories.length; i++)
-//            loadPostsFromCategory(categories[i], i);
+        boolean shouldAutoLoop = mPreferencesHelper.getShouldAutoLoop();
+        String optionValue = shouldAutoLoop
+                ? getString(R.string.text_auto_loop_enabled)
+                : getString(R.string.text_auto_loop_disabled);
+
+        mAutoLoopOption = new Option(
+                getString(R.string.text_auto_loop_title),
+                optionValue,
+                R.drawable.lopp);
+
+
+        HeaderItem gridHeader =
+                new HeaderItem(mRowsAdapter.size(), getString(R.string.header_text_options));
+        mOptionsAdapter = new OptionsAdapter(getActivity());
+        mOptionsAdapter.addOption(mAutoLoopOption);
+        mRowsAdapter.add(new ListRow(gridHeader, mOptionsAdapter));
+
     }
 
     private void loadPostsFromCategory(String tag, int headerPosition) {

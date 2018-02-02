@@ -2,19 +2,12 @@ package com.hitherejoe.vineyard.data.model;
 
 import android.util.Log;
 
-//import com.alibaba.fastjson.JSON;
-//import com.alibaba.fastjson.JSONObject;
-//import com.google.gson.Gson;
 
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by mingyang.wu on 17/11/8.
