@@ -1,11 +1,15 @@
 package com.hitherejoe.vineyard.data;
 
+import android.os.AsyncTask;
+
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Authentication;
+import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,9 +19,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.Call;
+import retrofit.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import timber.log.Timber;
 
 @Singleton
 public class DataManager {
@@ -25,10 +31,14 @@ public class DataManager {
     private final VineyardService mVineyardService;
     private final PreferencesHelper mPreferencesHelper;
 
+    private List<Category> mCategoryList;
+
     @Inject
     public DataManager(PreferencesHelper preferencesHelper, VineyardService vineyardService) {
         mPreferencesHelper = preferencesHelper;
         mVineyardService = vineyardService;
+
+//        getCategoryList();
     }
 
     public PreferencesHelper getPreferencesHelper() {
@@ -58,9 +68,43 @@ public class DataManager {
     }
 
     public Observable<VineyardService.MovieResponse> getPopularPosts(String page, String anchor) {
-        String wd=anchor!=null?"-wd-"+anchor:"";
-        return mVineyardService.getPosts("plus-api-json-order-vod_hits-p-"+page+wd);
+        String wd = anchor != null ? "-cid-" + anchor : "";
+        return mVineyardService.getPosts("plus-api-json-order-vod_hits-p-" + page + wd);
 //        return mVineyardService.getPopularPosts(page, anchor);
+    }
+
+    public Observable<VineyardService.MovieResponse> getMovies(String page, String anchor) {
+        return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page);
+    }
+
+    public void getCategoryList() {
+        try {
+
+            Response<VineyardService.CategoryListResponse> categoryListResponse = mVineyardService.getCategoryList().execute();
+
+            VineyardService.CategoryListResponse categoryResponse = categoryListResponse.body();
+
+            mCategoryList = new ArrayList<>();
+
+            mCategoryList.addAll(categoryResponse.data);
+
+//            handleRecommendations(movieResponse.data);
+        } catch (IOException e) {
+            Timber.e("There was an error retrieving the posts", e);
+        }
+
+
+    }
+
+    public Category getCategoryById(String list_id) {
+        if (mCategoryList != null)
+            for (Category category : mCategoryList) {
+                if (category.list_id.equals(list_id)) {
+                    return category;
+                }
+            }
+
+        return null;
     }
 
     public Call<VineyardService.MovieResponse> getPopularPostsSynchronous() {
@@ -72,10 +116,9 @@ public class DataManager {
     }
 
     public Observable<VineyardService.MovieResponse> getPostsByTag(String tag, String page, String anchor) {
-        String wd=anchor!=null?"-wd-"+anchor:"";
-        return mVineyardService.getPosts("plus-api-json-type-"+tag+"-p-"+page+wd);
+        String wd = anchor != null ? "-cid-" + anchor : "";
+        return mVineyardService.getPosts("plus-api-json-type-" + tag + "-p-" + page + wd);
 
-//        return mVineyardService.getPostsByTag(tag, page, anchor);
     }
 
     public Observable<VineyardService.MovieResponse> getPostsByUser(String userId, String page, String anchor) {

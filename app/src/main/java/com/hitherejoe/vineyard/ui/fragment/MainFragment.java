@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
@@ -31,6 +32,7 @@ import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.BusEvent;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
+import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Option;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.remote.VineyardService.MovieResponse;
@@ -45,11 +47,15 @@ import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.ui.presenter.IconHeaderItemPresenter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -82,6 +88,7 @@ public class MainFragment extends BrowseFragment {
     private String mPopularText;
     private String mEditorsPicksText;
     private boolean mIsStopping;
+    private HashMap<String, String> mCategoryMap;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -99,7 +106,11 @@ public class MainFragment extends BrowseFragment {
         mEditorsPicksText = getString(R.string.header_text_editors_picks);
         mEventBus.register(this);
 
-        loadPosts();
+        new DownloadCategoryTask().execute();
+
+//        mDataManager.getCategoryList();
+//
+//        loadPosts();
         setAdapter(mRowsAdapter);
         prepareBackgroundManager();
         setupUIElements();
@@ -210,12 +221,34 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadPosts() {
-        String[] categories = getResources().getStringArray(R.array.categories);
-        for (int i = 0; i < categories.length; i++) loadPostsFromCategory(categories[i], i);
+
+        Category category=mDataManager.getCategoryById("0");
+
+        mCategoryMap = category.getExtendValues();
+
+        for (Map.Entry<String, String> entry: mCategoryMap.entrySet()){
+
+            loadPostsFromCategory(entry.getKey(),0);
+
+        }
+
+//        String[] categories = getResources().getStringArray(R.array.categories);
+//
+//        for (int i = 0; i < categories.length; i++)
+//            loadPostsFromCategory(categories[i], i);
     }
 
     private void loadPostsFromCategory(String tag, int headerPosition) {
-        MovieAdapter listRowAdapter = new MovieAdapter(getActivity(), tag);
+        MovieAdapter listRowAdapter = new MovieAdapter(getActivity(), String.valueOf(headerPosition));
+
+        listRowAdapter.setAnchor(mCategoryMap.get(tag));
+
+//        String[] categorieIds = getResources().getStringArray(R.array.categoriesId);
+//
+//        if (categorieIds.length>headerPosition){
+//            listRowAdapter.setAnchor(categorieIds[headerPosition]);
+//        }
+
         addPostLoadSubscription(listRowAdapter);
         HeaderItem header = new HeaderItem(headerPosition, tag);
         mRowsAdapter.add(new ListRow(header, listRowAdapter));
@@ -251,13 +284,21 @@ public class MainFragment extends BrowseFragment {
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
         Observable<MovieResponse> observable;
-        if (tag.equals(mPopularText)) {
-            observable = mDataManager.getPopularPosts(nextPage, anchor);
-        } else if (tag.equals(mEditorsPicksText)) {
-            observable = mDataManager.getEditorsPicksPosts(nextPage, anchor);
-        } else {
-            observable = mDataManager.getPostsByTag(tag, nextPage, anchor);
-        }
+
+        observable=mDataManager.getMovies(nextPage,anchor);
+
+//        if (Integer.parseInt(tag)<=5){
+//            observable = mDataManager.getPopularPosts(nextPage, anchor);
+//
+////        }
+//
+////        if (tag.equals(mPopularText)) {
+////            observable = mDataManager.getPopularPosts(nextPage, anchor);
+////        } else if (tag.equals(mEditorsPicksText)) {
+////            observable = mDataManager.getEditorsPicksPosts(nextPage, anchor);
+//        } else {
+//            observable = mDataManager.getPostsByTag(tag, nextPage, anchor);
+//        }
 
         mCompositeSubscription.add(observable
                 .observeOn(AndroidSchedulers.mainThread())
@@ -348,5 +389,22 @@ public class MainFragment extends BrowseFragment {
             }
         }
     };
+
+    private class DownloadCategoryTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            mDataManager.getCategoryList();
+
+            return "";
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            loadPosts();
+        }
+}
 
 }

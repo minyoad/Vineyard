@@ -8,8 +8,15 @@
     <!-- Headers -->
     <string name="header_text_settings">Settings</string>
     <string name="header_text_options">Options</string>
+
     <string name="header_text_popular">Popular</string>
-    <string name="header_text_editors_picks">Editor\'s Picks</string>
+
+    <string name="header_text_popular_movie">热门电影</string>
+    <string name="header_text_popular_series">热门剧集</string>
+    <string name="header_text_latest_movie">最新电影</string>
+    <string name="header_text_latest_series">最新剧集</string>
+
+    <string name="header_text_editors_picks">编辑推荐</string>
 
     <!-- Connect Activity -->
     <string name="text_hint_username">Username</string>
@@ -68,22 +75,31 @@
 
 
     <string-array name="categories">
-        <item>@string/header_text_popular</item>
+        <item>@string/header_text_popular_movie</item>
+        <item>@string/header_text_popular_series</item>
+
+        <item>@string/header_text_latest_movie</item>
+        <item>@string/header_text_latest_series</item>
+
         <item>@string/header_text_editors_picks</item>
         <item>香港剧</item>
         <item>美剧</item>
         <item>动漫</item>
-        <item>Music</item>
-        <item>Art</item>
-        <item>Dance</item>
-        <item>Sports</item>
-        <item>OMG</item>
-        <item>Style</item>
-        <item>Family</item>
-        <item>Food</item>
-        <item>DIY</item>
-        <item>Places</item>
-        <item>News</item>
+
+    </string-array>
+
+    <string-array name="categoriesId">
+        <item>1</item>
+        <item>2</item>
+
+        <item>1</item>
+        <item>2</item>
+
+        <item>1</item>
+        <item>2</item>
+        <item>2</item>
+        <item>3</item>
+
     </string-array>
 
     <string-array name="icons">

@@ -176,16 +176,12 @@ public class VideoDetailsFragment extends DetailsFragment {
                         .load(mSelectedMovie.getCardImageUrl())
                         .asBitmap()
                         .into(width,height)
+//                        .error(mDefaultCardImage)
                         .get();
 
 
                 row.setImageBitmap(getActivity(), poster);
-//
-//                mVideoLists = VideoProvider.buildMedia(getActivity());
-//            } catch (IOException e) {
-//                Log.w(TAG, e.toString());
-//            } catch (JSONException e) {
-//                Log.e(TAG, e.toString());
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

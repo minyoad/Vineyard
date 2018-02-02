@@ -2,8 +2,8 @@ package com.hitherejoe.vineyard.data.remote;
 
 import com.google.gson.annotations.SerializedName;
 import com.hitherejoe.vineyard.data.model.Authentication;
+import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Movie;
-//import com.hitherejoe.vineyard.data.model.Post;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.squareup.okhttp.Interceptor;
@@ -65,6 +65,12 @@ public interface VineyardService {
     @GET("index.php")
     Observable<MovieResponse> getPosts(@Query("s") String params);
 
+
+    @GET("index.php?s=plus-api-category")
+    Call<CategoryListResponse> getCategoryList();
+
+
+
     /********
      * Helper class that sets up a new services
      *******/
@@ -95,11 +101,10 @@ public interface VineyardService {
     }
 
     class MovieResponse {
-        @SerializedName("status")
         public String status;
 
         public Page page;
-        public List<Category> list;
+        public List<CategoryData> list;
         public List<Movie> data;
 
         public static class Page{
@@ -109,12 +114,17 @@ public interface VineyardService {
             public int recordcount;
         }
 
-        public static class Category{
+        public static class CategoryData{
             public String list_id;
             public String list_name;
         }
 
 
+    }
+
+    class CategoryListResponse{
+        public String status;
+        public List<Category> data;
     }
 
     class TagResponse {
