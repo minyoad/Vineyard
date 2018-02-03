@@ -96,18 +96,18 @@ public class CardPresenter extends Presenter {
             Movie post = (Movie) item;
 
             final VideoCardView cardView = (VideoCardView) viewHolder.view;
-            if (post.getVideoUrl() != null) {
+//            if (post.getVideoUrl() != null) {
                 cardView.setTitleText(post.getTitle());
                 cardView.setContentText(post.vod_actor);
                 cardView.setMainContainerDimensions(CARD_WIDTH, CARD_HEIGHT);
-                cardView.setVideoUrl(post.getVideoUrl());
+//                cardView.setVideoUrl(post.getVideoUrl());
 
                 Glide.with(cardView.getContext())
                         .load(post.getCardImageUrl())
                         .centerCrop()
                         .error(mDefaultCardImage)
                         .into(cardView.getMainImageView());
-            }
+//            }
         }
     }
 

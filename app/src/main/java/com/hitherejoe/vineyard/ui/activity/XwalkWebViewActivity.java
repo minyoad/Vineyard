@@ -38,9 +38,13 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         Intent intent=getIntent();
         Movie movie=intent.getParcelableExtra(DetailsActivity.MOVIE);
 
+
         String url=movie.getVideoUrl();
 
-        mXwalkView.load(url, null);
+        String proxy=movie.getProxyUrlByPlayer(movie.currentSource);
+
+
+        mXwalkView.load(proxy+url, null);
     }
 
     @Override

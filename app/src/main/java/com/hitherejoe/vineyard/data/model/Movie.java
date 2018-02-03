@@ -109,7 +109,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     private String category;
 
 
-    private String currentSource;
+    public String currentSource;
 
     public long getId() {
         return id;
@@ -178,15 +178,17 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     public String getVideoUrl() {
 
-//        PlayUrlInfo playUrlInfo=getVideoUrlInfo();
-//        return getProxyUrlByPlayer(playUrlInfo.title)
-        return getVideoUrlInfo().url;
-//        return videoUrl;
+        if (videoUrl!=null && mPlayUrlMap==null){
+            parsePlayUrls();
+        }
+
+        return getVideoUrlInfo(currentSource,0).url;
+
     }
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
-        updatePlayUrls();
+        parsePlayUrls();
     }
 
     public String getCategory() { return category; }
@@ -214,7 +216,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     /*** auto generated codes by Parcelable plugin end ***/
 
 
-    private void updatePlayUrls(){
+    private void parsePlayUrls(){
 
         if(vod_play==null)
             return;
@@ -258,6 +260,8 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
         }
 
+        currentSource=mPlaySrcList.get(0);
+
     }
 
     public String getProxyUrlByPlayer(String playerName){
@@ -276,44 +280,35 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     }
 
-    public List<String> getPlaySourceList(){
 
-        if (vod_play==null)
-        {
-            return null;
-        }
-
-        String[] playNameList=vod_play.split("\\$\\$\\$");
-
-        return Arrays.asList(playNameList);
-
-    }
-
-    public PlayUrlInfo getVideoUrlInfo(){
+    public PlayUrlInfo getVideoUrlInfo(String srcName,int index){
 
         if (mPlaySrcList==null || mPlayUrlMap==null){
-            updatePlayUrls();
+            parsePlayUrls();
         }
 
 
-        List<String> nameList= getPlaySourceList();
+        return mPlayUrlMap.get(srcName).get(index);
 
-        final String[] PLAYERS = {"qq","youku","iqiyi","ku6"};
 
-        PlayUrlInfo playUrlInfo= getPlayUrl(nameList.get(0),0);
-
-        for (String name:nameList) {
-
-            if ( Arrays.asList(PLAYERS).contains(name) ) {
-                // Do some stuff.
-                playUrlInfo=getPlayUrl(name,0);
-
-                break;
-            }
-
-        }
-
-        return playUrlInfo;
+//        List<String> nameList= getPlaySourceList();
+//
+//        final String[] PLAYERS = {"qq","youku","iqiyi","ku6"};
+//
+//        PlayUrlInfo playUrlInfo= getPlayUrl(nameList.get(0),0);
+//
+//        for (String name:nameList) {
+//
+//            if ( Arrays.asList(PLAYERS).contains(name) ) {
+//                // Do some stuff.
+//                playUrlInfo=getPlayUrl(name,0);
+//
+//                break;
+//            }
+//
+//        }
+//
+//        return playUrlInfo;
 
     }
 
