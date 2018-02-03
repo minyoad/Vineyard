@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.hitherejoe.vineyard"
-        minSdkVersion 17
+        minSdkVersion 22
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 3
@@ -84,6 +84,8 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    annotationProcessor 'com.jakewharton:butterknife:7.0.1'
+
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
@@ -115,7 +117,13 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
 
     // APT dependencies
-    apt daggerCompiler
-    testApt daggerCompiler
-    androidTestApt daggerCompiler
+
+    //    apt daggerCompiler
+    annotationProcessor daggerCompiler
+//    annotationProcessor butterKnife
+
+    //    testApt daggerCompiler
+
+    //    androidTestApt daggerCompiler
+    implementation project(':xwalk_core_library')
 }

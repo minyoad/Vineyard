@@ -35,6 +35,7 @@ import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Movie;
 //import com.hitherejoe.vineyard.ui.background.PicassoBackgroundManager;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
+import com.hitherejoe.vineyard.ui.activity.XwalkWebViewActivity;
 import com.hitherejoe.vineyard.ui.presenter.CardPresenter;
 import com.hitherejoe.vineyard.ui.presenter.CustomDetailsOverviewRowPresenter;
 import com.hitherejoe.vineyard.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter;
@@ -265,19 +266,15 @@ public class VideoDetailsFragment extends DetailsFragment {
         public void onActionClicked(Action action) {
             if (action.getId() == ACTION_PLAY_VIDEO) {
 
+//                String url=mSelectedMovie.getVideoUrl();
+//
+//                Intent intent1=new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
-//                final String PROXY="http://api.avtv.fun/vip/?url=";
-
-
-                String url=mSelectedMovie.getVideoUrl();
-
-                Intent intent1=new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-
-                startActivity(intent1);
-//                Intent intent = new Intent(getActivity(), PlaybackActivity.class);
-//                intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
-////                intent.putExtra(getResources().getString(R.string.should_start), true);
-//                startActivity(intent);
+//                startActivity(intent1);
+                Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
+                intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
+//                intent.putExtra(getResources().getString(R.string.should_start), true);
+                startActivity(intent);
             }
         }
     }
