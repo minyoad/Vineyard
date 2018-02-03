@@ -86,7 +86,6 @@ public class VideoDetailsFragment extends DetailsFragment {
     /* Relation */
     private Movie mSelectedMovie;
     private LinkedHashMap<String, List<Movie>> mVideoLists = null;
-//    private PicassoBackgroundManager mPicassoBackgroundManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,14 +98,12 @@ public class VideoDetailsFragment extends DetailsFragment {
         mFwdorPresenter = new CustomFullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter());
         mDorPresenter = new CustomDetailsOverviewRowPresenter(new DetailsDescriptionPresenter(), getActivity());
 
-//        mPicassoBackgroundManager = new PicassoBackgroundManager(getActivity());
         mSelectedMovie = getActivity().getIntent().getParcelableExtra(DetailsActivity.MOVIE);
 
         mDetailsRowBuilderTask = (DetailsRowBuilderTask) new DetailsRowBuilderTask().execute(mSelectedMovie);
 
         setOnItemViewClickedListener(new ItemViewClickedListener());
 
-//        mPicassoBackgroundManager.updateBackgroundWithDelay(mSelectedMovie.getCardImageUrl());
     }
 
     @Override

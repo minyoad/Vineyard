@@ -18,7 +18,6 @@ import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
 import com.hitherejoe.vineyard.data.model.Movie;
 
-//import com.corochann.androidtvapptutorial.model.Movie;
 
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
@@ -28,7 +27,7 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
 
         if (movie != null) {
             viewHolder.getTitle().setText(movie.getTitle());
-            viewHolder.getSubtitle().setText(movie.getStudio());
+            viewHolder.getSubtitle().setText(movie.vod_actor);
             viewHolder.getBody().setText(movie.getDescription());
         }
 
