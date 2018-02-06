@@ -51,7 +51,7 @@ public class VerticalGridFragment extends android.support.v17.leanback.app.Verti
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
 
-        mAdapter = new ArrayObjectAdapter(new CardPresenter(getContext()));
+        mAdapter = new ArrayObjectAdapter(new CardPresenter(getActivity()));
 
         /* Add movie items */
 //        try {

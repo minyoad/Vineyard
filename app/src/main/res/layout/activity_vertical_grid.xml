@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.hitherejoe.vineyard.ui.activity.VerticalGridActivity">
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="ccom.hitherejoe.vineyard.ui.fragment.VerticalGridFragment"
+        android:name="com.hitherejoe.vineyard.ui.fragment.VerticalGridFragment"
         android:id="@+id/vertical_grid_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,7 +1,5 @@
 package com.hitherejoe.vineyard.data;
 
-import android.os.AsyncTask;
-
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Authentication;
 import com.hitherejoe.vineyard.data.model.Category;
@@ -78,6 +76,12 @@ public class DataManager {
     }
 
     public void getCategoryList() {
+
+        if (mCategoryList!=null && mCategoryList.size()>0){
+            Timber.d("already get categorylist,exit");
+            return;
+        }
+
         try {
 
             Response<VineyardService.CategoryListResponse> categoryListResponse = mVineyardService.getCategoryList().execute();
@@ -90,7 +94,8 @@ public class DataManager {
 
 //            handleRecommendations(movieResponse.data);
         } catch (IOException e) {
-            Timber.e("There was an error retrieving the posts", e);
+//            Timber.e("There was an error retrieving the posts", e);
+            Timber.e("error when retrieving movies");
         }
 
 

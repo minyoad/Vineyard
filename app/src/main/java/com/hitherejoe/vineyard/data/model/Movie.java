@@ -273,7 +273,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
                 break;
 
             default:
-                proxyurl="http://api.avtv.fun/vip/?url=";
+                proxyurl="http://jx.vgoodapi.com/jx.php?url=";
                 break;
         }
         return  proxyurl;
