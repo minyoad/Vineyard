@@ -95,72 +95,72 @@ public class MainActivityTest {
         VineyardService.MovieResponse movieResponseScary = createMockPostResponse();
         doReturn(Observable.just(movieResponseScary))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Scary"), anyString(), anyString());
+                .getVideosByTag(eq("Scary"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseComedy = createMockPostResponse();
         doReturn(Observable.just(movieResponseComedy))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Comedy"), anyString(), anyString());
+                .getVideosByTag(eq("Comedy"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseAnimals = createMockPostResponse();
         doReturn(Observable.just(movieResponseAnimals))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Animals"), anyString(), anyString());
+                .getVideosByTag(eq("Animals"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseMusic = createMockPostResponse();
         doReturn(Observable.just(movieResponseMusic))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Music"), anyString(), anyString());
+                .getVideosByTag(eq("Music"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseArt = createMockPostResponse();
         doReturn(Observable.just(movieResponseArt))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Art"), anyString(), anyString());
+                .getVideosByTag(eq("Art"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseDance = createMockPostResponse();
         doReturn(Observable.just(movieResponseDance))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Dance"), anyString(), anyString());
+                .getVideosByTag(eq("Dance"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseSports = createMockPostResponse();
         doReturn(Observable.just(movieResponseSports))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Sports"), anyString(), anyString());
+                .getVideosByTag(eq("Sports"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseOmg = createMockPostResponse();
         doReturn(Observable.just(movieResponseOmg))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("OMG"), anyString(), anyString());
+                .getVideosByTag(eq("OMG"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseStyle = createMockPostResponse();
         doReturn(Observable.just(movieResponseStyle))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Style"), anyString(), anyString());
+                .getVideosByTag(eq("Style"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseFamily = createMockPostResponse();
         doReturn(Observable.just(movieResponseFamily))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Family"), anyString(), anyString());
+                .getVideosByTag(eq("Family"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseFood = createMockPostResponse();
         doReturn(Observable.just(movieResponseFood))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Food"), anyString(), anyString());
+                .getVideosByTag(eq("Food"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseDiy = createMockPostResponse();
         doReturn(Observable.just(movieResponseDiy))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("DIY"), anyString(), anyString());
+                .getVideosByTag(eq("DIY"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponsePlaces = createMockPostResponse();
         doReturn(Observable.just(movieResponsePlaces))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("Places"), anyString(), anyString());
+                .getVideosByTag(eq("Places"), anyString(), anyString());
 
         VineyardService.MovieResponse movieResponseNews = createMockPostResponse();
         doReturn(Observable.just(movieResponseNews))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("News"), anyString(), anyString());
+                .getVideosByTag(eq("News"), anyString(), anyString());
 
         main.launchActivity(null);
 
@@ -355,7 +355,7 @@ public class MainActivityTest {
         tagData.records = mockTagPosts;
         postTagResponse.data = tagData;
 
-        when(component.getMockDataManager().getPostsByTag(anyString(), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         List<Post> mockEditorsPosts = TestDataFactory.createMockListOfPosts(5);

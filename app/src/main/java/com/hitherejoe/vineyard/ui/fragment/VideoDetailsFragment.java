@@ -58,6 +58,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by corochann on 6/7/2015.
@@ -66,10 +67,12 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private static final String TAG = VideoDetailsFragment.class.getSimpleName();
 
+    @Inject DataManager mDataManager;
+
+
     private static final int ACTION_PLAY_VIDEO = 1;
     private static final int ACTION_SHOW_EPISODE = 2;
     private static final int ACTION_SHOW_RELATED = 3;
-
 
     private static final int FULL_WIDTH_DETAIL_THUMB_WIDTH = 220;
     private static final int FULL_WIDTH_DETAIL_THUMB_HEIGHT = 120;
@@ -80,7 +83,7 @@ public class VideoDetailsFragment extends DetailsFragment {
     public static final String CATEGORY_FULL_WIDTH_DETAILS_OVERVIEW_ROW_PRESENTER = "FullWidthDetailsOverviewRowPresenter";
     public static final String CATEGORY_DETAILS_OVERVIEW_ROW_PRESENTER = "DetailsOverviewRowPresenter";
 
-    @Inject DataManager mDataManager;
+
 
     /* Attribute */
     private ArrayObjectAdapter mAdapter;
@@ -113,7 +116,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mSelectedMovie = getActivity().getIntent().getParcelableExtra(DetailsActivity.MOVIE);
 
-        getRelatedVideos();
+//        getRelatedVideos();
 
         mDetailsRowBuilderTask = (DetailsRowBuilderTask) new DetailsRowBuilderTask().execute(mSelectedMovie);
 
@@ -184,6 +187,7 @@ public class VideoDetailsFragment extends DetailsFragment {
     protected void getRelatedVideos(){
 
         if (mDataManager==null){
+            Timber.e("mdatamanager null");
             return;
         }
 
@@ -251,6 +255,8 @@ public class VideoDetailsFragment extends DetailsFragment {
 
 
                 row.setImageBitmap(getActivity(), poster);
+
+                getRelatedVideos();
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

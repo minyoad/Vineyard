@@ -209,9 +209,9 @@ public class PostGridFragment extends VerticalGridFragment {
         Observable<VineyardService.MovieResponse> observable = null;
 
         if (mSelectedType.equals(TYPE_TAG)) {
-            observable = mDataManager.getPostsByTag(tag, nextPage, anchor);
+            observable = mDataManager.getVideosByTag(tag, nextPage, anchor);
         } else if (mSelectedType.equals(TYPE_USER)) {
-            observable = mDataManager.getPostsByUser(tag, nextPage, anchor);
+            observable = mDataManager.getVideosByActor(tag, nextPage, anchor);
         }
         if (observable != null) {
             mCompositeSubscription.add(observable

@@ -39,6 +39,7 @@ import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
+import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
@@ -80,7 +81,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     private Subscription mSearchResultsSubscription;
     private Subscription mTagSubscription;
     private Subscription mUserSubscription;
-    private TagAdapter mSearchResultsAdapter;
+    private MovieAdapter mSearchResultsAdapter;
 
     private String mSearchQuery;
     private String mTagSearchAnchor;
@@ -92,7 +93,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         super.onCreate(savedInstanceState);
         ((BaseActivity) getActivity()).getActivityComponent().inject(this);
         mResultsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
-        mSearchResultsAdapter = new TagAdapter(getActivity(), "");
+        mSearchResultsAdapter = new MovieAdapter(getActivity(),"");
         mHandler = new Handler();
         setSearchResultProvider(this);
         setupBackgroundManager();
@@ -264,15 +265,18 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         String tag = options.get(PaginationAdapter.KEY_TAG);
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
-        Observable<VineyardService.KeywordSearchResponse> observable =
-                mDataManager.search(
-                        tag, nextPage, mTagSearchAnchor, nextPage, mUserSearchAnchor);
+
+        Observable<VineyardService.MovieResponse> observable=mDataManager.search(nextPage,tag);
+
+//        Observable<VineyardService.KeywordSearchResponse> observable =
+//                mDataManager.search(
+//                        tag, nextPage, mTagSearchAnchor, nextPage, mUserSearchAnchor);
 
         mSearchResultsSubscription = observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<VineyardService.KeywordSearchResponse>() {
+                .subscribe(new Subscriber<VineyardService.MovieResponse>() {
                     @Override
                     public void onCompleted() {
                         adapter.removeLoadingIndicator();
@@ -291,17 +295,21 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                     }
 
                     @Override
-                    public void onNext(VineyardService.KeywordSearchResponse dualResponse) {
-                        if (dualResponse.list.isEmpty()) {
+                    public void onNext(VineyardService.MovieResponse movieResponse) {
+
+
+                        if (movieResponse.data.isEmpty()) {
                             mResultsAdapter.clear();
                             mResultsHeader = new HeaderItem(0, getString(R.string.text_no_results));
                             mResultsAdapter.add(new ListRow(mResultsHeader, adapter));
                             mTagSearchAnchor = "";
                             mUserSearchAnchor = "";
                         } else {
-                            adapter.addAllItems(dualResponse.list);
-                            mTagSearchAnchor = dualResponse.tagSearchAnchor;
-                            mUserSearchAnchor = dualResponse.userSearchAnchor;
+                            adapter.addAllItems(movieResponse.data);
+
+//                            adapter.addAllItems(dualResponse.list);
+//                            mTagSearchAnchor = dualResponse.tagSearchAnchor;
+//                            mUserSearchAnchor = dualResponse.userSearchAnchor;
                         }
                     }
                 });
@@ -316,7 +324,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         String anchor = options.get(PaginationAdapter.KEY_ANCHOR);
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
-        mTagSubscription = mDataManager.getPostsByTag(tag, nextPage, anchor)
+        mTagSubscription = mDataManager.getVideosByTag(tag, nextPage, anchor)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -363,7 +371,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         String anchor = options.get(PaginationAdapter.KEY_ANCHOR);
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
-        mUserSubscription = mDataManager.getPostsByUser(tag, nextPage, anchor)
+        mUserSubscription = mDataManager.getVideosByActor(tag, nextPage, anchor)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -446,12 +454,18 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof Movie) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
-                    Movie post = (Movie) item;
-                    int index = mResultsAdapter.indexOf(row);
-                    MovieAdapter arrayObjectAdapter =
-                            ((MovieAdapter) ((ListRow) mResultsAdapter.get(index)).getAdapter());
-                    ArrayList<Movie> postList = (ArrayList<Movie>) arrayObjectAdapter.getAllItems();
-                    startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
+                    Movie movie = (Movie) item;
+//                    int index = mResultsAdapter.indexOf(row);
+//                    MovieAdapter arrayObjectAdapter =
+//                            ((MovieAdapter) ((ListRow) mResultsAdapter.get(index)).getAdapter());
+//                    ArrayList<Movie> postList = (ArrayList<Movie>) arrayObjectAdapter.getAllItems();
+//                    startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
+
+
+                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra(DetailsActivity.MOVIE, movie);
+                    getActivity().startActivity(intent);
+
                 } else {
                     showNetworkUnavailableToast();
                 }

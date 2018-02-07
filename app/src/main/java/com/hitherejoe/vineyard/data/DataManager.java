@@ -7,7 +7,6 @@ import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,11 +17,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import retrofit.Call;
-import retrofit.Response;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import timber.log.Timber;
 
 @Singleton
 public class DataManager {
@@ -88,31 +85,6 @@ public class DataManager {
         return mVineyardService.getCategoryList();
     }
 
-//    public void downloadCategoryList() {
-//
-//        if (mCategoryList!=null && mCategoryList.size()>0){
-//            Timber.d("already get categorylist,exit");
-//            return;
-//        }
-//
-//        try {
-//
-//            Response<VineyardService.CategoryListResponse> categoryListResponse = mVineyardService.downloadCategoryList().execute();
-//
-//            VineyardService.CategoryListResponse categoryResponse = categoryListResponse.body();
-//
-//            mCategoryList = new ArrayList<>();
-//
-//            mCategoryList.addAll(categoryResponse.data);
-//
-////            handleRecommendations(movieResponse.data);
-//        } catch (IOException e) {
-////            Timber.e("There was an error retrieving the posts", e);
-//            Timber.e("error when retrieving movies");
-//        }
-//
-//
-//    }
 
     public Category getCategoryById(String list_id) {
         if (mCategoryList != null)
@@ -133,14 +105,15 @@ public class DataManager {
         return mVineyardService.getEditorsPicksPosts(page, anchor);
     }
 
-    public Observable<VineyardService.MovieResponse> getPostsByTag(String tag, String page, String anchor) {
+    public Observable<VineyardService.MovieResponse> getVideosByTag(String tag, String page, String anchor) {
         String wd = anchor != null ? "-cid-" + anchor : "";
         return mVineyardService.getPosts("plus-api-json-type-" + tag + "-p-" + page + wd);
 
     }
 
-    public Observable<VineyardService.MovieResponse> getPostsByUser(String userId, String page, String anchor) {
-        return mVineyardService.getUserTimeline(userId, page, anchor);
+    public Observable<VineyardService.MovieResponse> getVideosByActor(String actor, String page, String cid) {
+        return getMovies(page,"-wd-"+actor+"-cid-"+cid);
+//        return mVineyardService.getUserTimeline(actor, page, cid);
     }
 
     public Observable<VineyardService.TagResponse> searchByTag(String tag, String page, String anchor) {
@@ -150,6 +123,10 @@ public class DataManager {
 
     public Observable<VineyardService.UserResponse> searchByUser(String query, String page, String anchor) {
         return mVineyardService.searchByUser(query, page, anchor);
+    }
+
+    public Observable<VineyardService.MovieResponse> search(String page,String keyword){
+        return getMovies(page,"-wd-"+keyword);
     }
 
     public Observable<VineyardService.KeywordSearchResponse> search(

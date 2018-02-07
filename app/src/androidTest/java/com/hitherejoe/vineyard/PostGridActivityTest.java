@@ -82,7 +82,7 @@ public class PostGridActivityTest {
         tagData.records = tagList;
         postTagResponse.data = tagData;
 
-        when(component.getMockDataManager().getPostsByTag(anyString(), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         Context context = InstrumentationRegistry.getTargetContext();
@@ -108,7 +108,7 @@ public class PostGridActivityTest {
         data.nextPage = 2;
         data.anchorStr = "anchor_string";
 
-        when(component.getMockDataManager().getPostsByUser(anyString(), eq("1"), anyString()))
+        when(component.getMockDataManager().getVideosByActor(anyString(), eq("1"), anyString()))
                 .thenReturn(Observable.just(movieResponse));
 
         List<Post> postListTwo = TestDataFactory.createMockListOfPosts(10);
@@ -121,10 +121,10 @@ public class PostGridActivityTest {
         dataTwo.nextPage = 0;
         dataTwo.anchorStr = "anchor_string";
 
-        when(component.getMockDataManager().getPostsByUser(anyString(), eq("2"), anyString()))
+        when(component.getMockDataManager().getVideosByActor(anyString(), eq("2"), anyString()))
                 .thenReturn(Observable.just(movieResponseTwo));
 
-        when(component.getMockDataManager().getPostsByUser(anyString(), eq("0"), anyString()))
+        when(component.getMockDataManager().getVideosByActor(anyString(), eq("0"), anyString()))
                 .thenReturn(Observable.<VineyardService.MovieResponse>empty());
 
         Context context = InstrumentationRegistry.getTargetContext();
@@ -145,7 +145,7 @@ public class PostGridActivityTest {
     public void tryAgainCardIsDisplayed() {
         doReturn(Observable.just(new RuntimeException()))
                 .when(component.getMockDataManager())
-                .getPostsByTag(anyString(), anyString(), anyString());
+                .getVideosByTag(anyString(), anyString(), anyString());
 
         Context context = InstrumentationRegistry.getTargetContext();
         Tag mockTag = TestDataFactory.createMockTag("cat");
@@ -162,7 +162,7 @@ public class PostGridActivityTest {
     public void tryAgainCardFetchesContentWhenClicked() {
         doReturn(Observable.just(new RuntimeException()))
                 .when(component.getMockDataManager())
-                .getPostsByTag(anyString(), anyString(), anyString());
+                .getVideosByTag(anyString(), anyString(), anyString());
 
         Context context = InstrumentationRegistry.getTargetContext();
         Tag mockTag = TestDataFactory.createMockTag("cat");
@@ -180,7 +180,7 @@ public class PostGridActivityTest {
         VineyardService.MovieResponse.Data tagData = new VineyardService.MovieResponse.Data();
         tagData.records = tagList;
         postTagResponse.data = tagData;
-        when(component.getMockDataManager().getPostsByTag(eq("cat"), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(eq("cat"), anyString(), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         onView(withId(R.id.browse_grid))
@@ -202,7 +202,7 @@ public class PostGridActivityTest {
         postTagResponse.data = tagData;
         postTagResponse.data.nextPage = 2;
 
-        when(component.getMockDataManager().getPostsByTag(eq("cat"), eq("1"), anyString()))
+        when(component.getMockDataManager().getVideosByTag(eq("cat"), eq("1"), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         Context context = InstrumentationRegistry.getTargetContext();
@@ -215,7 +215,7 @@ public class PostGridActivityTest {
 
         doReturn(Observable.just(new RuntimeException()))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("cat"), eq("2"), anyString());
+                .getVideosByTag(eq("cat"), eq("2"), anyString());
 
         checkPostsDisplayOnRecyclerView(tagList, 0);
 
@@ -237,8 +237,8 @@ public class PostGridActivityTest {
         postTagResponse.data.nextPage = 0;
         doReturn(Observable.just(postTagResponse))
                 .when(component.getMockDataManager())
-                .getPostsByTag(eq("cat"), eq("2"), anyString());
-        when(component.getMockDataManager().getPostsByUser(anyString(), eq("0"), anyString()))
+                .getVideosByTag(eq("cat"), eq("2"), anyString());
+        when(component.getMockDataManager().getVideosByActor(anyString(), eq("0"), anyString()))
                 .thenReturn(Observable.<VineyardService.MovieResponse>empty());
 
         onView(withId(R.id.browse_grid))
@@ -256,7 +256,7 @@ public class PostGridActivityTest {
         tagData.records = tagList;
         postTagResponse.data = tagData;
 
-        when(component.getMockDataManager().getPostsByTag(anyString(), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         Context context = InstrumentationRegistry.getTargetContext();
@@ -280,7 +280,7 @@ public class PostGridActivityTest {
         tagData.records = emptyTagList;
         postTagResponse.data = tagData;
 
-        when(component.getMockDataManager().getPostsByTag(eq("cat"), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(eq("cat"), anyString(), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         Context context = InstrumentationRegistry.getTargetContext();
@@ -298,7 +298,7 @@ public class PostGridActivityTest {
         Collections.sort(tagList);
         tagData.records = tagList;
         postTagResponse.data = tagData;
-        when(component.getMockDataManager().getPostsByTag(eq("cat"), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(eq("cat"), anyString(), anyString()))
                 .thenReturn(Observable.just(postTagResponse));
 
         onView(withItemText("Check again?", R.id.browse_grid)).perform(click());
@@ -360,7 +360,7 @@ public class PostGridActivityTest {
         data.records = postList;
         movieResponse.data = data;
 
-        when(component.getMockDataManager().getPostsByUser(anyString(), eq("1"), anyString()))
+        when(component.getMockDataManager().getVideosByActor(anyString(), eq("1"), anyString()))
                 .thenReturn(Observable.just(movieResponse));
     }
 

@@ -17,8 +17,8 @@ public class DetailsActivity extends Activity {
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String PLAY_URL = "URL";
 
-    @Inject
-    DataManager mDataManager;
+//    @Inject
+//    DataManager mDataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -145,11 +145,11 @@ public class DataManagerTest {
 //        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
 //        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
 //        editorsPicksResponse.data.records = mockPostLists;
-//        when(mMockVineyardService.getPostsByTag(eq(tag), eq(page), eq(anchor)))
+//        when(mMockVineyardService.getVideosByTag(eq(tag), eq(page), eq(anchor)))
 //                .thenReturn(Observable.just(editorsPicksResponse));
 //
 //        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
-//        mDataManager.getPostsByTag(tag, page, anchor).subscribe(result);
+//        mDataManager.getVideosByTag(tag, page, anchor).subscribe(result);
 //        result.assertNoErrors();
 //        result.assertValue(editorsPicksResponse);
     }

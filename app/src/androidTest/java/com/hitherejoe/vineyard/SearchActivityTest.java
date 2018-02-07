@@ -203,10 +203,10 @@ public class SearchActivityTest {
 
         String tag = tags.get(0).tag;
         User user = users.get(0);
-        when(component.getMockDataManager().getPostsByUser(eq(user.userId), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByActor(eq(user.userId), anyString(), anyString()))
                 .thenReturn(Observable.just(movieResponseOne));
 
-        when(component.getMockDataManager().getPostsByTag(eq(tag), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(eq(tag), anyString(), anyString()))
                 .thenReturn(Observable.just(movieResponseTwo));
 
         onView(withId(R.id.lb_search_text_editor))
@@ -297,10 +297,10 @@ public class SearchActivityTest {
         data.records = mockPosts;
         movieResponse.data = data;
 
-        when(component.getMockDataManager().getPostsByUser(anyString(), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByActor(anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(movieResponse));
 
-        when(component.getMockDataManager().getPostsByTag(anyString(), anyString(), anyString()))
+        when(component.getMockDataManager().getVideosByTag(anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(movieResponse));
 
         VineyardService.KeywordSearchResponse keywordSearchResponse = new VineyardService.KeywordSearchResponse();

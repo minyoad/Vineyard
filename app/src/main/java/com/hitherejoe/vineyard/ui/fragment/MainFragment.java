@@ -289,7 +289,7 @@ public class MainFragment extends BrowseFragment {
 ////        } else if (tag.equals(mEditorsPicksText)) {
 ////            observable = mDataManager.getEditorsPicksPosts(nextPage, anchor);
 //        } else {
-//            observable = mDataManager.getPostsByTag(tag, nextPage, anchor);
+//            observable = mDataManager.getVideosByTag(tag, nextPage, anchor);
 //        }
 
         mCompositeSubscription.add(observable
