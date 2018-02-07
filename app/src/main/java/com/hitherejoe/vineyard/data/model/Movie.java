@@ -372,6 +372,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
         dest.writeString(this.cardImageUrl);
         dest.writeString(this.videoUrl);
         dest.writeString(this.category);
+        dest.writeString(this.currentSource);
     }
 
     protected Movie(Parcel in) {
@@ -412,6 +413,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
         this.cardImageUrl = in.readString();
         this.videoUrl = in.readString();
         this.category = in.readString();
+        this.currentSource = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

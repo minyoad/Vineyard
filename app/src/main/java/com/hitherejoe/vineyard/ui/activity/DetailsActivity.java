@@ -6,13 +6,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hitherejoe.vineyard.R;
+import com.hitherejoe.vineyard.data.DataManager;
+
+import javax.inject.Inject;
 
 
 public class DetailsActivity extends Activity {
 
     public static final String MOVIE = "Movie";
     public static final String SHARED_ELEMENT_NAME = "hero";
-    public static final String NOTIFICATION_ID = "ID";
+    public static final String PLAY_URL = "URL";
+
+    @Inject
+    DataManager mDataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

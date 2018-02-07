@@ -67,7 +67,7 @@ public interface VineyardService {
 
 
     @GET("index.php?s=plus-api-category")
-    Call<CategoryListResponse> getCategoryList();
+    Observable<CategoryListResponse> getCategoryList();
 
 
 

@@ -100,7 +100,7 @@ public class CardPresenter extends Presenter {
                 cardView.setTitleText(post.getTitle());
                 cardView.setContentText(post.vod_actor);
                 cardView.setMainContainerDimensions(CARD_WIDTH, CARD_HEIGHT);
-//                cardView.setVideoUrl(post.getVideoUrl());
+                cardView.setVideoUrl(post.getVideoUrl());
 
                 Glide.with(cardView.getContext())
                         .load(post.getCardImageUrl())

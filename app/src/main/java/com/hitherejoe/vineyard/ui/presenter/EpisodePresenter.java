@@ -24,7 +24,6 @@ public class EpisodePresenter extends Presenter {
 
         EpisodeCardView cardView = new EpisodeCardView(parent.getContext());
 
-
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
         updateCardBackgroundColor(cardView, false);

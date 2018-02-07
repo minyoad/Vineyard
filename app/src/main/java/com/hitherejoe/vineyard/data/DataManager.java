@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,6 +30,10 @@ public class DataManager {
     private final VineyardService mVineyardService;
     private final PreferencesHelper mPreferencesHelper;
 
+    public List<Category> getCategoryList() {
+        return mCategoryList;
+    }
+
     private List<Category> mCategoryList;
 
     @Inject
@@ -36,7 +41,8 @@ public class DataManager {
         mPreferencesHelper = preferencesHelper;
         mVineyardService = vineyardService;
 
-//        getCategoryList();
+        mCategoryList=new LinkedList<>();
+
     }
 
     public PreferencesHelper getPreferencesHelper() {
@@ -68,38 +74,45 @@ public class DataManager {
     public Observable<VineyardService.MovieResponse> getPopularPosts(String page, String anchor) {
         String wd = anchor != null ? "-cid-" + anchor : "";
         return mVineyardService.getPosts("plus-api-json-order-vod_hits-p-" + page + wd);
-//        return mVineyardService.getPopularPosts(page, anchor);
     }
 
     public Observable<VineyardService.MovieResponse> getMovies(String page, String anchor) {
         return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page);
     }
 
-    public void getCategoryList() {
-
-        if (mCategoryList!=null && mCategoryList.size()>0){
-            Timber.d("already get categorylist,exit");
-            return;
-        }
-
-        try {
-
-            Response<VineyardService.CategoryListResponse> categoryListResponse = mVineyardService.getCategoryList().execute();
-
-            VineyardService.CategoryListResponse categoryResponse = categoryListResponse.body();
-
-            mCategoryList = new ArrayList<>();
-
-            mCategoryList.addAll(categoryResponse.data);
-
-//            handleRecommendations(movieResponse.data);
-        } catch (IOException e) {
-//            Timber.e("There was an error retrieving the posts", e);
-            Timber.e("error when retrieving movies");
-        }
-
-
+    public Observable<VineyardService.MovieResponse>getRelatedMovies(String actor){
+        return getMovies("1","-wd-"+actor+"-limit-6");
     }
+
+    public Observable<VineyardService.CategoryListResponse> downloadCategoryList(){
+        return mVineyardService.getCategoryList();
+    }
+
+//    public void downloadCategoryList() {
+//
+//        if (mCategoryList!=null && mCategoryList.size()>0){
+//            Timber.d("already get categorylist,exit");
+//            return;
+//        }
+//
+//        try {
+//
+//            Response<VineyardService.CategoryListResponse> categoryListResponse = mVineyardService.downloadCategoryList().execute();
+//
+//            VineyardService.CategoryListResponse categoryResponse = categoryListResponse.body();
+//
+//            mCategoryList = new ArrayList<>();
+//
+//            mCategoryList.addAll(categoryResponse.data);
+//
+////            handleRecommendations(movieResponse.data);
+//        } catch (IOException e) {
+////            Timber.e("There was an error retrieving the posts", e);
+//            Timber.e("error when retrieving movies");
+//        }
+//
+//
+//    }
 
     public Category getCategoryById(String list_id) {
         if (mCategoryList != null)

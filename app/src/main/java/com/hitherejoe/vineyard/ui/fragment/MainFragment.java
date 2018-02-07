@@ -35,11 +35,11 @@ import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Option;
 import com.hitherejoe.vineyard.data.model.Movie;
+import com.hitherejoe.vineyard.data.remote.VineyardService;
 import com.hitherejoe.vineyard.data.remote.VineyardService.MovieResponse;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.activity.GuidedStepActivity;
-import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.adapter.OptionsAdapter;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
@@ -47,14 +47,10 @@ import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.ui.presenter.IconHeaderItemPresenter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +58,7 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -85,8 +82,8 @@ public class MainFragment extends BrowseFragment {
     private OptionsAdapter mOptionsAdapter;
     private Runnable mBackgroundRunnable;
 
-    private String mPopularText;
-    private String mEditorsPicksText;
+//    private String mPopularText;
+//    private String mEditorsPicksText;
     private boolean mIsStopping;
     private HashMap<String, String> mCategoryMap;
 
@@ -102,15 +99,12 @@ public class MainFragment extends BrowseFragment {
                 VineyardApplication.get(getActivity()).getComponent().preferencesHelper();
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         mHandler = new Handler();
-        mPopularText = getString(R.string.header_text_popular);
-        mEditorsPicksText = getString(R.string.header_text_editors_picks);
+
         mEventBus.register(this);
 
-        new DownloadCategoryTask().execute();
 
-//        mDataManager.getCategoryList();
-//
-//        loadPosts();
+        downloadCategorySubcription();
+
         setAdapter(mRowsAdapter);
         prepareBackgroundManager();
         setupUIElements();
@@ -318,7 +312,7 @@ public class MainFragment extends BrowseFragment {
                                     Toast.LENGTH_SHORT
                             ).show();
                         }
-                        Timber.e("There was an error loading the posts", e);
+                        Timber.e("There was an error loading the posts");
                     }
 
                     @Override
@@ -388,21 +382,41 @@ public class MainFragment extends BrowseFragment {
         }
     };
 
-    private class DownloadCategoryTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
+    public void downloadCategorySubcription(){
 
-            mDataManager.getCategoryList();
+        Observable<VineyardService.CategoryListResponse> observable=mDataManager.downloadCategoryList();
 
-            return "";
+        Subscription categorySubcription=observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<VineyardService.CategoryListResponse>() {
+                    @Override
+                    public void onCompleted() {
 
+                        loadPosts();
 
-        }
+                    }
 
-        @Override
-        protected void onPostExecute(String result) {
-            loadPosts();
-        }
-}
+                    @Override
+                    public void onError(Throwable e) {
+                        //TODO: Handle error
+//                        adapter.removeLoadingIndicator();
+                        Toast.makeText(
+                                getActivity(),
+                                getString(R.string.error_message_retrieving_results),
+                                Toast.LENGTH_SHORT
+                        ).show();
+//                        Timber.e("There was an error loading the videos", e);
+                    }
+
+                    @Override
+                    public void onNext(VineyardService.CategoryListResponse categoryListResponse) {
+
+                        mDataManager.getCategoryList().addAll(categoryListResponse.data);
+
+                    }
+                });
+    }
 
 }

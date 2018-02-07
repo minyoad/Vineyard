@@ -2,6 +2,7 @@ package com.hitherejoe.vineyard.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v17.leanback.app.VerticalGridFragment;
 
 import com.hitherejoe.vineyard.R;
 

@@ -21,7 +21,7 @@ import com.hitherejoe.vineyard.ui.presenter.EpisodePresenter;
 public class EpisodeGridFragment extends android.support.v17.leanback.app.VerticalGridFragment {
 
     private static final String TAG = EpisodeGridFragment.class.getSimpleName();
-    private static final int NUM_COLUMNS = 4;
+    private static final int NUM_COLUMNS = 10;
 
 //    private LinkedHashMap<String, List<Movie.PlayUrlInfo>> mVideoLists = null;
     private ArrayObjectAdapter mAdapter;
