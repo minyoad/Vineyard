@@ -3,7 +3,6 @@ package com.hitherejoe.vineyard.ui.adapter;
 import android.content.Context;
 
 import com.hitherejoe.vineyard.data.model.Movie;
-import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
 import com.hitherejoe.vineyard.ui.presenter.CardPresenter;
 
 import java.util.ArrayList;

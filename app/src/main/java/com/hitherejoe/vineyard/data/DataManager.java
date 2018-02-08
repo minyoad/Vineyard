@@ -77,6 +77,10 @@ public class DataManager {
         return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page);
     }
 
+    public Observable<VineyardService.MovieResponse> getMovies(String page, String anchor,int limit) {
+        return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page+"-limit-"+limit);
+    }
+
     public Observable<VineyardService.MovieResponse>getRelatedMovies(String actor){
         return getMovies("1","-wd-"+actor+"-limit-6");
     }
@@ -86,13 +90,14 @@ public class DataManager {
     }
 
 
-    public Category getCategoryById(String list_id) {
-        if (mCategoryList != null)
+    public Category getCategoryById(int list_id) {
+        if (mCategoryList != null) {
             for (Category category : mCategoryList) {
-                if (category.list_id.equals(list_id)) {
+                if (category.list_id.equals(String.valueOf(list_id))) {
                     return category;
                 }
             }
+        }
 
         return null;
     }
@@ -126,7 +131,7 @@ public class DataManager {
     }
 
     public Observable<VineyardService.MovieResponse> search(String page,String keyword){
-        return getMovies(page,"-wd-"+keyword);
+        return getMovies(page,"-wd-"+keyword,12);
     }
 
     public Observable<VineyardService.KeywordSearchResponse> search(

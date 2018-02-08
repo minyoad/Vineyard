@@ -23,17 +23,12 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
     private static final String TAG = EpisodeGridFragment.class.getSimpleName();
     private static final int NUM_COLUMNS = 10;
 
-//    private LinkedHashMap<String, List<Movie.PlayUrlInfo>> mVideoLists = null;
     private ArrayObjectAdapter mAdapter;
-
-//    private PicassoBackgroundManager picassoBackgroundManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
-//        picassoBackgroundManager = new PicassoBackgroundManager(getActivity());
 
         setTitle("VerticalGridFragment");
         //setBadgeDrawable(getResources().getDrawable(R.drawable.app_icon_your_company));

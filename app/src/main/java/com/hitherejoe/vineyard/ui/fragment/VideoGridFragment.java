@@ -49,7 +49,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class PostGridFragment extends VerticalGridFragment {
+public class VideoGridFragment extends VerticalGridFragment {
 
     public static final String ARG_ITEM = "arg_item";
     public static final String TYPE_USER = "user";
@@ -70,16 +70,16 @@ public class PostGridFragment extends VerticalGridFragment {
     private String mSelectedType;
     private boolean mIsStopping;
 
-    public static PostGridFragment newInstance(Object selectedItem) {
-        PostGridFragment postGridFragment = new PostGridFragment();
+    public static VideoGridFragment newInstance(Object selectedItem) {
+        VideoGridFragment videoGridFragment = new VideoGridFragment();
         Bundle args = new Bundle();
         if (selectedItem instanceof User) {
             args.putParcelable(ARG_ITEM, (User) selectedItem);
         } else if (selectedItem instanceof Tag) {
             args.putParcelable(ARG_ITEM, (Tag) selectedItem);
         }
-        postGridFragment.setArguments(args);
-        return postGridFragment;
+        videoGridFragment.setArguments(args);
+        return videoGridFragment;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class PostGridFragment extends VerticalGridFragment {
         Bundle args = getArguments();
         Object item = args.getParcelable(ARG_ITEM);
         if (item == null) {
-            throw new IllegalArgumentException("PostGridFragment requires an item arguement!");
+            throw new IllegalArgumentException("VideoGridFragment requires an item arguement!");
         }
         setupFragment();
         prepareBackgroundManager();
@@ -248,6 +248,7 @@ public class PostGridFragment extends VerticalGridFragment {
                                 }
                                 mPostAdapter.setNextPage(movieResponse.page.pageindex+1);
                                 mPostAdapter.addAllItems(movieResponse.data);
+
                             }
                         }
                     }));

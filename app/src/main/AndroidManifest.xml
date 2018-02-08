@@ -55,7 +55,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ui.activity.PostGridActivity"
+            android:name=".ui.activity.VideoGridActivity"
             android:label="@string/label_main"
             android:theme="@style/AppTheme.NoActionBar" />
 

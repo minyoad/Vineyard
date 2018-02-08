@@ -201,7 +201,7 @@ public class MainFragment extends BrowseFragment {
 
     private void loadPosts() {
 
-        Category category=mDataManager.getCategoryById("0");
+        Category category=mDataManager.getCategoryById(Category.INDEX);
 
         mCategoryMap = category.getExtendValues();
 
@@ -234,12 +234,6 @@ public class MainFragment extends BrowseFragment {
         MovieAdapter listRowAdapter = new MovieAdapter(getActivity(), String.valueOf(headerPosition));
 
         listRowAdapter.setAnchor(mCategoryMap.get(tag));
-
-//        String[] categorieIds = getResources().getStringArray(R.array.categoriesId);
-//
-//        if (categorieIds.length>headerPosition){
-//            listRowAdapter.setAnchor(categorieIds[headerPosition]);
-//        }
 
         addPostLoadSubscription(listRowAdapter);
         HeaderItem header = new HeaderItem(headerPosition, tag);
@@ -277,20 +271,7 @@ public class MainFragment extends BrowseFragment {
 
         Observable<MovieResponse> observable;
 
-        observable=mDataManager.getMovies(nextPage,anchor);
-
-//        if (Integer.parseInt(tag)<=5){
-//            observable = mDataManager.getPopularPosts(nextPage, anchor);
-//
-////        }
-//
-////        if (tag.equals(mPopularText)) {
-////            observable = mDataManager.getPopularPosts(nextPage, anchor);
-////        } else if (tag.equals(mEditorsPicksText)) {
-////            observable = mDataManager.getEditorsPicksPosts(nextPage, anchor);
-//        } else {
-//            observable = mDataManager.getVideosByTag(tag, nextPage, anchor);
-//        }
+        observable=mDataManager.getMovies(nextPage,anchor,6);
 
         mCompositeSubscription.add(observable
                 .observeOn(AndroidSchedulers.mainThread())
@@ -322,8 +303,11 @@ public class MainFragment extends BrowseFragment {
                             adapter.showReloadCard();
                         } else {
 //                            if (anchor == null) adapter.setAnchor(movieResponse.data.anchorStr);
-                            adapter.setNextPage(movieResponse.page.pageindex+1);
+//                            adapter.setNextPage(movieResponse.page.pageindex+1);
                             adapter.addAllItems(movieResponse.data);
+
+                            adapter.showLoadMoreCard();
+                            adapter.setNextPage(0);
                         }
                     }
                 }));

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.ui.activity.MainActivity;
-import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
+import com.hitherejoe.vineyard.ui.activity.VideoGridActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.widget.VideoCardView;
 
@@ -57,8 +57,8 @@ public class CardPresenter extends Presenter {
                 if (hasFocus) {
 //                    cardView.startVideo();
                 } else {
-                    if (mContext instanceof PostGridActivity) {
-                        if (((PostGridActivity) mContext).isFragmentActive()) {
+                    if (mContext instanceof VideoGridActivity) {
+                        if (((VideoGridActivity) mContext).isFragmentActive()) {
                             cardView.stopVideo();
                         }
                     } else if (mContext instanceof SearchActivity) {

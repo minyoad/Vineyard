@@ -15,6 +15,13 @@ import java.util.List;
 
 public class Category {
 
+    public static int MOVIE=1;
+    public static int SERIES=2;
+    public static int ANIME=3;
+    public static int VARIETY=4;
+    public static int INDEX=10;
+
+
     public static class CategoryExtent{
         public String cate;
         public String type;

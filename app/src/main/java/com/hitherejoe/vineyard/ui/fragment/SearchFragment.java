@@ -40,16 +40,15 @@ import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
-import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
-import com.hitherejoe.vineyard.ui.activity.PostGridActivity;
+import com.hitherejoe.vineyard.ui.activity.VideoGridActivity;
+import com.hitherejoe.vineyard.ui.adapter.CustomListRow;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
 import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
-import com.hitherejoe.vineyard.ui.adapter.TagAdapter;
+import com.hitherejoe.vineyard.ui.presenter.CustomListRowPresenter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -92,7 +91,7 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((BaseActivity) getActivity()).getActivityComponent().inject(this);
-        mResultsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+        mResultsAdapter = new ArrayObjectAdapter(new CustomListRowPresenter());
         mSearchResultsAdapter = new MovieAdapter(getActivity(),"");
         mHandler = new Handler();
         setSearchResultProvider(this);
@@ -247,7 +246,9 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
         mSearchResultsAdapter.setTag(tag);
         mResultsAdapter.clear();
         mResultsHeader = new HeaderItem(0, getString(R.string.text_search_results));
-        ListRow listRow = new ListRow(mResultsHeader, mSearchResultsAdapter);
+        CustomListRow listRow = new CustomListRow(mResultsHeader, mSearchResultsAdapter);
+        listRow.setNumRows(2);
+
         Timber.e(listRow.getId() + "");
         mResultsAdapter.add(listRow);
         performSearch(mSearchResultsAdapter);
@@ -472,14 +473,14 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
             } else if (item instanceof Tag) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
                     Tag tag = (Tag) item;
-                    startActivity(PostGridActivity.getStartIntent(getActivity(), tag));
+                    startActivity(VideoGridActivity.getStartIntent(getActivity(), tag));
                 } else {
                     showNetworkUnavailableToast();
                 }
             } else if (item instanceof User) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
                     User user = (User) item;
-                    startActivity(PostGridActivity.getStartIntent(getActivity(), user));
+                    startActivity(VideoGridActivity.getStartIntent(getActivity(), user));
                 } else {
                     showNetworkUnavailableToast();
                 }

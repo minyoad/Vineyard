@@ -123,6 +123,14 @@ public abstract class PaginationAdapter extends ArrayObjectAdapter {
         add(option);
     }
 
+    public void showLoadMoreCard(){
+        Option option = new Option(
+                "",
+                mContext.getString(R.string.message_load_more),
+                R.drawable.ic_family);
+        add(option);
+    }
+
     public void showTryAgainCard() {
         Option option = new Option(
                 mContext.getString(R.string.title_oops),

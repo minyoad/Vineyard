@@ -5,20 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v17.leanback.app.ErrorFragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
-import com.hitherejoe.vineyard.ui.fragment.PostGridFragment;
+import com.hitherejoe.vineyard.ui.fragment.VideoGridFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
-public class PostGridActivity extends BaseActivity {
+public class VideoGridActivity extends BaseActivity {
 
     @Bind(R.id.frame_container_post_grid)
     FrameLayout mFragmentContainer;
@@ -27,7 +25,7 @@ public class PostGridActivity extends BaseActivity {
     private Fragment mPostGridFragment;
 
     public static Intent getStartIntent(Context context, Object selectedItem) {
-        Intent intent = new Intent(context, PostGridActivity.class);
+        Intent intent = new Intent(context, VideoGridActivity.class);
         if (selectedItem instanceof User) {
             intent.putExtra(EXTRA_ITEM, (User) selectedItem);
         } else if (selectedItem instanceof Tag) {
@@ -52,7 +50,7 @@ public class PostGridActivity extends BaseActivity {
                 (!(object instanceof User) && !(object instanceof Tag))) {
             mPostGridFragment = buildErrorFragment();
         } else {
-            mPostGridFragment = PostGridFragment.newInstance(object);
+            mPostGridFragment = VideoGridFragment.newInstance(object);
         }
         getFragmentManager().beginTransaction()
                 .add(mFragmentContainer.getId(), mPostGridFragment).commit();
@@ -65,11 +63,11 @@ public class PostGridActivity extends BaseActivity {
     }
 
     public boolean isFragmentActive() {
-        return mPostGridFragment instanceof PostGridFragment &&
+        return mPostGridFragment instanceof VideoGridFragment &&
                 mPostGridFragment.isAdded() &&
                 !mPostGridFragment.isDetached() &&
                 !mPostGridFragment.isRemoving() &&
-                !((PostGridFragment) mPostGridFragment).isStopping();
+                !((VideoGridFragment) mPostGridFragment).isStopping();
     }
 
     private ErrorFragment buildErrorFragment() {
