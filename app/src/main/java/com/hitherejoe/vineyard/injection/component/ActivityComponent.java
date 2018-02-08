@@ -3,11 +3,14 @@ package com.hitherejoe.vineyard.injection.component;
 import com.hitherejoe.vineyard.injection.PerActivity;
 import com.hitherejoe.vineyard.injection.module.ActivityModule;
 import com.hitherejoe.vineyard.ui.activity.ConnectActivity;
+import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.activity.GuidedStepActivity;
 import com.hitherejoe.vineyard.ui.activity.MainActivity;
+import com.hitherejoe.vineyard.ui.activity.PageActivity;
 import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.fragment.AutoLoopStepFragment;
 import com.hitherejoe.vineyard.ui.fragment.MainFragment;
+import com.hitherejoe.vineyard.ui.fragment.PageFragment;
 import com.hitherejoe.vineyard.ui.fragment.PlaybackOverlayFragment;
 import com.hitherejoe.vineyard.ui.fragment.VideoGridFragment;
 import com.hitherejoe.vineyard.ui.fragment.SearchFragment;
@@ -40,8 +43,14 @@ public interface ActivityComponent {
 
     void inject(PlaybackOverlayFragment playbackOverlayFragment);
 
-//    void inject(DetailsActivity detailsActivity);
+    void inject(DetailsActivity detailsActivity);
 
     void inject(VideoDetailsFragment videoDetailsFragment);
+
+    void inject(PageActivity pageActivity);
+
+    void inject(PageFragment pageFragment);
+
+    void inject(PageFragment.SampleFragmentA sampleFragmentA);
 
 }

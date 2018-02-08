@@ -30,6 +30,7 @@ import com.bumptech.glide.request.target.Target;
 import com.hitherejoe.vineyard.R;
 //import com.hitherejoe.vineyard.common.Utils;
 //import com.hitherejoe.vineyard.data.VideoProvider;
+import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.model.Movie;
 //import com.hitherejoe.vineyard.ui.background.PicassoBackgroundManager;
@@ -110,6 +111,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
 //        mDefaultCardImage = ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.ic_card_default);
 
+        mDataManager = VineyardApplication.get(getActivity()).getComponent().dataManager();
 
         mFwdorPresenter = new CustomFullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter());
         mDorPresenter = new CustomDetailsOverviewRowPresenter(new DetailsDescriptionPresenter(), getActivity());
@@ -141,6 +143,9 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mAdapter = new ArrayObjectAdapter(mClassPresenterSelector);
         setAdapter(mAdapter);
+
+        mVideoLists=new LinkedList<>();
+
     }
 
     @Override
@@ -220,7 +225,6 @@ public class VideoDetailsFragment extends DetailsFragment {
 
                     @Override
                     public void onNext(VineyardService.MovieResponse movieResponse) {
-                        mVideoLists=new LinkedList<>();
                         mVideoLists.addAll(movieResponse.data);
                     }
                 });

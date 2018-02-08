@@ -61,49 +61,19 @@ public class Category {
 
 
     }
+    public static int idFromAchor(String achor){
+        String[] params=achor.split("-");
 
-//    public List<MenuItemInfo> getMenuItemList(){
-//
-//        JSONObject jsonObject= JSON.parseObject(list_extend);
-//
-//        String value=jsonObject.getString("cate");
-//        Log.d(TAG,"catestring="+value);
-//
-//        List<MenuItemInfo> menuItemInfos=new CopyOnWriteArrayList<>();
-//
-//        if (value!=null) {
-//
-//            String[] infos = value.split("\r\n");
-//
-//            for (String info : infos) {
-//
-//                String[] items = info.split("=");
-//
-//                MenuItemInfo menuItemInfo = new MenuItemInfo();
-//                menuItemInfo.setTitle(items[0]);
-//                menuItemInfo.setUrl(items[1]);
-//
-//
-//                menuItemInfos.add(menuItemInfo);
-//            }
-//        }
-//        else{
-//
-//            List<String> types=getExtendValues("type");
-//
-//            for (String type: types){
-//
-//                MenuItemInfo menuItemInfo = new MenuItemInfo();
-//                menuItemInfo.setTitle(type);
-//                menuItemInfo.setUrl("-cid-"+list_id+"-type-"+type);
-//
-//                menuItemInfos.add(menuItemInfo);
-//            }
-//
-//        }
-//
-//        return menuItemInfos;
-//
-//    }
+        int cid=Category.MOVIE;
+        for (int i = 0; i < params.length-1; i++) {
+            if (params[i].equals("cid")){
+                cid=Integer.valueOf(params[i+1]);
+                break;
+            }
+        }
+        return cid;
+
+    }
+
 
 }

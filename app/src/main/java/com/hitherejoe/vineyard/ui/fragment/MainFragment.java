@@ -40,6 +40,7 @@ import com.hitherejoe.vineyard.data.remote.VineyardService.MovieResponse;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.activity.GuidedStepActivity;
+import com.hitherejoe.vineyard.ui.activity.PageActivity;
 import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.adapter.OptionsAdapter;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
@@ -344,6 +345,22 @@ public class MainFragment extends BrowseFragment {
                     addPostLoadSubscription(adapter);
                 } else {
                     startActivity(GuidedStepActivity.getStartIntent(getActivity()));
+
+                    Intent intent=new Intent(getActivity().getBaseContext(), PageActivity.class);
+
+                    int index = mRowsAdapter.indexOf(row);
+
+                    String header=((ListRow) mRowsAdapter.get(index)).getHeaderItem().getName();
+                    String achor=mCategoryMap.get(header);
+
+                    int cid=Category.idFromAchor(achor);
+
+                    intent.putExtra(PageActivity.ACHOR,mCategoryMap.get(header));
+                    intent.putExtra(PageActivity.CURRENT,header);
+                    intent.putExtra(PageActivity.CID,cid);
+
+                    startActivity(intent);
+
                 }
             }
         }
