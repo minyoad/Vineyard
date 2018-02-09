@@ -285,8 +285,9 @@ public class PageFragment extends BrowseFragment {
         }
 
         private void loadData() {
-            
-//            mDataManager = VineyardApplication.get(getActivity().getBaseContext()).getComponent().dataManager();
+
+           Context context= getMainFragmentAdapter().getFragment().getActivity();
+            mDataManager = VineyardApplication.get(context).getComponent().dataManager();
 
             Map<String, String> options = mAdapter.getAdapterOptions();
             String tag = options.get(PaginationAdapter.KEY_TAG);

@@ -3,6 +3,7 @@ package com.hitherejoe.vineyard.data;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Authentication;
 import com.hitherejoe.vineyard.data.model.Category;
+import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
@@ -81,8 +82,8 @@ public class DataManager {
         return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page+"-limit-"+limit);
     }
 
-    public Observable<VineyardService.MovieResponse>getRelatedMovies(String actor){
-        return getMovies("1","-wd-"+actor+"-limit-6");
+    public Observable<VineyardService.MovieResponse>getRelatedMovies(Movie movie){
+        return getMovies("1","-star-"+movie.vod_actor+"-limit-6");
     }
 
     public Observable<VineyardService.CategoryListResponse> downloadCategoryList(){

@@ -280,6 +280,12 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     }
 
+    public String getRelatedWord(){
+        String word=getTitle();
+
+        return word;
+    }
+
 
     public PlayUrlInfo getVideoUrlInfo(String srcName,int index){
 

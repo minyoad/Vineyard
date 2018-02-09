@@ -304,11 +304,11 @@ public class MainFragment extends BrowseFragment {
                             adapter.showReloadCard();
                         } else {
 //                            if (anchor == null) adapter.setAnchor(movieResponse.data.anchorStr);
-//                            adapter.setNextPage(movieResponse.page.pageindex+1);
+                            adapter.setNextPage(movieResponse.page.pageindex+1);
                             adapter.addAllItems(movieResponse.data);
 
-                            adapter.showLoadMoreCard();
-                            adapter.setNextPage(0);
+//                            adapter.showLoadMoreCard();
+//                            adapter.setNextPage(0);
                         }
                     }
                 }));
@@ -321,11 +321,6 @@ public class MainFragment extends BrowseFragment {
             if (item instanceof Movie) {
                 if (NetworkUtil.isNetworkConnected(getActivity())) {
                     Movie movie = (Movie) item;
-//                    int index = mRowsAdapter.indexOf(row);
-//                    MovieAdapter adapter =
-//                            ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
-//                    ArrayList<Movie> postList = (ArrayList<Movie>) adapter.getAllItems();
-//                    startActivity(PlaybackActivity.newStartIntent(getActivity(), post, postList));
 
                     Intent intent = new Intent(getActivity(), DetailsActivity.class);
                     intent.putExtra(DetailsActivity.MOVIE, movie);

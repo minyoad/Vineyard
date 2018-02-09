@@ -169,11 +169,12 @@ public class VideoDetailsFragment extends DetailsFragment {
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra(DetailsActivity.MOVIE, movie);
 
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
+//                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        getActivity(),
+//                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
+//                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
+                getActivity().startActivity(intent);
+
             }
             else if(item instanceof Movie.PlayUrlInfo){
                 Movie.PlayUrlInfo playUrlInfo=(Movie.PlayUrlInfo)item;
@@ -196,7 +197,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             return;
         }
 
-        Observable<VineyardService.MovieResponse> observable=mDataManager.getRelatedMovies(mSelectedMovie.vod_actor);
+        Observable<VineyardService.MovieResponse> observable=mDataManager.getRelatedMovies(mSelectedMovie);
 
         //TODO: Handle error
 //                        adapter.removeLoadingIndicator();
@@ -226,6 +227,31 @@ public class VideoDetailsFragment extends DetailsFragment {
                     @Override
                     public void onNext(VineyardService.MovieResponse movieResponse) {
                         mVideoLists.addAll(movieResponse.data);
+
+
+                        if (mVideoLists == null ||mVideoLists.isEmpty()) {
+                            // Error occured while fetching videos
+                            Log.i(TAG, "mVideoLists is null, skip creating mRelatedVideoRow");
+                        } else {
+                            CardPresenter cardPresenter = new CardPresenter(getActivity());
+
+                            ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
+
+                            for (int j = 0; j < mVideoLists.size(); j++) {
+                                cardRowAdapter.add(mVideoLists.get(j));
+                            }
+                            //HeaderItem header = new HeaderItem(index, entry.getKey());
+                            HeaderItem header = new HeaderItem(0, "Related Videos");
+                            mRelatedVideoRow = new ListRow(header, cardRowAdapter);
+
+
+                                  /* 3nd row */
+                            if(mRelatedVideoRow != null){
+                                mAdapter.add(mRelatedVideoRow);
+                            }
+//                }
+                        }
+
                     }
                 });
     }
@@ -281,7 +307,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             SparseArrayObjectAdapter sparseArrayObjectAdapter = new SparseArrayObjectAdapter();
             sparseArrayObjectAdapter.set(ACTION_PLAY_VIDEO, new Action(ACTION_PLAY_VIDEO, "播放"));
             sparseArrayObjectAdapter.set(ACTION_SHOW_EPISODE, new Action(ACTION_SHOW_EPISODE, "选择分集", ""));
-            sparseArrayObjectAdapter.set(ACTION_SHOW_RELATED, new Action(ACTION_SHOW_RELATED, "相关剧集", ""));
+            sparseArrayObjectAdapter.set(ACTION_SHOW_RELATED, new Action(ACTION_SHOW_RELATED, "相关视频", ""));
 
             row.setActionsAdapter(sparseArrayObjectAdapter);
 
@@ -290,22 +316,6 @@ public class VideoDetailsFragment extends DetailsFragment {
 
             /* 2nd row: ListRow CardPresenter */
 
-            if (mVideoLists == null) {
-                // Error occured while fetching videos
-                Log.i(TAG, "mVideoLists is null, skip creating mRelatedVideoRow");
-            } else {
-                CardPresenter cardPresenter = new CardPresenter(getContext());
-
-                    ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(cardPresenter);
-
-                    for (int j = 0; j < mVideoLists.size(); j++) {
-                        cardRowAdapter.add(mVideoLists.get(j));
-                    }
-                    //HeaderItem header = new HeaderItem(index, entry.getKey());
-                    HeaderItem header = new HeaderItem(0, "Related Videos");
-                    mRelatedVideoRow = new ListRow(header, cardRowAdapter);
-//                }
-            }
 
 
             /* 1st row */
@@ -334,10 +344,6 @@ public class VideoDetailsFragment extends DetailsFragment {
 
             mAdapter.add(episodeRow);
 
-            /* 3nd row */
-            if(mRelatedVideoRow != null){
-                mAdapter.add(mRelatedVideoRow);
-            }
 
             /* 3rd row */
             //adapter.add(new ListRow(headerItem, listRowAdapter));
