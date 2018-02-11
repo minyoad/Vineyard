@@ -302,6 +302,7 @@ public class MainFragment extends BrowseFragment {
 
                     @Override
                     public void onNext(MovieResponse movieResponse) {
+
                         adapter.removeLoadingIndicator();
                         if (adapter.size() == 0 && (movieResponse.data==null || movieResponse.data.isEmpty())) {
                             adapter.showReloadCard();

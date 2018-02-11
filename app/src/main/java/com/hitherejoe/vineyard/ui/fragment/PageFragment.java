@@ -28,6 +28,7 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
+import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.PageRow;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.PresenterSelector;
@@ -50,11 +51,14 @@ import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
 import com.hitherejoe.vineyard.ui.activity.BaseActivity;
+import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.activity.PageActivity;
+import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
 import com.hitherejoe.vineyard.ui.presenter.CardPresenter;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,6 +69,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Sample {@link BrowseFragment} implementation showcasing the use of {@link PageRow} and
@@ -87,12 +92,22 @@ public class PageFragment extends BrowseFragment {
 
     private ArrayObjectAdapter mRowsAdapter;
     private HashMap<String, String> mCategoryMap;
+    private int mCid;
+    private Category mCategory;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mDataManager = VineyardApplication.get(getActivity()).getComponent().dataManager();
+
+        Intent intent=getActivity().getIntent();
+
+        mCid = intent.getIntExtra(PageActivity.CID, Category.MOVIE);
+
+        mCategory = mDataManager.getCategoryById(mCid);
+
 
         setupUi();
         loadData();
@@ -103,6 +118,8 @@ public class PageFragment extends BrowseFragment {
     }
 
     private void setupUi() {
+        setTitle(mCategory.list_name);
+
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 //        setBrandColor(getResources().getColor(R.color.fastlane_background));
@@ -111,6 +128,9 @@ public class PageFragment extends BrowseFragment {
 
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra("cid",mCid);
+                startActivity(intent);
 //                Toast.makeText(
 //                        getActivity(), getString(R.string.implement_search), Toast.LENGTH_SHORT)
 //                        .show();
@@ -134,27 +154,24 @@ public class PageFragment extends BrowseFragment {
     }
 
     private void createRows() {
-        Intent intent=getActivity().getIntent();
 
-        int cid=intent.getIntExtra(PageActivity.CID, Category.MOVIE);
 
-        Category category=mDataManager.getCategoryById(cid);
-
-        setTitle(category.list_name);
-
-        mCategoryMap=category.getExtendValues();
+        mCategoryMap=mCategory.getExtendValues();
 
         for (Map.Entry<String, String> entry: mCategoryMap.entrySet()){
 
             HeaderItem headerItem1 = new HeaderItem(HEADER_ID_1, entry.getKey());
             CustomPageRow pageRow1 = new CustomPageRow(headerItem1);
 
-            pageRow1.options.put("cid",String.valueOf(cid));
+            pageRow1.options.put("cid",String.valueOf(mCid));
             pageRow1.options.put("achor",entry.getValue());
 
             mRowsAdapter.add(pageRow1);
 
         }
+
+        //current
+
 
 
 //        HeaderItem headerItem1 = new HeaderItem(HEADER_ID_1, HEADER_NAME_1);
@@ -214,9 +231,6 @@ public class PageFragment extends BrowseFragment {
 
                 }
 
-//                SampleFragmentA sampleFragmentA= new SampleFragmentA();
-//                sampleFragmentA.setHeader(row.getHeaderItem().getName());
-
                 return sampleFragmentA;
             }
             else if (row.getHeaderItem().getId() == HEADER_ID_4) {
@@ -262,11 +276,6 @@ public class PageFragment extends BrowseFragment {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-//            ((BaseActivity) getActivity()).getActivityComponent().inject(this);
-
-
-//            setupAdapter(savedInstanceState);
-//            loadData();
         }
 
 
@@ -297,10 +306,41 @@ public class PageFragment extends BrowseFragment {
                         Object item,
                         RowPresenter.ViewHolder rowViewHolder,
                         Row row) {
+
+                    Movie movie = (Movie) item;
+
+                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra(DetailsActivity.MOVIE, movie);
+                    getActivity().startActivity(intent);
+
 //                    Card card = (Card)item;
 //                    Toast.makeText(getActivity(),
 //                            "Clicked on "+card.getTitle(),
 //                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            setOnItemViewSelectedListener(new OnItemViewSelectedListener() {
+                @Override
+                public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item, RowPresenter.ViewHolder rowViewHolder, Row row) {
+                    if (item instanceof Movie) {
+                        String backgroundUrl = ((Movie) item).getBackgroundImageUrl();
+//                        if (backgroundUrl != null) startBackgroundTimer(URI.create(backgroundUrl));
+
+
+                        int index = mAdapter.indexOf(item);
+
+                        Timber.d("index of item:"+index);
+
+                        if (mAdapter.size()-index<=COLUMNS && mAdapter.size()>COLUMNS){
+//                            mAdapter.showLoadingIndicator();
+
+//                            if(mAdapter.shouldLoadNextPage()){
+                                loadData();
+//                            }
+                        }
+
+                    }
                 }
             });
 
@@ -309,8 +349,7 @@ public class PageFragment extends BrowseFragment {
 
         private void loadData() {
 
-//           Context context= getMainFragmentAdapter().getFragment().getActivity();
-//            mDataManager = VineyardApplication.get(context).getComponent().dataManager();
+            Timber.d("loading data");
 
             Map<String, String> options = mAdapter.getAdapterOptions();
             String tag = options.get(PaginationAdapter.KEY_TAG);
@@ -331,7 +370,7 @@ public class PageFragment extends BrowseFragment {
                         @Override
                         public void onError(Throwable e) {
                             //TODO: Handle error
-//                        adapter.removeLoadingIndicator();
+//                            mAdapter.removeLoadingIndicator();
                             Toast.makeText(
                                     getActivity(),
                                     getString(R.string.error_message_retrieving_results),
@@ -343,9 +382,15 @@ public class PageFragment extends BrowseFragment {
                         @Override
                         public void onNext(VineyardService.MovieResponse movieResponse) {
 
-                            mAdapter.setNextPage(movieResponse.page.pageindex+1);
+//                            mAdapter.removeLoadingIndicator();
+//                            if (mAdapter.size() == 0 && (movieResponse.data==null || movieResponse.data.isEmpty())) {
+//                                mAdapter.showReloadCard();
+//                            }
+//                            else {
+                                mAdapter.setNextPage(movieResponse.page.pageindex + 1);
 
-                            mAdapter.addAllItems(movieResponse.data);
+                                mAdapter.addAllItems(movieResponse.data);
+//                            }
 
 
                         }
