@@ -103,7 +103,6 @@ public class MainFragment extends BrowseFragment {
 
         mEventBus.register(this);
 
-
         downloadCategorySubcription();
 
         setAdapter(mRowsAdapter);
@@ -243,7 +242,11 @@ public class MainFragment extends BrowseFragment {
 
     private void prepareBackgroundManager() {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
-        mBackgroundManager.attach(getActivity().getWindow());
+        try {
+            mBackgroundManager.attach(getActivity().getWindow());
+        }catch (Exception e){
+
+        }
         mDefaultBackground =
                 new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.bg_grey));
         mBackgroundManager.setColor(ContextCompat.getColor(getActivity(), R.color.bg_grey));
@@ -272,7 +275,7 @@ public class MainFragment extends BrowseFragment {
 
         Observable<MovieResponse> observable;
 
-        observable=mDataManager.getMovies(nextPage,anchor,6);
+        observable=mDataManager.getMovies(nextPage,anchor,10);
 
         mCompositeSubscription.add(observable
                 .observeOn(AndroidSchedulers.mainThread())
@@ -304,11 +307,11 @@ public class MainFragment extends BrowseFragment {
                             adapter.showReloadCard();
                         } else {
 //                            if (anchor == null) adapter.setAnchor(movieResponse.data.anchorStr);
-                            adapter.setNextPage(movieResponse.page.pageindex+1);
+//                            adapter.setNextPage(movieResponse.page.pageindex+1);
                             adapter.addAllItems(movieResponse.data);
 
-//                            adapter.showLoadMoreCard();
-//                            adapter.setNextPage(0);
+                            adapter.showLoadMoreCard();
+                            adapter.setNextPage(0);
                         }
                     }
                 }));

@@ -49,6 +49,7 @@ import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
+import com.hitherejoe.vineyard.ui.activity.BaseActivity;
 import com.hitherejoe.vineyard.ui.activity.PageActivity;
 import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
@@ -98,7 +99,7 @@ public class PageFragment extends BrowseFragment {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
         mBackgroundManager.attach(getActivity().getWindow());
         getMainFragmentRegistry().registerFragment(CustomPageRow.class,
-                new PageRowFragmentFactory(mBackgroundManager));
+                new PageRowFragmentFactory(mBackgroundManager,mDataManager));
     }
 
     private void setupUi() {
@@ -138,6 +139,7 @@ public class PageFragment extends BrowseFragment {
         int cid=intent.getIntExtra(PageActivity.CID, Category.MOVIE);
 
         Category category=mDataManager.getCategoryById(cid);
+
         setTitle(category.list_name);
 
         mCategoryMap=category.getExtendValues();
@@ -184,8 +186,10 @@ public class PageFragment extends BrowseFragment {
     private static class PageRowFragmentFactory extends BrowseFragment.FragmentFactory {
         private final BackgroundManager mBackgroundManager;
 
-        PageRowFragmentFactory(BackgroundManager backgroundManager) {
+        private DataManager mDataManager;
+        PageRowFragmentFactory(BackgroundManager backgroundManager,DataManager dataManager) {
             this.mBackgroundManager = backgroundManager;
+            this.mDataManager=dataManager;
         }
 
         @Override
@@ -206,6 +210,7 @@ public class PageFragment extends BrowseFragment {
 
                     sampleFragmentA= new SampleFragmentA();
                     sampleFragmentA.setArguments(bundle);
+                    sampleFragmentA.setDataManager(mDataManager);
 
                 }
 
@@ -233,19 +238,35 @@ public class PageFragment extends BrowseFragment {
      * Simple page fragment implementation.
      */
     public static class SampleFragmentA extends GridFragment {
-        private static final int COLUMNS = 4;
+        private static final int COLUMNS = 6;
         private final int ZOOM_FACTOR = FocusHighlight.ZOOM_FACTOR_SMALL;
         private MovieAdapter mAdapter;
 
-        @Inject DataManager mDataManager;
+        public void setDataManager(DataManager dataManager) {
+            mDataManager = dataManager;
+
+            if (mDataManager!=null){
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadData();
+                    }
+                }, 500);
+            }
+        }
+
+        private DataManager mDataManager;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
+//            ((BaseActivity) getActivity()).getActivityComponent().inject(this);
+
+
 //            setupAdapter(savedInstanceState);
 //            loadData();
-            getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());
         }
 
 
@@ -254,7 +275,7 @@ public class PageFragment extends BrowseFragment {
             super.setArguments(args);
 
             setupAdapter(args);
-            loadData();
+//            loadData();
 
         }
 
@@ -282,12 +303,14 @@ public class PageFragment extends BrowseFragment {
 //                            Toast.LENGTH_SHORT).show();
                 }
             });
+
+//            getMainFragmentAdapter().getFragmentHost().notifyViewCreated(getMainFragmentAdapter());
         }
 
         private void loadData() {
 
-           Context context= getMainFragmentAdapter().getFragment().getActivity();
-            mDataManager = VineyardApplication.get(context).getComponent().dataManager();
+//           Context context= getMainFragmentAdapter().getFragment().getActivity();
+//            mDataManager = VineyardApplication.get(context).getComponent().dataManager();
 
             Map<String, String> options = mAdapter.getAdapterOptions();
             String tag = options.get(PaginationAdapter.KEY_TAG);
@@ -327,6 +350,9 @@ public class PageFragment extends BrowseFragment {
 
                         }
                     });
+
+            getMainFragmentAdapter().getFragmentHost().notifyDataReady(getMainFragmentAdapter());
+
         }
     }
 

@@ -6,7 +6,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.hitherejoe.vineyard"
-        minSdkVersion 22
+        minSdkVersion 21
         targetSdkVersion 23
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 3
@@ -49,8 +49,9 @@ android {
 }
 
 dependencies {
-//    final SUPPORT_LIBRARY_VERSION = '23.1.1'
-    final SUPPORT_LIBRARY_VERSION='26.0.2'
+
+    //    final SUPPORT_LIBRARY_VERSION = '23.1.1'
+    final SUPPORT_LIBRARY_VERSION = '26.0.2'
     final DAGGER_VERSION = '2.0.2'
     final HAMCREST_VERSION = '1.3'
     final MOCKITO_VERSION = '1.10.19'
@@ -86,7 +87,6 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     annotationProcessor 'com.jakewharton:butterknife:7.0.1'
-
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
@@ -121,7 +121,8 @@ dependencies {
 
     //    apt daggerCompiler
     annotationProcessor daggerCompiler
-//    annotationProcessor butterKnife
+
+    //    annotationProcessor butterKnife
 
     //    testApt daggerCompiler
 

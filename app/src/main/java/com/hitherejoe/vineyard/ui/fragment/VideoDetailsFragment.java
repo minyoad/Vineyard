@@ -74,6 +74,8 @@ public class VideoDetailsFragment extends DetailsFragment {
     private static final int ACTION_PLAY_VIDEO = 1;
     private static final int ACTION_SHOW_EPISODE = 2;
     private static final int ACTION_SHOW_RELATED = 3;
+    private static final int ACTION_ADD_FAVOURITE = 4;
+
 
     private static final int FULL_WIDTH_DETAIL_THUMB_WIDTH = 220;
     private static final int FULL_WIDTH_DETAIL_THUMB_HEIGHT = 120;
@@ -303,50 +305,57 @@ public class VideoDetailsFragment extends DetailsFragment {
             Log.v(TAG, "DetailsRowBuilderTask onPostExecute");
             /* 1st row: DetailsOverviewRow */
 
+            List<Movie.PlayUrlInfo> playUrlInfoList=mSelectedMovie.getmPlayUrlMap().get(mSelectedMovie.currentSource);
+
               /* action setting*/
             SparseArrayObjectAdapter sparseArrayObjectAdapter = new SparseArrayObjectAdapter();
+
             sparseArrayObjectAdapter.set(ACTION_PLAY_VIDEO, new Action(ACTION_PLAY_VIDEO, "播放"));
+
+            if (playUrlInfoList.size()>1)
             sparseArrayObjectAdapter.set(ACTION_SHOW_EPISODE, new Action(ACTION_SHOW_EPISODE, "选择分集", ""));
+
             sparseArrayObjectAdapter.set(ACTION_SHOW_RELATED, new Action(ACTION_SHOW_RELATED, "相关视频", ""));
+
+
+            sparseArrayObjectAdapter.set(ACTION_ADD_FAVOURITE, new Action(ACTION_ADD_FAVOURITE, "加入收藏", ""));
+
 
             row.setActionsAdapter(sparseArrayObjectAdapter);
 
             mFwdorPresenter.setOnActionClickedListener(new DetailsOverviewRowActionClickedListener());
             mDorPresenter.setOnActionClickedListener(new DetailsOverviewRowActionClickedListener());
 
-            /* 2nd row: ListRow CardPresenter */
-
-
-
             /* 1st row */
             mAdapter.add(row);
 
+
+            /* 2nd row: ListRow CardPresenter */
+
 //            ArrayObjectAdapter episodeAapter=new ArrayObjectAdapter(new CustomListRowPresenter());
+            if (playUrlInfoList.size()>1) {
+                // add episode list
+                EpisodePresenter episodePresenter = new EpisodePresenter();
 
-            // add episode list
-            EpisodePresenter episodePresenter=new EpisodePresenter();
+                ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(episodePresenter);
 
-            ArrayObjectAdapter cardRowAdapter = new ArrayObjectAdapter(episodePresenter);
 
-            List<Movie.PlayUrlInfo> playUrlInfoList=mSelectedMovie.getmPlayUrlMap().get(mSelectedMovie.currentSource);
+                for (Movie.PlayUrlInfo playUrlInfo : playUrlInfoList) {
+                    cardRowAdapter.add(playUrlInfo);
+                }
 
-            for (Movie.PlayUrlInfo playUrlInfo:playUrlInfoList){
-                cardRowAdapter.add(playUrlInfo);
+                HeaderItem header = new HeaderItem(0, "Episode List");
+                CustomListRow episodeRow = new CustomListRow(header, cardRowAdapter);
+                episodeRow.setNumRows(10);
+
+                mAdapter.add(episodeRow);
             }
-
-            HeaderItem header = new HeaderItem(0, "Episode List");
-            CustomListRow episodeRow = new CustomListRow(header, cardRowAdapter);
-            episodeRow.setNumRows(10);
-
-//            episodeAapter.add(episodeRow);
-
-//            episodePresenter.setOnClickListener();
-
-            mAdapter.add(episodeRow);
 
 
             /* 3rd row */
             //adapter.add(new ListRow(headerItem, listRowAdapter));
+
+            //
             setAdapter(mAdapter);
         }
     }
@@ -370,7 +379,11 @@ public class VideoDetailsFragment extends DetailsFragment {
                 break;
                 case ACTION_SHOW_RELATED:{
                     setSelectedPosition(2);
+                }
+                break;
 
+                case ACTION_ADD_FAVOURITE:{
+                    //add fav
                 }
                 break;
             }

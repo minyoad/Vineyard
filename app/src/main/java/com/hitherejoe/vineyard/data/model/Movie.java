@@ -293,28 +293,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
             parsePlayUrls();
         }
 
-
         return mPlayUrlMap.get(srcName).get(index);
-
-
-//        List<String> nameList= getPlaySourceList();
-//
-//        final String[] PLAYERS = {"qq","youku","iqiyi","ku6"};
-//
-//        PlayUrlInfo playUrlInfo= getPlayUrl(nameList.get(0),0);
-//
-//        for (String name:nameList) {
-//
-//            if ( Arrays.asList(PLAYERS).contains(name) ) {
-//                // Do some stuff.
-//                playUrlInfo=getPlayUrl(name,0);
-//
-//                break;
-//            }
-//
-//        }
-//
-//        return playUrlInfo;
 
     }
 
