@@ -1,5 +1,7 @@
 package com.hitherejoe.vineyard.ui.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -88,6 +90,8 @@ public class MainFragment extends BrowseFragment {
     private boolean mIsStopping;
     private HashMap<String, String> mCategoryMap;
 
+    private Context mContext;
+
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -134,6 +138,12 @@ public class MainFragment extends BrowseFragment {
         super.onStop();
         mBackgroundManager.release();
         mIsStopping = true;
+    }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+        mContext=context;
     }
 
     @Subscribe
@@ -203,11 +213,24 @@ public class MainFragment extends BrowseFragment {
 
         Category category=mDataManager.getCategoryById(Category.INDEX);
 
+        if(category==null){
+            return;
+        }
         mCategoryMap = category.getExtendValues();
 
-        for (Map.Entry<String, String> entry: mCategoryMap.entrySet()){
+        for (final Map.Entry<String, String> entry: mCategoryMap.entrySet()){
 
-            loadPostsFromCategory(entry.getKey(),0);
+            Activity activity=getActivity();
+            if(activity==null)
+                return;
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadPostsFromCategory(entry.getKey(),0);
+                }
+
+        });
 
         }
 
@@ -273,9 +296,7 @@ public class MainFragment extends BrowseFragment {
         final String anchor = options.get(PaginationAdapter.KEY_ANCHOR);
         String nextPage = options.get(PaginationAdapter.KEY_NEXT_PAGE);
 
-        Observable<MovieResponse> observable;
-
-        observable=mDataManager.getMovies(nextPage,anchor,10);
+        Observable<MovieResponse> observable=mDataManager.getMovies(nextPage,anchor,10);
 
         mCompositeSubscription.add(observable
                 .observeOn(AndroidSchedulers.mainThread())

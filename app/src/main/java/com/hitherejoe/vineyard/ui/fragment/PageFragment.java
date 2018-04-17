@@ -123,7 +123,7 @@ public class PageFragment extends BrowseFragment {
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 //        setBrandColor(getResources().getColor(R.color.fastlane_background));
-        setTitle("Title goes here");
+//        setTitle("Title goes here");
         setOnSearchClickedListener(new View.OnClickListener() {
 
             @Override
@@ -136,6 +136,8 @@ public class PageFragment extends BrowseFragment {
 //                        .show();
             }
         });
+
+
 
         prepareEntranceTransition();
     }
@@ -294,7 +296,6 @@ public class PageFragment extends BrowseFragment {
             presenter.setNumberOfColumns(COLUMNS);
             setGridPresenter(presenter);
 
-//            CardPresenter cardPresenter = new CardPresenter(getActivity());
             mAdapter = new MovieAdapter(getActivity(),"");
             mAdapter.setAnchor(bundle.getString("achor"));
             setAdapter(mAdapter);
