@@ -33,6 +33,8 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     XWalkView mXwalkView;
 
     View loadingView;
+
+    boolean paused;
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
             super(view);
@@ -60,7 +62,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         XWalkView mWalkView;
         private void pause(){
-            String js="javascript:getVideo().paused?getVideo().play():getVideo().pause();";
+            String js="javascript:getVideo().pause();";
 
             mWalkView.loadUrl(js);
         }
@@ -121,7 +123,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
             play();
 
-            loadingView.setVisibility(View.GONE);
+
 
         }
 
@@ -150,9 +152,13 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                     forward();
                 }
                     break;
-                case KeyEvent.KEYCODE_ENTER: {//确定
-//                    Log.e("jamie","－－－－－确定－－－－－");
-                    pause();
+                case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.KEYCODE_DPAD_CENTER:{//确定
+
+                    if (paused)
+                        play();
+                    else
+                        pause();
                 }
                     break;
                 case KeyEvent.KEYCODE_BACK: {//返回
@@ -198,7 +204,6 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         mXwalkView.addJavascriptInterface(new JSVideoObj(),"videoObj");
 
-
         Intent intent=getIntent();
         Movie movie=intent.getParcelableExtra(DetailsActivity.MOVIE);
 
@@ -219,32 +224,53 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
     }
 
-    private class JSVideoObj{
+    public class JSVideoObj{
 
         private final String TAG = JSVideoObj.class.getSimpleName();
 
-        @JavascriptInterface
+        @org.xwalk.core.JavascriptInterface
         public void processEvents(String eventType){
             Timber.d("event:"+eventType);
 
-            Log.d("XwalkWebView","KEYEVENT:="+eventType);
+            switch (eventType){
+                case "ended":{
+                    //play next video
 
+                }
+                break;
+                case "canplay":
+                case "playing":{
+
+                    //hide loading view
+                    loadingView.setVisibility(View.GONE);
+                }
+            }
 
         }
-        @JavascriptInterface
-        public void processsProperties(String propertiesJson){
+        @org.xwalk.core.JavascriptInterface
+        public void processProperties(String propertiesJson){
 
             Timber.d("processsProperties:"+propertiesJson);
+
             JSONObject jsonObject= null;
             try {
                 jsonObject = new JSONObject(propertiesJson);
+
+                if (jsonObject!=null){
+
+                    double currentTime=jsonObject.getDouble("currentTime");
+
+                    Timber.d("currentTime:"+currentTime);
+
+
+                    paused=jsonObject.getBoolean("paused");
+                }
+
             } catch (JSONException e) {
                 Log.e(TAG, "processsProperties: "+e.getMessage() );
             }
 
-            if (jsonObject!=null){
-                
-            }
+
 
         }
 

@@ -36,13 +36,13 @@ function init() {
 
 	document._video = document.getElementsByTagName("video")[0];
 
-	media_properties_elts = new Array(media_properties.length);
+	media_properties_elts = {};
 
 	init_events("events", media_events);
 	init_properties("properties", media_properties, media_properties_elts);
 
 	// properties are updated even if no event was triggered
-	setInterval(update_properties, 500);
+	setInterval(update_properties, 1000);
 }
 
 
@@ -70,11 +70,12 @@ function init_properties(id, arrayPropDef, arrayProp) {
 function capture(event) {
 	media_events[event.type]++;
 
-//	if (videoObj != undefined)
-		videoObj.processEvents(event.type);
+	videoObj.processEvents(event.type+'');
 }
 
 function update_properties() {
+//    console.log("update_properties:"+videoObj);
+
 	var i = 0;
 	for (key in media_properties) {
 		var val = eval("document._video." + media_properties[key]);
@@ -83,16 +84,16 @@ function update_properties() {
 	}
 
 	var properties = JSON.stringify(media_properties_elts);
-//	if (videoObj != undefined)
-		videoObj.processProperties(properties);
 
-//	span = document.getElementById("currentTime");
-//	span.textContent = media_properties_elts["currentTime"];
+//    console.log("update_properties:"+properties+","+media_properties_elts);
+
+	videoObj.processProperties(properties+'');
+
 }
 
 function getVideo() {
 
-    console.log("getvideo:"+document._video);
+//    console.log("getvideo:"+document._video);
     if(typeof(document._video) == 'undefined'){
         init();
     }
