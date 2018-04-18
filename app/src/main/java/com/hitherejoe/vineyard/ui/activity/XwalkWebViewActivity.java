@@ -3,20 +3,29 @@ package com.hitherejoe.vineyard.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Movie;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkSettings;
 import org.xwalk.core.XWalkUIClient;
 import org.xwalk.core.XWalkView;
 import org.xwalk.core.XWalkWebResourceRequest;
 import org.xwalk.core.XWalkWebResourceResponse;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import timber.log.Timber;
 
@@ -36,6 +45,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             if (request.getUrl().toString().contains("js.zyrfanli.com")){
                 return createXWalkWebResourceResponse("","",null);
             }
+            if (request.getUrl().toString().contains("cnzz.com/")){
+                return createXWalkWebResourceResponse("","",null);
+            }
 
             return super.shouldInterceptLoadRequest(view, request);
 
@@ -48,27 +60,25 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         XWalkView mWalkView;
         private void pause(){
-            String js="javascript:var v = document.getElementsByTagName(\"video\")[0];\n" +
-                    "v.paused?v.play():v.pause();";
-
+            String js="javascript:getVideo().paused?getVideo().play():getVideo().pause();";
 
             mWalkView.loadUrl(js);
         }
 
         private void forward(){
-
-        }
-
-        private void backward(){
-
-        }
-
-        private void play(){
-            String js="javascript:var v = document.getElementsByTagName(\"video\")[0];\n" +
-                    "v.play();";
+            String js="javascript:getVideo().pause();getVideo().currentTime+=10;getVideo().play()";
             mWalkView.loadUrl(js);
         }
 
+        private void backward(){
+            String js="javascript:getVideo().pause();getVideo().currentTime-=10;getVideo().play()";
+            mWalkView.loadUrl(js);
+        }
+
+        private void play(){
+            String js="javascript:getVideo().play();";
+            mWalkView.loadUrl(js);
+        }
 
 
         MyUIClient(XWalkView view) {
@@ -77,9 +87,37 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         }
 
 
+        private void injectScriptFile(XWalkView view, String scriptFile) {
+            InputStream input;
+            try {
+                input = getAssets().open(scriptFile);
+                byte[] buffer = new byte[input.available()];
+                input.read(buffer);
+                input.close();
+
+                // String-ify the script byte-array using BASE64 encoding !!!
+                String encoded = Base64.encodeToString(buffer, Base64.NO_WRAP);
+                view.loadUrl("javascript:(function() {" +
+                        "var parent = document.getElementsByTagName('head').item(0);" +
+                        "var script = document.createElement('script');" +
+                        "script.type = 'text/javascript';" +
+                        // Tell the browser to BASE64-decode the string into your script !!!
+                        "script.innerHTML = window.atob('" + encoded + "');" +
+                        "parent.appendChild(script)" +
+                        "})()");
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+
         @Override
         public void onPageLoadStopped(XWalkView view, String url, LoadStatus status) {
             super.onPageLoadStopped(view, url, status);
+
+            injectScriptFile(view,"script.js");
+            view.loadUrl("javascript:init();");
 
             play();
 
@@ -90,40 +128,49 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         @Override
         public boolean shouldOverrideKeyEvent(XWalkView view, KeyEvent event) {
 
+            Log.d("XwalkWebView","KEYEVENT:="+event.getKeyCode());
+
             boolean overrided=true;
             switch (event.getKeyCode()) {
-                case KeyEvent.KEYCODE_DPAD_UP://向上
+                case KeyEvent.KEYCODE_DPAD_UP: {//向上
 //                    Log.e("jamie","－－－－－向上－－－－－");
+                }
                     break;
-                case KeyEvent.KEYCODE_DPAD_DOWN://向下
+                case KeyEvent.KEYCODE_DPAD_DOWN: {//向下
 //                    Log.e("jamie","－－－－－向下－－－－－");
+                }
                     break;
-                case KeyEvent.KEYCODE_DPAD_LEFT://向左
+                case KeyEvent.KEYCODE_DPAD_LEFT: {//向左
 //                    Log.e("jamie","－－－－－向左－－－－－");
                     backward();
+                }
                     break;
-                case KeyEvent.KEYCODE_DPAD_RIGHT://向右
+                case KeyEvent.KEYCODE_DPAD_RIGHT: {//向右
 //                    Log.e("jamie","－－－－－向右－－－－－");
                     forward();
+                }
                     break;
-                case KeyEvent.KEYCODE_ENTER://确定
+                case KeyEvent.KEYCODE_ENTER: {//确定
 //                    Log.e("jamie","－－－－－确定－－－－－");
                     pause();
-
+                }
                     break;
-                case KeyEvent.KEYCODE_BACK://返回
+                case KeyEvent.KEYCODE_BACK: {//返回
 //                    Log.e("jamie","－－－－－返回－－－－－");
+                }
                     break;
-                case KeyEvent.KEYCODE_HOME://房子
+                case KeyEvent.KEYCODE_HOME: {//房子
 //                    Log.e("jamie","－－－－－房子－－－－－");
+                }
                     break;
-                case KeyEvent.KEYCODE_MENU://菜单
+                case KeyEvent.KEYCODE_MENU: {//菜单
 //                    Log.e("jamie","－－－－－菜单－－－－－");
+                }
                     break;
 
-                    default:{
-                        overrided=super.shouldOverrideKeyEvent(view, event);;
-                    }
+                default:{
+                        overrided=super.shouldOverrideKeyEvent(view, event);
+                }
 
 
             }
@@ -136,7 +183,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xwalkwebview);
-        mXwalkView = (XWalkView) findViewById(R.id.xwalkView);
+        mXwalkView = findViewById(R.id.xwalkView);
         mXwalkView.setResourceClient(new MyResourceClient(mXwalkView));
         mXwalkView.setUIClient(new MyUIClient(mXwalkView));
 
@@ -147,6 +194,10 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         settings.setAllowFileAccess(true);
         settings.setDatabaseEnabled(true);
         settings.setJavaScriptEnabled(true);
+
+
+        mXwalkView.addJavascriptInterface(new JSVideoObj(),"videoObj");
+
 
         Intent intent=getIntent();
         Movie movie=intent.getParcelableExtra(DetailsActivity.MOVIE);
@@ -165,6 +216,37 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         loadingView=findViewById(R.id.loadingPanel);
         loadingView.setVisibility(View.VISIBLE);
+
+    }
+
+    private class JSVideoObj{
+
+        private final String TAG = JSVideoObj.class.getSimpleName();
+
+        @JavascriptInterface
+        public void processEvents(String eventType){
+            Timber.d("event:"+eventType);
+
+            Log.d("XwalkWebView","KEYEVENT:="+eventType);
+
+
+        }
+        @JavascriptInterface
+        public void processsProperties(String propertiesJson){
+
+            Timber.d("processsProperties:"+propertiesJson);
+            JSONObject jsonObject= null;
+            try {
+                jsonObject = new JSONObject(propertiesJson);
+            } catch (JSONException e) {
+                Log.e(TAG, "processsProperties: "+e.getMessage() );
+            }
+
+            if (jsonObject!=null){
+                
+            }
+
+        }
 
     }
 
