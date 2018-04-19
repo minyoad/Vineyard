@@ -2,13 +2,18 @@ package com.hitherejoe.vineyard.ui.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v17.leanback.app.DetailsFragment;
+import android.support.v17.leanback.app.DetailsFragmentBackgroundController;
 import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
+import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
@@ -22,6 +27,8 @@ import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -68,6 +75,8 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private static final String TAG = VideoDetailsFragment.class.getSimpleName();
 
+    public static final String TRANSITION_NAME = "t_for_transition";
+
     @Inject DataManager mDataManager;
 
 
@@ -106,6 +115,9 @@ public class VideoDetailsFragment extends DetailsFragment {
     private Subscription mCategorySubcription;
 
 
+    private final DetailsFragmentBackgroundController mDetailsBackground =
+            new DetailsFragmentBackgroundController(this);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
@@ -120,7 +132,8 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mSelectedMovie = getActivity().getIntent().getParcelableExtra(DetailsActivity.MOVIE);
 
-//        getRelatedVideos();
+        setTitle(mSelectedMovie.getTitle());
+
 
         mDetailsRowBuilderTask = (DetailsRowBuilderTask) new DetailsRowBuilderTask().execute(mSelectedMovie);
 
@@ -134,20 +147,45 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mClassPresenterSelector = new ClassPresenterSelector();
         Log.v(TAG, "mFwdorPresenter.getInitialState: " + mFwdorPresenter.getInitialState());
-        if(mSelectedMovie.getCategory().equals(CATEGORY_DETAILS_OVERVIEW_ROW_PRESENTER)) {
-            /* If category name is "DetailsOverviewRowPresenter", show DetailsOverviewRowPresenter for demo purpose (this class is deprecated from API level 22) */
-            mClassPresenterSelector.addClassPresenter(DetailsOverviewRow.class, mDorPresenter);
-        } else {
-            /* Default behavior, show FullWidthDetailsOverviewRowPresenter */
-            mClassPresenterSelector.addClassPresenter(DetailsOverviewRow.class, mFwdorPresenter);
-        }
+
+        FullWidthDetailsOverviewSharedElementHelper mHelper = new FullWidthDetailsOverviewSharedElementHelper();
+        mHelper.setSharedElementEnterTransition(getActivity(), TRANSITION_NAME);
+        mFwdorPresenter.setListener(mHelper);
+        mFwdorPresenter.setParticipatingEntranceTransition(false);
+        prepareEntranceTransition();
+
+//        if(mSelectedMovie.getCategory().equals(CATEGORY_DETAILS_OVERVIEW_ROW_PRESENTER)) {
+//            /* If category name is "DetailsOverviewRowPresenter", show DetailsOverviewRowPresenter for demo purpose (this class is deprecated from API level 22) */
+//            mClassPresenterSelector.addClassPresenter(DetailsOverviewRow.class, mDorPresenter);
+//        } else {
+//            /* Default behavior, show FullWidthDetailsOverviewRowPresenter */
+//            mClassPresenterSelector.addClassPresenter(DetailsOverviewRow.class, mFwdorPresenter);
+//        }
+
+        mClassPresenterSelector.addClassPresenter(DetailsOverviewRow.class, mFwdorPresenter);
+
         mClassPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
 
         mAdapter = new ArrayObjectAdapter(mClassPresenterSelector);
+
         setAdapter(mAdapter);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startEntranceTransition();
+            }
+        }, 500);
+        initializeBackground();
 
         mVideoLists=new LinkedList<>();
 
+    }
+
+    private void initializeBackground() {
+        mDetailsBackground.enableParallax();
+        mDetailsBackground.setCoverBitmap(BitmapFactory.decodeResource(getResources(),
+                R.drawable.background_canyon));
     }
 
     @Override
@@ -171,10 +209,6 @@ public class VideoDetailsFragment extends DetailsFragment {
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra(DetailsActivity.MOVIE, movie);
 
-//                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        getActivity(),
-//                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-//                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
                 getActivity().startActivity(intent);
 
             }
@@ -263,15 +297,15 @@ public class VideoDetailsFragment extends DetailsFragment {
         protected DetailsOverviewRow doInBackground(Movie... params) {
             Log.v(TAG, "DetailsRowBuilderTask doInBackground");
             int width, height;
-            if(mSelectedMovie.getCategory().equals(CATEGORY_DETAILS_OVERVIEW_ROW_PRESENTER)) {
-                /* If category name is "DetailsOverviewRowPresenter", show DetailsOverviewRowPresenter for demo purpose (this class is deprecated from API level 22) */
-                width = DETAIL_THUMB_WIDTH;
-                height = DETAIL_THUMB_HEIGHT;
-            } else {
+//            if(mSelectedMovie.getCategory().equals(CATEGORY_DETAILS_OVERVIEW_ROW_PRESENTER)) {
+//                /* If category name is "DetailsOverviewRowPresenter", show DetailsOverviewRowPresenter for demo purpose (this class is deprecated from API level 22) */
+//                width = DETAIL_THUMB_WIDTH;
+//                height = DETAIL_THUMB_HEIGHT;
+//            } else {
                 /* Default behavior, show FullWidthDetailsOverviewRowPresenter */
                 width = FULL_WIDTH_DETAIL_THUMB_WIDTH;
                 height = FULL_WIDTH_DETAIL_THUMB_HEIGHT;
-            }
+//            }
 
             DetailsOverviewRow row = new DetailsOverviewRow(mSelectedMovie);
 
