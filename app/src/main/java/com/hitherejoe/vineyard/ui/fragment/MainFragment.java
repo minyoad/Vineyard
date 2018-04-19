@@ -182,15 +182,16 @@ public class MainFragment extends BrowseFragment {
         setBadgeDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.banner_shadow));
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
+
         setBrandColor(ContextCompat.getColor(getActivity(), R.color.primary));
         setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.accent));
 
-        setHeaderPresenterSelector(new PresenterSelector() {
-            @Override
-            public Presenter getPresenter(Object o) {
-                return new IconHeaderItemPresenter();
-            }
-        });
+//        setHeaderPresenterSelector(new PresenterSelector() {
+//            @Override
+//            public Presenter getPresenter(Object o) {
+//                return new IconHeaderItemPresenter();
+//            }
+//        });
 
 
     }
@@ -228,28 +229,29 @@ public class MainFragment extends BrowseFragment {
                 @Override
                 public void run() {
                     loadPostsFromCategory(entry.getKey(),0);
+                    startEntranceTransition();
                 }
 
         });
 
         }
 
-        boolean shouldAutoLoop = mPreferencesHelper.getShouldAutoLoop();
-        String optionValue = shouldAutoLoop
-                ? getString(R.string.text_auto_loop_enabled)
-                : getString(R.string.text_auto_loop_disabled);
-
-        mAutoLoopOption = new Option(
-                getString(R.string.text_auto_loop_title),
-                optionValue,
-                R.drawable.lopp);
-
-
-        HeaderItem gridHeader =
-                new HeaderItem(mRowsAdapter.size(), getString(R.string.header_text_options));
-        mOptionsAdapter = new OptionsAdapter(getActivity());
-        mOptionsAdapter.addOption(mAutoLoopOption);
-        mRowsAdapter.add(new ListRow(gridHeader, mOptionsAdapter));
+//        boolean shouldAutoLoop = mPreferencesHelper.getShouldAutoLoop();
+//        String optionValue = shouldAutoLoop
+//                ? getString(R.string.text_auto_loop_enabled)
+//                : getString(R.string.text_auto_loop_disabled);
+//
+//        mAutoLoopOption = new Option(
+//                getString(R.string.text_auto_loop_title),
+//                optionValue,
+//                R.drawable.lopp);
+//
+//
+//        HeaderItem gridHeader =
+//                new HeaderItem(mRowsAdapter.size(), getString(R.string.header_text_options));
+//        mOptionsAdapter = new OptionsAdapter(getActivity());
+//        mOptionsAdapter.addOption(mAutoLoopOption);
+//        mRowsAdapter.add(new ListRow(gridHeader, mOptionsAdapter));
 
     }
 
