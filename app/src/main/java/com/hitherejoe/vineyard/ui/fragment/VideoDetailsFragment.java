@@ -277,7 +277,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                                 cardRowAdapter.add(mVideoLists.get(j));
                             }
                             //HeaderItem header = new HeaderItem(index, entry.getKey());
-                            HeaderItem header = new HeaderItem(0, "Related Videos");
+                            HeaderItem header = new HeaderItem(0, "看过的人也喜欢");
                             mRelatedVideoRow = new ListRow(header, cardRowAdapter);
 
 
@@ -378,7 +378,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                     cardRowAdapter.add(playUrlInfo);
                 }
 
-                HeaderItem header = new HeaderItem(0, "Episode List");
+                HeaderItem header = new HeaderItem(0, "分集列表");
                 CustomListRow episodeRow = new CustomListRow(header, cardRowAdapter);
                 episodeRow.setNumRows(10);
 

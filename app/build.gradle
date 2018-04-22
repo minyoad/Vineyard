@@ -3,6 +3,12 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
+        config {
+            keyAlias 'vineyard'
+            keyPassword 'nigel@1633'
+            storeFile file('/Users/mingyang.wu/vineyard.keystore')
+            storePassword 'nigel@1633'
+        }
     }
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
