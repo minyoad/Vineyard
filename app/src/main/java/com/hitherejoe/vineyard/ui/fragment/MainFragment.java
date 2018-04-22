@@ -356,17 +356,18 @@ public class MainFragment extends BrowseFragment {
                 } else {
                     ToastFactory.createWifiErrorToast(getActivity()).show();
                 }
+
             } else if (item instanceof Option) {
                 Option option = (Option) item;
-                if (option.title.equals(getString(R.string.title_no_videos)) ||
-                        option.title.equals(getString(R.string.title_oops))) {
+                if (option.title.equals(getString(R.string.title_no_videos)) || option.title.equals(getString(R.string.title_oops))) {
                     int index = mRowsAdapter.indexOf(row);
                     MovieAdapter adapter =
                             ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
                     adapter.removeReloadCard();
                     addPostLoadSubscription(adapter);
+
                 } else {
-                    startActivity(GuidedStepActivity.getStartIntent(getActivity()));
+//                    startActivity(GuidedStepActivity.getStartIntent(getActivity()));
 
                     Intent intent=new Intent(getActivity().getBaseContext(), PageActivity.class);
 

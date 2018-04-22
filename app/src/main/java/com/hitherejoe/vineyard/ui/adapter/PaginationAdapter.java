@@ -127,7 +127,7 @@ public abstract class PaginationAdapter extends ArrayObjectAdapter {
         Option option = new Option(
                 "",
                 mContext.getString(R.string.message_load_more),
-                R.drawable.ic_family);
+                R.drawable.lb_ic_more);
         add(option);
     }
 
