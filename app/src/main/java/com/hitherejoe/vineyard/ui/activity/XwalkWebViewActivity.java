@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Movie;
 
@@ -23,12 +26,21 @@ import org.xwalk.core.XWalkWebResourceResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class XwalkWebViewActivity extends AppCompatActivity {
     XWalkView mXwalkView;
 
-    View loadingView;
+    @Bind(R.id.main_image)
+    ImageView mImageView;
+
+    @Bind(R.id.view_overlay)
+    View mOverlayView;
+
+    @Bind(R.id.progress_card)
+    ProgressBar mProgressCard;
 
     boolean paused;
 
@@ -181,6 +193,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xwalkwebview);
+        ButterKnife.bind(this);
         mXwalkView = findViewById(R.id.xwalkView);
         mXwalkView.setResourceClient(new MyResourceClient(mXwalkView));
         mXwalkView.setUIClient(new MyUIClient(mXwalkView));
@@ -211,9 +224,22 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         mXwalkView.loadUrl(proxy + url, null);
 
 
-        loadingView = findViewById(R.id.loadingPanel);
-        loadingView.setVisibility(View.VISIBLE);
+        showLoadingView();
 
+
+    }
+
+    public void showLoadingView(){
+
+        mOverlayView.setVisibility(View.VISIBLE);
+        mProgressCard.setVisibility(View.VISIBLE);
+
+    }
+
+    public void hideLoadingView(){
+//        mImageView.setVisibility(View.VISIBLE);
+        mOverlayView.setVisibility(View.INVISIBLE);
+        mProgressCard.setVisibility(View.INVISIBLE);
     }
 
     public class JSVideoObj {
@@ -234,7 +260,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 case "playing": {
 
                     //hide loading view
-                    loadingView.setVisibility(View.GONE);
+                    hideLoadingView();
                 }
             }
 
