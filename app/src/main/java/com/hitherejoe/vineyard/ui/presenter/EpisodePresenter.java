@@ -37,13 +37,20 @@ public class EpisodePresenter extends Presenter {
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Object item) {
         if (item instanceof Movie.PlayUrlInfo) {
-            Movie.PlayUrlInfo post = (Movie.PlayUrlInfo) item;
+            Movie.PlayUrlInfo playUrlInfo = (Movie.PlayUrlInfo) item;
             EpisodeCardView cardView = (EpisodeCardView) viewHolder.view;
 
-            if (post.title != null) {
-                cardView.setCardText(post.title);
+            if (playUrlInfo.title != null) {
+                cardView.setCardText(playUrlInfo.title);
                 cardView.setCardIcon(R.drawable.ic_tag);
             }
+        }
+        else if(item instanceof String){
+            String sourceName=(String)item;
+            EpisodeCardView cardView = (EpisodeCardView) viewHolder.view;
+
+            cardView.setCardText(sourceName);
+
         }
     }
 

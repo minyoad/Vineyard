@@ -46,11 +46,15 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     private HashMap<String,List<PlayUrlInfo>> mPlayUrlMap;
 
-    public List<String> getmPlaySrcList() {
+    public List<String> getPlaySrcList() {
         return mPlaySrcList;
     }
 
-    public HashMap<String, List<PlayUrlInfo>> getmPlayUrlMap() {
+    public List<PlayUrlInfo> getPlayUrlList(String srcName){
+        return mPlayUrlMap.get(srcName);
+    }
+
+    public HashMap<String, List<PlayUrlInfo>> getPlayUrlMap() {
         return mPlayUrlMap;
     }
 
@@ -110,6 +114,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
 
     public String currentSource;
+    public int currentIndex;
 
     public long getId() {
         return id;
@@ -261,6 +266,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
         }
 
         currentSource=mPlaySrcList.get(0);
+        currentIndex=0;
 
     }
 

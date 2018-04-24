@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Movie;
+import com.hitherejoe.vineyard.ui.fragment.EpisodeGridFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +43,14 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     @Bind(R.id.progress_card)
     ProgressBar mProgressCard;
 
+//    @Bind(R.id.episode_list_containter)
+    EpisodeGridFragment mEpisodeListFragment;
+
+//    @Bind(R.id.episode_source_containter)
+    EpisodeGridFragment mEpisodeSourceFragment;
+
     boolean paused;
+    private Movie mMovie;
 
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
@@ -146,6 +154,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 }
                 break;
                 case KeyEvent.KEYCODE_DPAD_DOWN: {//向下
+                    showEpisodeList();
                 }
                 break;
                 case KeyEvent.KEYCODE_DPAD_LEFT: {//向左
@@ -167,6 +176,15 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 break;
                 case KeyEvent.KEYCODE_BACK: {//返回
 
+                    if(mEpisodeListFragment.isVisible()){
+                        getFragmentManager().beginTransaction()
+                                .remove(mEpisodeListFragment);
+                    }
+                    if(mEpisodeSourceFragment.isVisible()){
+                        getFragmentManager().beginTransaction()
+                                .remove(mEpisodeSourceFragment);
+                    }
+
                 }
                 break;
                 case KeyEvent.KEYCODE_HOME: {//房子
@@ -174,6 +192,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 }
                 break;
                 case KeyEvent.KEYCODE_MENU: {//菜单
+                    showSourceList();
 
                 }
                 break;
@@ -210,14 +229,14 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         mXwalkView.addJavascriptInterface(new JSVideoObj(), "videoObj");
 
         Intent intent = getIntent();
-        Movie movie = intent.getParcelableExtra(DetailsActivity.MOVIE);
+        mMovie = intent.getParcelableExtra(DetailsActivity.MOVIE);
 
         String url = intent.getStringExtra(DetailsActivity.PLAY_URL);
 
         if (url == null || url.isEmpty())
-            url = movie.getVideoUrl();
+            url = mMovie.getVideoUrl();
 
-        String proxy = movie.getProxyUrlByPlayer(movie.currentSource);
+        String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
 
 
         Timber.d("URL=" + proxy + url);
@@ -240,6 +259,40 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 //        mImageView.setVisibility(View.VISIBLE);
         mOverlayView.setVisibility(View.INVISIBLE);
         mProgressCard.setVisibility(View.INVISIBLE);
+    }
+
+
+    public void showSourceList(){
+        Timber.d("movie="+mMovie);
+        if(mMovie==null)
+            return;
+
+        if(mEpisodeSourceFragment==null){
+            mEpisodeSourceFragment=EpisodeGridFragment.newInstance(mMovie,0);
+        }
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.episode_source_containter,mEpisodeSourceFragment,"source")
+                .addToBackStack("")
+                .commit();
+        mEpisodeSourceFragment.startEntranceTransition();
+
+    }
+
+    public void showEpisodeList(){
+        if(mMovie==null)
+            return;
+
+        if(mEpisodeListFragment==null){
+            mEpisodeListFragment=EpisodeGridFragment.newInstance(mMovie,1);
+        }
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.episode_list_containter,mEpisodeListFragment,"list")
+                .addToBackStack("")
+                .commit();
+
+        mEpisodeListFragment.startEntranceTransition();
     }
 
     public class JSVideoObj {
@@ -269,7 +322,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         @org.xwalk.core.JavascriptInterface
         public void processProperties(String propertiesJson) {
 
-            Timber.d("processsProperties:" + propertiesJson);
+//            Timber.d("processsProperties:" + propertiesJson);
 
             JSONObject jsonObject = null;
             try {

@@ -12,10 +12,8 @@ import android.support.v17.leanback.widget.Action;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.ClassPresenterSelector;
 import android.support.v17.leanback.widget.DetailsOverviewRow;
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter;
 import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper;
 import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnActionClickedListener;
@@ -24,16 +22,10 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.SparseArrayObjectAdapter;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.hitherejoe.vineyard.R;
 //import com.hitherejoe.vineyard.common.Utils;
 //import com.hitherejoe.vineyard.data.VideoProvider;
@@ -42,25 +34,21 @@ import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.model.Movie;
 //import com.hitherejoe.vineyard.ui.background.PicassoBackgroundManager;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
-import com.hitherejoe.vineyard.ui.activity.PlaybackActivity;
 import com.hitherejoe.vineyard.ui.activity.XwalkWebViewActivity;
 import com.hitherejoe.vineyard.ui.adapter.CustomListRow;
 import com.hitherejoe.vineyard.ui.presenter.CardPresenter;
 import com.hitherejoe.vineyard.ui.presenter.CustomDetailsOverviewRowPresenter;
 import com.hitherejoe.vineyard.ui.presenter.CustomFullWidthDetailsOverviewRowPresenter;
-import com.hitherejoe.vineyard.ui.presenter.CustomListRowPresenter;
 import com.hitherejoe.vineyard.ui.presenter.DetailsDescriptionPresenter;
 import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
 import com.hitherejoe.vineyard.ui.presenter.EpisodePresenter;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
-import jp.wasabeef.glide.transformations.internal.Utils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -339,7 +327,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             Log.v(TAG, "DetailsRowBuilderTask onPostExecute");
             /* 1st row: DetailsOverviewRow */
 
-            List<Movie.PlayUrlInfo> playUrlInfoList=mSelectedMovie.getmPlayUrlMap().get(mSelectedMovie.currentSource);
+            List<Movie.PlayUrlInfo> playUrlInfoList=mSelectedMovie.getPlayUrlMap().get(mSelectedMovie.currentSource);
 
               /* action setting*/
             SparseArrayObjectAdapter sparseArrayObjectAdapter = new SparseArrayObjectAdapter();

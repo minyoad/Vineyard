@@ -1,5 +1,6 @@
 package com.hitherejoe.vineyard.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
@@ -10,34 +11,95 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v17.leanback.widget.VerticalGridPresenter;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.hitherejoe.vineyard.ui.activity.DetailsActivity;
+import com.hitherejoe.vineyard.ui.activity.XwalkWebViewActivity;
 import com.hitherejoe.vineyard.ui.presenter.EpisodePresenter;
 
+import java.util.List;
+
 /**
- * VerticalGridFragment shows contents with vertical alignment
+ * EpisodeGridFragment shows contents with vertical alignment
  */
 public class EpisodeGridFragment extends android.support.v17.leanback.app.VerticalGridFragment {
 
     private static final String TAG = EpisodeGridFragment.class.getSimpleName();
-    private static final int NUM_COLUMNS = 10;
+    private static final int NUM_COLUMNS = 1;
+
+    private static final String MOVIE="MOVIE";
+    private static final String SOURCE_TYPE="SOURCE_TYPE";
 
     private ArrayObjectAdapter mAdapter;
+
+    private Movie mMovie;
+
+    private int mSourceType;
+
+    public static EpisodeGridFragment newInstance(Movie movie,int sourceType){
+        EpisodeGridFragment episodeGridFragment= new EpisodeGridFragment();
+
+        Bundle bundle=new Bundle();
+        bundle.putParcelable(MOVIE,movie);
+        bundle.putInt(SOURCE_TYPE,sourceType);
+
+        episodeGridFragment.setArguments(bundle);
+
+        return episodeGridFragment;
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
 
-        setTitle("VerticalGridFragment");
+//        setTitle("VerticalGridFragment");
         //setBadgeDrawable(getResources().getDrawable(R.drawable.app_icon_your_company));
 
         setupFragment();
         setupEventListeners();
 
         // it will move current focus to specified position. Comment out it to see the behavior.
-        // setSelectedPosition(5);
+         setSelectedPosition(mMovie.currentIndex);
+    }
+
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        Bundle bundle=getArguments();
+
+        mMovie=bundle.getParcelable(MOVIE);
+
+        mSourceType=bundle.getInt(SOURCE_TYPE);
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getFocus();
+    }
+    //主界面获取焦点
+    private void getFocus() {
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+//        getView().setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+////                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+////                    // 监听到返回按钮点击事件
+////
+////                    return true;
+////                }
+//                return false;
+//            }
+//        });
     }
 
     private void setupFragment() {
@@ -47,25 +109,15 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
 
         mAdapter = new ArrayObjectAdapter(new EpisodePresenter());
 
-        /* Add movie items */
-//        try {
-//            mVideoLists = VideoProvider.buildMedia(getActivity());
-//        } catch (JSONException e) {
-//            Log.e(TAG, e.toString(), e);
-//        }
+        if (mSourceType==0){
+            List<String> sourceList=mMovie.getPlaySrcList();
 
-//        if(mVideoLists != null) {
-//            for (int i = 0; i < 3; i++) { // This loop is to for increasing the number of contents. not necessary.
-//                for (Map.Entry<String, List<Movie>> entry : mVideoLists.entrySet()) {
-//                    // String categoryName = entry.getKey();
-//                    List<Movie> list = entry.getValue();
-//                    for (int j = 0; j < list.size(); j++) {
-//                        Movie movie = list.get(j);
-//                        mAdapter.add(movie);
-//                    }
-//                }
-//            }
-//        }
+            mAdapter.addAll(0,sourceList);
+        }else {
+            List<Movie.PlayUrlInfo> urlList=mMovie.getPlayUrlList(mMovie.currentSource);
+            mAdapter.addAll(0,urlList);
+        }
+
         setAdapter(mAdapter);
     }
 
@@ -78,13 +130,24 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if (item instanceof Movie) {
-                Movie movie = (Movie) item;
 
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, movie);
+            if(item instanceof Movie.PlayUrlInfo){
+                Movie.PlayUrlInfo playUrlInfo=(Movie.PlayUrlInfo)item;
+                Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
+                intent.putExtra(DetailsActivity.MOVIE, mMovie);
+                intent.putExtra("URL",playUrlInfo.url);
                 getActivity().startActivity(intent);
             }
+            else{
+                String sourceName=(String)item;
+                mMovie.currentSource=sourceName;
+
+                Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
+                intent.putExtra(DetailsActivity.MOVIE, mMovie);
+                intent.putExtra("URL",mMovie.getVideoUrlInfo(sourceName,mMovie.currentIndex).url);
+                getActivity().startActivity(intent);
+            }
+
         }
     }
 
