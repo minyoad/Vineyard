@@ -268,7 +268,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             return;
 
         if(mEpisodeSourceFragment==null){
-            mEpisodeSourceFragment=EpisodeGridFragment.newInstance(mMovie,0);
+            mEpisodeSourceFragment=EpisodeGridFragment.newInstance(mMovie,EpisodeGridFragment.SOURCE_TYPE_SOURCE);
         }
 
         getFragmentManager().beginTransaction()
@@ -284,7 +284,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             return;
 
         if(mEpisodeListFragment==null){
-            mEpisodeListFragment=EpisodeGridFragment.newInstance(mMovie,1);
+            mEpisodeListFragment=EpisodeGridFragment.newInstance(mMovie,EpisodeGridFragment.SOURCE_TYPE_EPISODE);
         }
 
         getFragmentManager().beginTransaction()

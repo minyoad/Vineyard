@@ -47,6 +47,11 @@ public class GridFragment extends Fragment implements BrowseFragment.MainFragmen
     private OnItemViewSelectedListener mOnItemViewSelectedListener;
     private OnItemViewClickedListener mOnItemViewClickedListener;
     private Object mSceneAfterEntranceTransition;
+
+    public int getSelectedPosition() {
+        return mSelectedPosition;
+    }
+
     private int mSelectedPosition = -1;
     private BrowseFragment.MainFragmentAdapter mMainFragmentAdapter =
             new BrowseFragment.MainFragmentAdapter(this) {

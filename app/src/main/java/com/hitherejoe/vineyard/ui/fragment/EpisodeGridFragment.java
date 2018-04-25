@@ -22,6 +22,8 @@ import com.hitherejoe.vineyard.ui.presenter.EpisodePresenter;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * EpisodeGridFragment shows contents with vertical alignment
  */
@@ -33,11 +35,16 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
     private static final String MOVIE="MOVIE";
     private static final String SOURCE_TYPE="SOURCE_TYPE";
 
+    public static final int SOURCE_TYPE_SOURCE=0;
+    public static final int SOURCE_TYPE_EPISODE=1;
+
+
     private ArrayObjectAdapter mAdapter;
 
     private Movie mMovie;
 
     private int mSourceType;
+    private int mSelectedPosition;
 
     public static EpisodeGridFragment newInstance(Movie movie,int sourceType){
         EpisodeGridFragment episodeGridFragment= new EpisodeGridFragment();
@@ -63,6 +70,7 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
         setupFragment();
         setupEventListeners();
 
+        mSelectedPosition=mMovie.currentIndex;
         // it will move current focus to specified position. Comment out it to see the behavior.
          setSelectedPosition(mMovie.currentIndex);
     }
@@ -89,23 +97,68 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
     private void getFocus() {
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-//        getView().setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-////                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-////                    // 监听到返回按钮点击事件
-////
-////                    return true;
-////                }
-//                return false;
-//            }
-//        });
+
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Timber.d("onKey,keycode="+keyCode);
+
+                if(event.getAction()==KeyEvent.ACTION_UP){
+                    switch (keyCode){
+                        case KeyEvent.KEYCODE_DPAD_UP:{
+                            setSelectedPosition(mSelectedPosition--);
+
+                        }
+                        break;
+                        case  KeyEvent.KEYCODE_DPAD_DOWN:{
+                            setSelectedPosition(mSelectedPosition++);
+
+                        }
+                        break;
+                        case KeyEvent.KEYCODE_DPAD_CENTER:{
+                            playUrlOnPosition(mSelectedPosition);
+
+                        }
+                        break;
+                    }
+                }
+
+//                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+//                    // 监听到返回按钮点击事件
+//
+//                    return true;
+//                }
+                return false;
+            }
+        });
+    }
+
+    private void playUrlOnPosition(int selectedPosition) {
+
+
+        if(mSourceType==SOURCE_TYPE_EPISODE){
+            Movie.PlayUrlInfo playUrlInfo=(Movie.PlayUrlInfo) mAdapter.get(selectedPosition);
+            Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
+            intent.putExtra(DetailsActivity.MOVIE, mMovie);
+            intent.putExtra("URL",playUrlInfo.url);
+            getActivity().startActivity(intent);
+        }
+        else{
+            String sourceName=(String)mAdapter.get(selectedPosition);
+            mMovie.currentSource=sourceName;
+
+            Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
+            intent.putExtra(DetailsActivity.MOVIE, mMovie);
+            intent.putExtra("URL",mMovie.getVideoUrlInfo(sourceName,mMovie.currentIndex).url);
+            getActivity().startActivity(intent);
+        }
     }
 
     private void setupFragment() {
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
+
 
         mAdapter = new ArrayObjectAdapter(new EpisodePresenter());
 
