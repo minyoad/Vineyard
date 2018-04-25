@@ -67,12 +67,13 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
 //        setTitle("VerticalGridFragment");
         //setBadgeDrawable(getResources().getDrawable(R.drawable.app_icon_your_company));
 
+//        setupEventListeners();
         setupFragment();
-        setupEventListeners();
+
 
         mSelectedPosition=mMovie.currentIndex;
         // it will move current focus to specified position. Comment out it to see the behavior.
-         setSelectedPosition(mMovie.currentIndex);
+        setSelectedPosition(mMovie.currentIndex);
     }
 
     @Override
@@ -86,6 +87,19 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
         mSourceType=bundle.getInt(SOURCE_TYPE);
 
 
+    }
+
+    @Override
+    public void setSelectedPosition(int position){
+        super.setSelectedPosition(position);
+
+        for(int i=0;i<mAdapter.size();i++){
+            EpisodePresenter presenter=(EpisodePresenter) mAdapter.getPresenter(mAdapter.get(i));
+
+            presenter.setSelected(i==position);
+
+
+        }
     }
 
     @Override
@@ -135,7 +149,6 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
 
     private void playUrlOnPosition(int selectedPosition) {
 
-
         if(mSourceType==SOURCE_TYPE_EPISODE){
             Movie.PlayUrlInfo playUrlInfo=(Movie.PlayUrlInfo) mAdapter.get(selectedPosition);
             Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
@@ -158,6 +171,7 @@ public class EpisodeGridFragment extends android.support.v17.leanback.app.Vertic
         VerticalGridPresenter gridPresenter = new VerticalGridPresenter();
         gridPresenter.setNumberOfColumns(NUM_COLUMNS);
         setGridPresenter(gridPresenter);
+
 
 
         mAdapter = new ArrayObjectAdapter(new EpisodePresenter());

@@ -390,7 +390,6 @@ public class VideoDetailsFragment extends DetailsFragment {
                 case ACTION_PLAY_VIDEO:{
                     Intent intent = new Intent(getActivity(), XwalkWebViewActivity.class);
                     intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
-//                intent.putExtra(getResources().getString(R.string.should_start), true);
                     startActivity(intent);
                 }
                 break;

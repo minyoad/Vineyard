@@ -17,12 +17,31 @@ public class EpisodePresenter extends Presenter {
     private static int sSelectedBackgroundColor;
     private static int sDefaultBackgroundColor;
 
+    private EpisodeCardView mCardView;
+
+    public boolean isSelected() {
+        return mSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        mSelected = selected;
+//        updateCardBackgroundColor(mCardView,mSelected);
+    }
+
+    private boolean mSelected;
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent) {
         sDefaultBackgroundColor = ContextCompat.getColor(parent.getContext(), R.color.primary);
         sSelectedBackgroundColor = ContextCompat.getColor(parent.getContext(), R.color.primary_dark);
 
-        EpisodeCardView cardView = new EpisodeCardView(parent.getContext());
+        EpisodeCardView cardView = new EpisodeCardView(parent.getContext()){
+            @Override
+            public void setSelected(boolean selected) {
+                updateCardBackgroundColor(this, selected);
+                super.setSelected(selected);
+            }
+        };
 
         cardView.setFocusable(true);
         cardView.setFocusableInTouchMode(true);
@@ -30,7 +49,10 @@ public class EpisodePresenter extends Presenter {
         return new ViewHolder(cardView);
     }
 
-    private static void updateCardBackgroundColor(EpisodeCardView view, boolean selected) {
+
+
+
+    public void updateCardBackgroundColor(EpisodeCardView view, boolean selected) {
         view.setBackgroundColor(selected ? sSelectedBackgroundColor : sDefaultBackgroundColor);
     }
 

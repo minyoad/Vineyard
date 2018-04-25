@@ -79,7 +79,8 @@
         <activity
             android:name=".ui.activity.XwalkWebViewActivity"
             android:label="@string/label_main"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
 
         <activity
             android:name=".ui.activity.SearchActivity"

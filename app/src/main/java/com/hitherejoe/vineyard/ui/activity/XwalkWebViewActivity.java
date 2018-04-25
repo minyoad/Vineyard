@@ -176,14 +176,21 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 break;
                 case KeyEvent.KEYCODE_BACK: {//返回
 
-                    if(mEpisodeListFragment.isVisible()){
+                    if(mEpisodeListFragment!=null && mEpisodeListFragment.isVisible()){
                         getFragmentManager().beginTransaction()
                                 .remove(mEpisodeListFragment);
                     }
-                    if(mEpisodeSourceFragment.isVisible()){
+                    else if(mEpisodeSourceFragment!=null &&mEpisodeSourceFragment.isVisible()){
                         getFragmentManager().beginTransaction()
                                 .remove(mEpisodeSourceFragment);
                     }
+                    else{
+//                        Intent intent = new Intent(getBaseContext(),DetailsActivity.class);
+//                        intent.putExtra(DetailsActivity.MOVIE, mMovie);
+//                        startActivity(intent);
+                        finish();
+                    }
+
 
                 }
                 break;
@@ -229,6 +236,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         mXwalkView.addJavascriptInterface(new JSVideoObj(), "videoObj");
 
         Intent intent = getIntent();
+
         mMovie = intent.getParcelableExtra(DetailsActivity.MOVIE);
 
         String url = intent.getStringExtra(DetailsActivity.PLAY_URL);
@@ -246,6 +254,19 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         showLoadingView();
 
 
+    }
+
+    public void play(Movie.PlayUrlInfo playUrlInfo){
+
+        String url=playUrlInfo.url;
+
+        String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
+
+
+        Timber.d("URL=" + proxy + url);
+        mXwalkView.loadUrl(proxy + url, null);
+
+        showLoadingView();
     }
 
     public void showLoadingView(){
@@ -275,7 +296,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 .replace(R.id.episode_source_containter,mEpisodeSourceFragment,"source")
                 .addToBackStack("")
                 .commit();
-        mEpisodeSourceFragment.startEntranceTransition();
+        mEpisodeSourceFragment.prepareEntranceTransition();
+//        mEpisodeSourceFragment.getView().setFocusable(true);
+//        mEpisodeSourceFragment.getView().requestFocus();
 
     }
 
@@ -292,7 +315,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 .addToBackStack("")
                 .commit();
 
-        mEpisodeListFragment.startEntranceTransition();
+        mEpisodeListFragment.prepareEntranceTransition();
     }
 
     public class JSVideoObj {
@@ -306,6 +329,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             switch (eventType) {
                 case "ended": {
                     //play next video
+
 
                 }
                 break;
