@@ -55,7 +55,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     boolean paused;
     private Movie mMovie;
 
-    private PopupMenu mSourceMenu,mEpisodeMenu;
+    private PopupMenu mSourceMenu, mEpisodeMenu;
 
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
@@ -259,9 +259,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
     }
 
-    public void play(Movie.PlayUrlInfo playUrlInfo){
+    public void play(Movie.PlayUrlInfo playUrlInfo) {
 
-        String url=playUrlInfo.url;
+        String url = playUrlInfo.url;
 
         String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
 
@@ -272,105 +272,100 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         showLoadingView();
     }
 
-    public void showLoadingView(){
+    public void showLoadingView() {
 
         mOverlayView.setVisibility(View.VISIBLE);
         mProgressCard.setVisibility(View.VISIBLE);
 
     }
 
-    public void hideLoadingView(){
+    public void hideLoadingView() {
 //        mImageView.setVisibility(View.VISIBLE);
         mOverlayView.setVisibility(View.INVISIBLE);
         mProgressCard.setVisibility(View.INVISIBLE);
     }
 
 
-    public void showSourceList(){
-        Timber.d("movie="+mMovie);
+    public void showSourceList() {
+        Timber.d("movie=" + mMovie);
 
-        if (mSourceMenu==null) {
-
-            PopupMenu menu = new PopupMenu(this);
-            menu.setHeaderTitle("视频源");
-            final List<String> srcList = mMovie.getPlaySrcList();
-
-            // Set Listener
-            menu.setOnItemSelectedListener(new PopupMenu.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(MenuItem item) {
-                    int idx=item.getItemId();
-//                    String sourceName=srcList.get(idx);
-//                    mMovie.currentSource=sourceName;
-
-//                    Intent intent = new Intent(getBaseContext(), XwalkWebViewActivity.class);
-//                    intent.putExtra(DetailsActivity.MOVIE, mMovie);
-//                    intent.putExtra("URL",mMovie.getVideoUrlInfo(sourceName,mMovie.currentIndex).url);
-//                    startActivity(intent);
-
-                }
-            });
-
-            int i = 0;
-            for (String src : srcList) {
-                menu.add(i, src);
-                i++;
-            }
-
-            mSourceMenu=menu;
+        if (mSourceMenu != null) {
+            mSourceMenu.dismiss();
+            mSourceMenu = null;
         }
 
+        PopupMenu menu = new PopupMenu(this);
+        menu.setHeaderTitle("视频源");
+        final List<String> srcList = mMovie.getPlaySrcList();
 
+        // Set Listener
+        menu.setOnItemSelectedListener(new PopupMenu.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MenuItem item) {
+                int idx = item.getItemId();
+                String sourceName = srcList.get(idx);
+                mMovie.currentSource = sourceName;
 
+                Intent intent = new Intent(getBaseContext(), XwalkWebViewActivity.class);
+                intent.putExtra(DetailsActivity.MOVIE, mMovie);
+                intent.putExtra("URL", mMovie.getVideoUrlInfo(sourceName, mMovie.currentIndex).url);
+                startActivity(intent);
 
-//        // Add Menu (Android menu like style)
-//        menu.add(PLAY_SELECTION, R.string.play).setIcon(
-//                getResources().getDrawable(R.drawable.ic_context_menu_play_normal));
-//        menu.add(ADD_TO_PLAYLIST, R.string.add_to_playlist).setIcon(
-//                getResources().getDrawable(R.drawable.ic_context_menu_add_to_playlist_normal));
-//        menu.add(SEARCH, R.string.search).setIcon(
-//                getResources().getDrawable(R.drawable.ic_context_menu_search_normal));
-        mSourceMenu.show(mEpisodeSourceView);
+            }
+        });
+
+        int i = 0;
+        for (String src : srcList) {
+            menu.add(i, src);
+            i++;
+        }
+
+        mSourceMenu = menu;
+
+        menu.show(mEpisodeSourceView);
 
 
     }
 
-    public void showEpisodeList(){
+    public void showEpisodeList() {
 
-        if(mEpisodeMenu==null) {
-
-            PopupMenu menu = new PopupMenu(this);
-            menu.setHeaderTitle("分集列表");
-            final List<Movie.PlayUrlInfo> urlInfoList = mMovie.getPlayUrlList(mMovie.currentSource);
-
-            // Set Listener
-            menu.setOnItemSelectedListener(new PopupMenu.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(MenuItem item) {
-
-                    int idx=item.getItemId();
-
-//                    Movie.PlayUrlInfo urlInfo=urlInfoList.get(idx);
-
-//                    Intent intent = new Intent(getBaseContext(), XwalkWebViewActivity.class);
-//                    intent.putExtra(DetailsActivity.MOVIE, mMovie);
-//                    intent.putExtra("URL",urlInfo.url);
-//                    startActivity(intent);
-
-                }
-            });
-
-            int i = 0;
-            for (Movie.PlayUrlInfo urlInfo : urlInfoList) {
-
-                menu.add(i, urlInfo.title);
-
-                i++;
-            }
-            mEpisodeMenu=menu;
+        if (mEpisodeMenu != null) {
+            mEpisodeMenu.dismiss();
+            mEpisodeMenu = null;
         }
 
-        mEpisodeMenu.show(mEpisodeListView);
+        PopupMenu menu = new PopupMenu(this);
+        menu.setHeaderTitle("分集列表");
+        final List<Movie.PlayUrlInfo> urlInfoList = mMovie.getPlayUrlList(mMovie.currentSource);
+
+        // Set Listener
+        menu.setOnItemSelectedListener(new PopupMenu.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MenuItem item) {
+
+                int idx = item.getItemId();
+
+                Movie.PlayUrlInfo urlInfo = urlInfoList.get(idx);
+
+                Intent intent = new Intent(getBaseContext(), XwalkWebViewActivity.class);
+                intent.putExtra(DetailsActivity.MOVIE, mMovie);
+                intent.putExtra("URL", urlInfo.url);
+                startActivity(intent);
+
+            }
+        });
+
+        int i = 0;
+        for (Movie.PlayUrlInfo urlInfo : urlInfoList) {
+
+            menu.add(i, urlInfo.title);
+
+            i++;
+        }
+        mEpisodeMenu = menu;
+//        }
+
+        menu.show(mEpisodeListView);
 
     }
 
