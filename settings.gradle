@@ -1,2 +1,2 @@
-include ':app', 'xwalk_core_library'
+include ':app', ':mylibrary', 'xwalk_core_library'
 include ':xwalk_core_library'

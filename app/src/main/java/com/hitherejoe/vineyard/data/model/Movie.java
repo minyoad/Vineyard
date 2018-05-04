@@ -279,8 +279,8 @@ public class Movie implements Comparable<Movie>, Parcelable{
                 break;
 
             default:
-                proxyurl="http://jiexi.mybacc.com/jiexi.php?url=";
-//                proxyurl="http://jx.vgoodapi.com/jx.php?url=";
+//                proxyurl="http://jiexi.mybacc.com/jiexi.php?url=";
+                proxyurl="http://jx.vgoodapi.com/jx.php?url=";
                 break;
         }
         return  proxyurl;

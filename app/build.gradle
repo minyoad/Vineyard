@@ -100,6 +100,8 @@ dependencies {
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
+    //    compile 'com.u1aryz:android-newpopupmenu-lib:1.0.1'
+
     //Required by Dagger2
 
     // Instrumentation test dependencies
@@ -136,4 +138,5 @@ dependencies {
 
     //    androidTestApt daggerCompiler
     implementation project(':xwalk_core_library')
+    implementation project(':mylibrary')
 }

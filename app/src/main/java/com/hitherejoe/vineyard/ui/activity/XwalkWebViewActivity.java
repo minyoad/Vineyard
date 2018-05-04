@@ -13,7 +13,9 @@ import android.widget.ProgressBar;
 
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.data.model.Movie;
-import com.hitherejoe.vineyard.ui.fragment.EpisodeGridFragment;
+import com.mybacc.popupmenu.MenuItem;
+import com.mybacc.popupmenu.PopupMenu;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,7 @@ import org.xwalk.core.XWalkWebResourceResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,14 +46,16 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     @Bind(R.id.progress_card)
     ProgressBar mProgressCard;
 
-//    @Bind(R.id.episode_list_containter)
-    EpisodeGridFragment mEpisodeListFragment;
+    @Bind(R.id.episode_list_containter)
+    View mEpisodeListView;
 
-//    @Bind(R.id.episode_source_containter)
-    EpisodeGridFragment mEpisodeSourceFragment;
+    @Bind(R.id.episode_source_containter)
+    View mEpisodeSourceView;
 
     boolean paused;
     private Movie mMovie;
+
+    private PopupMenu mSourceMenu,mEpisodeMenu;
 
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
@@ -176,20 +181,20 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 break;
                 case KeyEvent.KEYCODE_BACK: {//返回
 
-                    if(mEpisodeListFragment!=null && mEpisodeListFragment.isVisible()){
-                        getFragmentManager().beginTransaction()
-                                .remove(mEpisodeListFragment);
-                    }
-                    else if(mEpisodeSourceFragment!=null &&mEpisodeSourceFragment.isVisible()){
-                        getFragmentManager().beginTransaction()
-                                .remove(mEpisodeSourceFragment);
-                    }
-                    else{
-//                        Intent intent = new Intent(getBaseContext(),DetailsActivity.class);
-//                        intent.putExtra(DetailsActivity.MOVIE, mMovie);
-//                        startActivity(intent);
-                        finish();
-                    }
+//                    if(mEpisodeListFragment!=null && mEpisodeListFragment.isVisible()){
+//                        getFragmentManager().beginTransaction()
+//                                .remove(mEpisodeListFragment);
+//                    }
+//                    else if(mEpisodeSourceFragment!=null &&mEpisodeSourceFragment.isVisible()){
+//                        getFragmentManager().beginTransaction()
+//                                .remove(mEpisodeSourceFragment);
+//                    }
+//                    else{
+////                        Intent intent = new Intent(getBaseContext(),DetailsActivity.class);
+////                        intent.putExtra(DetailsActivity.MOVIE, mMovie);
+////                        startActivity(intent);
+//                        finish();
+//                    }
 
 
                 }
@@ -250,9 +255,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         Timber.d("URL=" + proxy + url);
         mXwalkView.loadUrl(proxy + url, null);
 
-
         showLoadingView();
-
 
     }
 
@@ -285,37 +288,90 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
     public void showSourceList(){
         Timber.d("movie="+mMovie);
-        if(mMovie==null)
-            return;
 
-        if(mEpisodeSourceFragment==null){
-            mEpisodeSourceFragment=EpisodeGridFragment.newInstance(mMovie,EpisodeGridFragment.SOURCE_TYPE_SOURCE);
+        if (mSourceMenu==null) {
+
+            PopupMenu menu = new PopupMenu(this);
+            menu.setHeaderTitle("视频源");
+            final List<String> srcList = mMovie.getPlaySrcList();
+
+            // Set Listener
+            menu.setOnItemSelectedListener(new PopupMenu.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(MenuItem item) {
+                    int idx=item.getItemId();
+//                    String sourceName=srcList.get(idx);
+//                    mMovie.currentSource=sourceName;
+
+//                    Intent intent = new Intent(getBaseContext(), XwalkWebViewActivity.class);
+//                    intent.putExtra(DetailsActivity.MOVIE, mMovie);
+//                    intent.putExtra("URL",mMovie.getVideoUrlInfo(sourceName,mMovie.currentIndex).url);
+//                    startActivity(intent);
+
+                }
+            });
+
+            int i = 0;
+            for (String src : srcList) {
+                menu.add(i, src);
+                i++;
+            }
+
+            mSourceMenu=menu;
         }
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.episode_source_containter,mEpisodeSourceFragment,"source")
-                .addToBackStack("")
-                .commit();
-        mEpisodeSourceFragment.prepareEntranceTransition();
-//        mEpisodeSourceFragment.getView().setFocusable(true);
-//        mEpisodeSourceFragment.getView().requestFocus();
+
+
+
+//        // Add Menu (Android menu like style)
+//        menu.add(PLAY_SELECTION, R.string.play).setIcon(
+//                getResources().getDrawable(R.drawable.ic_context_menu_play_normal));
+//        menu.add(ADD_TO_PLAYLIST, R.string.add_to_playlist).setIcon(
+//                getResources().getDrawable(R.drawable.ic_context_menu_add_to_playlist_normal));
+//        menu.add(SEARCH, R.string.search).setIcon(
+//                getResources().getDrawable(R.drawable.ic_context_menu_search_normal));
+        mSourceMenu.show(mEpisodeSourceView);
+
 
     }
 
     public void showEpisodeList(){
-        if(mMovie==null)
-            return;
 
-        if(mEpisodeListFragment==null){
-            mEpisodeListFragment=EpisodeGridFragment.newInstance(mMovie,EpisodeGridFragment.SOURCE_TYPE_EPISODE);
+        if(mEpisodeMenu==null) {
+
+            PopupMenu menu = new PopupMenu(this);
+            menu.setHeaderTitle("分集列表");
+            final List<Movie.PlayUrlInfo> urlInfoList = mMovie.getPlayUrlList(mMovie.currentSource);
+
+            // Set Listener
+            menu.setOnItemSelectedListener(new PopupMenu.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(MenuItem item) {
+
+                    int idx=item.getItemId();
+
+//                    Movie.PlayUrlInfo urlInfo=urlInfoList.get(idx);
+
+//                    Intent intent = new Intent(getBaseContext(), XwalkWebViewActivity.class);
+//                    intent.putExtra(DetailsActivity.MOVIE, mMovie);
+//                    intent.putExtra("URL",urlInfo.url);
+//                    startActivity(intent);
+
+                }
+            });
+
+            int i = 0;
+            for (Movie.PlayUrlInfo urlInfo : urlInfoList) {
+
+                menu.add(i, urlInfo.title);
+
+                i++;
+            }
+            mEpisodeMenu=menu;
         }
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.episode_list_containter,mEpisodeListFragment,"list")
-                .addToBackStack("")
-                .commit();
+        mEpisodeMenu.show(mEpisodeListView);
 
-        mEpisodeListFragment.prepareEntranceTransition();
     }
 
     public class JSVideoObj {
