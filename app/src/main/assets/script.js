@@ -34,7 +34,23 @@ var media_properties_elts = null;
 function init() {
 	console.log("init");
 
-	document._video = document.getElementsByTagName("video")[0];
+	var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
+        iframes = document.getElementsByTagName('iframe'), l = IMGelems.length,
+        m = iframes.length, i, j;
+    for( i=0; i<l; i++) IMGmatches[i] = IMGelems[i];
+    for( j=0; j<m; j++) {
+        IMGelems = iframes[j].contentDocument.getElementsByTagName("video");
+        l = IMGelems.length;
+        for( i=0; i<l; i++) IMGmatches.push(IMGelems[i]);
+    }
+
+
+//	document._video= document.getElementsByTagName("video")[0];
+
+	document._video=IMGmatches[0];
+
+	iframe0=iframes[0];
+	iframe0.webkitRequestFullscreen();
 
 	media_properties_elts = {};
 
@@ -44,7 +60,6 @@ function init() {
 	// properties are updated even if no event was triggered
 	setInterval(update_properties, 1000);
 }
-
 
 document.addEventListener("DOMContentLoaded", init, false);
 

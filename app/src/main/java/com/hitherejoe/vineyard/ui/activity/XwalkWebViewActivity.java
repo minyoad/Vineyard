@@ -71,6 +71,16 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             } else if (request.getUrl().toString().contains("cnzz.com/")) {
                 return createXWalkWebResourceResponse("", "", null);
             }
+            else if (request.getUrl().toString().contains("img2.xjoot.com")) {
+                return createXWalkWebResourceResponse("", "", null);
+            }
+            else if (request.getUrl().toString().contains("km.jianduankm.com")) {
+                return createXWalkWebResourceResponse("", "", null);
+            }
+            else if (request.getUrl().toString().contains("e.nirentang.com")) {
+                return createXWalkWebResourceResponse("", "", null);
+            }
+
 
             return super.shouldInterceptLoadRequest(view, request);
 
@@ -100,7 +110,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         }
 
         private void play() {
-            String js = "javascript:getVideo().play();";
+            String js = "javascript:var elem=getVideo();elem.play();";
             mWalkView.loadUrl(js);
         }
 
@@ -388,7 +398,17 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 case "playing": {
 
                     //hide loading view
-                    hideLoadingView();
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            // Stuff that updates the UI
+                            hideLoadingView();
+
+                        }
+                    });
+
                 }
             }
 

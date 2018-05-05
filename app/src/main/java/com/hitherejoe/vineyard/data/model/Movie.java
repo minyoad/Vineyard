@@ -275,12 +275,19 @@ public class Movie implements Comparable<Movie>, Parcelable{
         switch (playerName){
             case "kkyun":
             case "kuyun":
+            case "ckm3u8":
 
                 break;
-
             default:
 //                proxyurl="http://jiexi.mybacc.com/jiexi.php?url=";
-                proxyurl="http://jx.vgoodapi.com/jx.php?url=";
+//                proxyurl="http://jx.vgoodapi.com/jx.php?url=";
+//                proxyurl="http://api.kq1f.cn/vip/index.php?url=";
+//                proxyurl="http://y.qin52.com/?url=";
+//                proxyurl="http://yun.baiyug.cn/vip/index.php?url=";
+//                proxyurl="http://jqaaa.com/jx.php?url=";
+                proxyurl="http://beaacc.com/api.php?url=";
+//                proxyurl="http://www.dgua.xyz/webcloud/?url=";
+
                 break;
         }
         return  proxyurl;
