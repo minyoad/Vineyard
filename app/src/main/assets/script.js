@@ -31,10 +31,19 @@ var media_properties = ["error", "src", "srcObject", "currentSrc", "crossOrigin"
 
 var media_properties_elts = null;
 
+
+var init_intval=0;
+
 function init() {
 	console.log("init");
 
-	var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
+    init_intval=setInterval(getVideo,1000);
+
+}
+
+function config_video(){
+
+var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
         iframes = document.getElementsByTagName('iframe'), l = IMGelems.length,
         m = iframes.length, i, j;
     for( i=0; i<l; i++) IMGmatches[i] = IMGelems[i];
@@ -43,7 +52,6 @@ function init() {
         l = IMGelems.length;
         for( i=0; i<l; i++) IMGmatches.push(IMGelems[i]);
     }
-
 
 //	document._video= document.getElementsByTagName("video")[0];
 
@@ -54,19 +62,24 @@ function init() {
 
 	media_properties_elts = {};
 
-	init_events("events", media_events);
+	init_events(document._video, media_events);
 	init_properties("properties", media_properties, media_properties_elts);
 
 	// properties are updated even if no event was triggered
 	setInterval(update_properties, 1000);
+
+
+	clearInterval(init_intval);
+
 }
+
 
 document.addEventListener("DOMContentLoaded", init, false);
 
 function init_events(id, arrayEventDef) {
 
 	for (key in arrayEventDef) {
-		document._video.addEventListener(key, capture, false);
+		id.addEventListener(key, capture, false);
 	}
 }
 
@@ -110,7 +123,7 @@ function getVideo() {
 
 //    console.log("getvideo:"+document._video);
     if(typeof(document._video) == 'undefined'){
-        init();
+        config_video();
     }
 
 	return document._video;
