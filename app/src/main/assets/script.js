@@ -58,7 +58,9 @@ var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
 	document._video=IMGmatches[0];
 
 	iframe0=iframes[0];
-	iframe0.webkitRequestFullscreen();
+	if(iframe0 !='undefined'){
+	    iframe0.webkitRequestFullscreen();
+	}
 
 	media_properties_elts = {};
 

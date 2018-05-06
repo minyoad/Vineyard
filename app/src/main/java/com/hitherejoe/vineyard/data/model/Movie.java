@@ -275,7 +275,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
         switch (playerName){
             case "kkyun":
             case "kuyun":
-            case "ckm3u8":
+//            case "ckm3u8":
 
                 break;
             default:

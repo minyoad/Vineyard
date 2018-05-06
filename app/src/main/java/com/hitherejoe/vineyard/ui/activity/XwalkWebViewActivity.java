@@ -55,6 +55,8 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     boolean paused;
     private Movie mMovie;
 
+    private boolean mLoading;
+
     private PopupMenu mSourceMenu, mEpisodeMenu;
 
     class MyResourceClient extends XWalkResourceClient {
@@ -110,7 +112,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         }
 
         private void play() {
-            String js = "javascript:var elem=getVideo();elem.play();";
+            String js = "javascript:getVideo().play();";
             mWalkView.loadUrl(js);
         }
 
@@ -287,12 +289,26 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         mOverlayView.setVisibility(View.VISIBLE);
         mProgressCard.setVisibility(View.VISIBLE);
 
+        mLoading=true;
+
     }
 
     public void hideLoadingView() {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                // Stuff that updates the UI
+
 //        mImageView.setVisibility(View.VISIBLE);
-        mOverlayView.setVisibility(View.INVISIBLE);
-        mProgressCard.setVisibility(View.INVISIBLE);
+                mOverlayView.setVisibility(View.INVISIBLE);
+                mProgressCard.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mLoading=false;
+
     }
 
 
@@ -394,20 +410,14 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
                 }
                 break;
+                case "progress":
                 case "canplay":
                 case "playing": {
 
                     //hide loading view
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                            // Stuff that updates the UI
-                            hideLoadingView();
-
-                        }
-                    });
+                    if(mLoading) {
+                        hideLoadingView();
+                    }
 
                 }
             }
