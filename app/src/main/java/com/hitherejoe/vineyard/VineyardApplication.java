@@ -7,6 +7,8 @@ import com.hitherejoe.vineyard.injection.component.ApplicationComponent;
 import com.hitherejoe.vineyard.injection.component.DaggerApplicationComponent;
 import com.hitherejoe.vineyard.injection.module.ApplicationModule;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 public class VineyardApplication extends Application {
@@ -21,6 +23,10 @@ public class VineyardApplication extends Application {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().name("vineyard.realm").build();
+        Realm.setDefaultConfiguration(config);
     }
 
     public static VineyardApplication get(Context context) {
