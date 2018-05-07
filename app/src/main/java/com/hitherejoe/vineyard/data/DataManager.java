@@ -1,5 +1,7 @@
 package com.hitherejoe.vineyard.data;
 
+import com.hitherejoe.vineyard.VineyardApplication;
+import com.hitherejoe.vineyard.data.local.PlayerHelper;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Authentication;
 import com.hitherejoe.vineyard.data.model.Category;
@@ -42,6 +44,11 @@ public class DataManager {
         mCategoryList=new LinkedList<>();
 
     }
+
+//    public PlayerHelper getPlayerHelper(){
+//        return new PlayerHelper();
+//
+//    }
 
     public PreferencesHelper getPreferencesHelper() {
         return mPreferencesHelper;
@@ -105,6 +112,10 @@ public class DataManager {
 
     public Call<VineyardService.MovieResponse> getPopularPostsSynchronous() {
         return mVineyardService.getPopularPosts();
+    }
+
+    public Call<VineyardService.PlayerResponse> getPlayerList(){
+        return mVineyardService.getPlayerList();
     }
 
     public Observable<VineyardService.MovieResponse> getEditorsPicksPosts(String page, String anchor) {

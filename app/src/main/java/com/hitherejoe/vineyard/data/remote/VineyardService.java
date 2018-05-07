@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.hitherejoe.vineyard.data.model.Authentication;
 import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Movie;
+import com.hitherejoe.vineyard.data.model.Player;
 import com.hitherejoe.vineyard.data.model.Tag;
 import com.hitherejoe.vineyard.data.model.User;
 import com.squareup.okhttp.Interceptor;
@@ -68,6 +69,9 @@ public interface VineyardService {
 
     @GET("index.php?s=plus-api-category")
     Observable<CategoryListResponse> getCategoryList();
+
+    @GET("index.php?s=plus-api-player")
+    Call<PlayerResponse> getPlayerList();
 
 
 
@@ -135,6 +139,15 @@ public interface VineyardService {
             public String anchorStr;
             public List<Tag> records;
         }
+    }
+
+    class PlayerResponse{
+        public String status;
+
+        public MovieResponse.Page page;
+
+        public List<Player> data;
+
     }
 
     class UserResponse {
