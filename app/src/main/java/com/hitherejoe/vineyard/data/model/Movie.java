@@ -311,6 +311,17 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     }
 
+    public int getIndexByUrl(String urlInfo){
+        List<PlayUrlInfo> urls= mPlayUrlMap.get(currentSource);
+
+        for(PlayUrlInfo urlInfo1:urls){
+            if (urlInfo1.url.equalsIgnoreCase(urlInfo)){
+                return urls.indexOf(urlInfo1);
+            }
+        }
+
+        return 0;
+    }
 
     public PlayUrlInfo getPlayUrl(String playName,int index){
 
@@ -321,7 +332,6 @@ public class Movie implements Comparable<Movie>, Parcelable{
                 return urls.get(index);
             }
         }
-
 
         return  null;
 

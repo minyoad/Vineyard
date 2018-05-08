@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.hitherejoe.vineyard.R;
+import com.hitherejoe.vineyard.VineyardApplication;
+import com.hitherejoe.vineyard.data.local.PlayerHelper;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.mybacc.popupmenu.MenuItem;
 import com.mybacc.popupmenu.PopupMenu;
@@ -82,7 +85,6 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             else if (request.getUrl().toString().contains("e.nirentang.com")) {
                 return createXWalkWebResourceResponse("", "", null);
             }
-
 
             return super.shouldInterceptLoadRequest(view, request);
 
@@ -258,30 +260,43 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         String url = intent.getStringExtra(DetailsActivity.PLAY_URL);
 
-        if (url == null || url.isEmpty())
-            url = mMovie.getVideoUrl();
+        int pid=0;
 
-        String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
+        if(url!=null && !url.isEmpty()){
+
+            pid=mMovie.getIndexByUrl(url);
+
+        }
 
 
-        Timber.d("URL=" + proxy + url);
-        mXwalkView.loadUrl(proxy + url, null);
+        play(pid);
 
-        showLoadingView();
+//        String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
+//
+//
+//        Timber.d("URL=" + proxy + url);
+//        mXwalkView.loadUrl(proxy + url, null);
+//
+//        showLoadingView();
 
     }
 
-    public void play(Movie.PlayUrlInfo playUrlInfo) {
+    public void play(int pid) {
+
+        mMovie.currentIndex=pid;
+
+        Movie.PlayUrlInfo playUrlInfo=mMovie.getPlayUrl(mMovie.currentSource,pid);
 
         String url = playUrlInfo.url;
 
         String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
 
-
         Timber.d("URL=" + proxy + url);
         mXwalkView.loadUrl(proxy + url, null);
 
         showLoadingView();
+
+
     }
 
     public void showLoadingView() {
@@ -340,9 +355,10 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             }
         });
 
+        PlayerHelper playerHelper=VineyardApplication.get(this).getComponent().playerHelper();
         int i = 0;
         for (String src : srcList) {
-            menu.add(i, src);
+            menu.add(i, playerHelper.getPlayerName(src));
             i++;
         }
 
@@ -384,7 +400,11 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         int i = 0;
         for (Movie.PlayUrlInfo urlInfo : urlInfoList) {
 
-            menu.add(i, urlInfo.title);
+            MenuItem menuItem=menu.add(i, urlInfo.title);
+
+            if (i==mMovie.currentIndex){
+                menuItem.setIcon(getDrawable(R.drawable.ic_play));
+            }
 
             i++;
         }
@@ -406,7 +426,6 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             switch (eventType) {
                 case "ended": {
                     //play next video
-
 
                 }
                 break;

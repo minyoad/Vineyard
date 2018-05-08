@@ -16,6 +16,9 @@ public class DetailsActivity extends Activity {
     public static final String MOVIE = "Movie";
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String PLAY_URL = "URL";
+    public static final String PLAY_PID = "PID";
+
+
 
 //    @Inject
 //    DataManager mDataManager;

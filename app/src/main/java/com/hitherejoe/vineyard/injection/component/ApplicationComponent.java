@@ -4,7 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.hitherejoe.vineyard.data.DataManager;
+import com.hitherejoe.vineyard.data.local.PlayerHelper;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
+import com.hitherejoe.vineyard.data.local.RecordHelper;
 import com.hitherejoe.vineyard.injection.ApplicationContext;
 import com.hitherejoe.vineyard.injection.module.ApplicationModule;
 import com.squareup.otto.Bus;
@@ -25,5 +27,7 @@ public interface ApplicationComponent {
     DataManager dataManager();
     CompositeSubscription compositeSubscription();
     Bus eventBus();
+    PlayerHelper playerHelper();
+    RecordHelper recordHelper();
 
 }

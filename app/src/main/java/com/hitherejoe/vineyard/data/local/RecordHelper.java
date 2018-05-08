@@ -3,18 +3,24 @@ package com.hitherejoe.vineyard.data.local;
 import android.content.Context;
 
 import com.hitherejoe.vineyard.data.model.Record;
+import com.hitherejoe.vineyard.injection.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+@Singleton
 public class RecordHelper {
 
     private Context mContext;
-    public RecordHelper(Context context) {
+    @Inject
+    public RecordHelper(@ApplicationContext  Context context) {
         mContext=context;
     }
 

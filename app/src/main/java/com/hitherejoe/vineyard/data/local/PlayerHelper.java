@@ -6,25 +6,31 @@ import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.DataManager;
 import com.hitherejoe.vineyard.data.model.Player;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
+import com.hitherejoe.vineyard.injection.ApplicationContext;
 
 import java.io.IOException;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.realm.Realm;
 import retrofit.Call;
 import retrofit.Response;
 import timber.log.Timber;
 
+@Singleton
 public class PlayerHelper {
 
     private Context mContext;
 
-    public PlayerHelper(Context context) {
+    @Inject
+    public PlayerHelper(@ApplicationContext Context context) {
         mContext=context;
 
         loadPlayerData();
     }
 
-    public static String getPlayerName(String player){
+    public String getPlayerName(String player){
 
         Realm realm=Realm.getDefaultInstance();
 
