@@ -85,6 +85,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             else if (request.getUrl().toString().contains("e.nirentang.com")) {
                 return createXWalkWebResourceResponse("", "", null);
             }
+//            else if (request.getUrl().toString().contains("boba.52kuyun.com/html/js/share.js")) {
+//                return createXWalkWebResourceResponse("", "", null);
+//            }
 
             return super.shouldInterceptLoadRequest(view, request);
 

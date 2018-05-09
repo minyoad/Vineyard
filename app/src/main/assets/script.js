@@ -33,6 +33,7 @@ var media_properties_elts = null;
 
 
 var init_intval=0;
+var inited=false;
 
 function init() {
 	console.log("init");
@@ -43,9 +44,18 @@ function init() {
 
 function config_video(){
 
+console.log("config_video");
+
+var videoElem=document.getElementsByTagName("video");
+
+if(videoElem.length>0){
+    document._video= document.getElementsByTagName("video")[0];
+}
+else{// not found video tag, find iframe.video
 var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
         iframes = document.getElementsByTagName('iframe'), l = IMGelems.length,
         m = iframes.length, i, j;
+
     for( i=0; i<l; i++) IMGmatches[i] = IMGelems[i];
     for( j=0; j<m; j++) {
         IMGelems = iframes[j].contentDocument.getElementsByTagName("video");
@@ -62,6 +72,8 @@ var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
 	    iframe0.webkitRequestFullscreen();
 	}
 
+	console.log("iframe="+iframe0);
+}
 	media_properties_elts = {};
 
 	init_events(document._video, media_events);
@@ -70,8 +82,9 @@ var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
 	// properties are updated even if no event was triggered
 	setInterval(update_properties, 1000);
 
-
 	clearInterval(init_intval);
+
+	inited=true;
 
 }
 
@@ -79,13 +92,14 @@ var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
 document.addEventListener("DOMContentLoaded", init, false);
 
 function init_events(id, arrayEventDef) {
-
+    console.log("init_events");
 	for (key in arrayEventDef) {
 		id.addEventListener(key, capture, false);
 	}
 }
 
 function init_properties(id, arrayPropDef, arrayProp) {
+    console.log("init_properties");
 	var i = 0;
 	do {
 		var r;
@@ -124,7 +138,7 @@ function update_properties() {
 function getVideo() {
 
 //    console.log("getvideo:"+document._video);
-    if(typeof(document._video) == 'undefined'){
+    if(typeof(document._video) == 'undefined' || !inited){
         config_video();
     }
 
