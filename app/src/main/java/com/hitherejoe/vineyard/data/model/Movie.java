@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  *  Modified from AOSP sample source code, by corochann on 2/7/2015.
@@ -249,7 +250,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
                 PlayUrlInfo playUrlInfo=new PlayUrlInfo();
 
                 if(infos.length>1) {
-                    playUrlInfo.title = infos[0];
+                    playUrlInfo.title = generateUrlName(infos[0]);
                     playUrlInfo.url = infos[1];
                 }
                 else{
@@ -268,6 +269,20 @@ public class Movie implements Comparable<Movie>, Parcelable{
         currentSource=mPlaySrcList.get(0);
         currentIndex=0;
 
+    }
+
+    private String generateUrlName(String origName){
+        if (isNumeric(origName)){
+            return "第"+origName+"集";
+        }
+        else{
+            return origName;
+        }
+    }
+
+    public static boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(str).matches();
     }
 
     public String getProxyUrlByPlayer(String playerName){
