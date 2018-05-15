@@ -33,6 +33,7 @@ import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.BusEvent;
 import com.hitherejoe.vineyard.data.DataManager;
+import com.hitherejoe.vineyard.data.local.PlayerHelper;
 import com.hitherejoe.vineyard.data.local.PreferencesHelper;
 import com.hitherejoe.vineyard.data.model.Category;
 import com.hitherejoe.vineyard.data.model.Option;
@@ -395,7 +396,16 @@ public class MainFragment extends BrowseFragment {
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof Movie) {
                 String backgroundUrl = ((Movie) item).getBackgroundImageUrl();
-                if (backgroundUrl != null) startBackgroundTimer(URI.create(backgroundUrl));
+
+                try {
+                    URI uri = URI.create(backgroundUrl);
+
+                    if (backgroundUrl != null && uri != null)
+                        startBackgroundTimer(uri);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 int index = mRowsAdapter.indexOf(row);
                 MovieAdapter adapter =
                         ((MovieAdapter) ((ListRow) mRowsAdapter.get(index)).getAdapter());
@@ -405,6 +415,8 @@ public class MainFragment extends BrowseFragment {
             }
         }
     };
+
+
 
     public void downloadCategorySubcription(){
 

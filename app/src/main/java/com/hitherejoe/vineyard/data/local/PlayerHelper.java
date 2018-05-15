@@ -27,7 +27,7 @@ public class PlayerHelper {
     public PlayerHelper(@ApplicationContext Context context) {
         mContext=context;
 
-        loadPlayerData();
+//        loadPlayerData();
     }
 
     public String getPlayerName(String player){

@@ -198,6 +198,12 @@ public class PopupMenu {
         }
     }
 
+    public void setSelectedPosition(int position){
+
+        mItemsView.smoothScrollToPosition(position);
+
+    }
+
     /**
      * Sets the popup menu header's title.
      *

@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.DataManager;
+import com.hitherejoe.vineyard.data.local.PlayerHelper;
 import com.hitherejoe.vineyard.data.model.Movie;
 //import com.hitherejoe.vineyard.data.model.Post;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
@@ -46,7 +47,11 @@ public class UpdateRecommendationsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Timber.i("Retrieving popular posts for recommendations...");
+
+        downloadPlayerInfo();
+
         DataManager mDataManager = VineyardApplication.get(this).getComponent().dataManager();
+
         Call<VineyardService.MovieResponse> popularPosts = mDataManager.getPopularPostsSynchronous();
         try {
             Response<VineyardService.MovieResponse> response = popularPosts.execute();
@@ -58,6 +63,15 @@ public class UpdateRecommendationsService extends IntentService {
 
     }
 
+    public void downloadPlayerInfo(){
+
+
+        PlayerHelper playerHelper=VineyardApplication.get(this).getComponent().playerHelper();
+
+        playerHelper.loadPlayerData();
+
+
+    }
     private void handleRecommendations(List<Movie> recommendations) {
         Timber.i("Building recommendations...");
         Resources res = getResources();

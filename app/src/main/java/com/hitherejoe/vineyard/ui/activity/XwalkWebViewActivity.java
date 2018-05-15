@@ -10,7 +10,9 @@ import android.view.Menu;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.VineyardApplication;
@@ -46,14 +48,24 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     @Bind(R.id.view_overlay)
     View mOverlayView;
 
+    @Bind(R.id.loadingLayout)
+    LinearLayout mLinearLayout;
+
     @Bind(R.id.progress_card)
     ProgressBar mProgressCard;
+
+    @Bind(R.id.movieName)
+    TextView mMovieName;
+
+    @Bind(R.id.episodeName)
+    TextView mEpisodeName;
 
     @Bind(R.id.episode_list_containter)
     View mEpisodeListView;
 
     @Bind(R.id.episode_source_containter)
     View mEpisodeSourceView;
+
 
     boolean paused;
     private Movie mMovie;
@@ -75,14 +87,11 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 return createXWalkWebResourceResponse("", "", null);
             } else if (request.getUrl().toString().contains("cnzz.com/")) {
                 return createXWalkWebResourceResponse("", "", null);
-            }
-            else if (request.getUrl().toString().contains("img2.xjoot.com")) {
+            } else if (request.getUrl().toString().contains("img2.xjoot.com")) {
                 return createXWalkWebResourceResponse("", "", null);
-            }
-            else if (request.getUrl().toString().contains("km.jianduankm.com")) {
+            } else if (request.getUrl().toString().contains("km.jianduankm.com")) {
                 return createXWalkWebResourceResponse("", "", null);
-            }
-            else if (request.getUrl().toString().contains("e.nirentang.com")) {
+            } else if (request.getUrl().toString().contains("e.nirentang.com")) {
                 return createXWalkWebResourceResponse("", "", null);
             }
 //            else if (request.getUrl().toString().contains("boba.52kuyun.com/html/js/share.js")) {
@@ -263,11 +272,11 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         String url = intent.getStringExtra(DetailsActivity.PLAY_URL);
 
-        int pid=0;
+        int pid = 0;
 
-        if(url!=null && !url.isEmpty()){
+        if (url != null && !url.isEmpty()) {
 
-            pid=mMovie.getIndexByUrl(url);
+            pid = mMovie.getIndexByUrl(url);
 
         }
 
@@ -286,9 +295,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
     public void play(int pid) {
 
-        mMovie.currentIndex=pid;
+        mMovie.currentIndex = pid;
 
-        Movie.PlayUrlInfo playUrlInfo=mMovie.getPlayUrl(mMovie.currentSource,pid);
+        Movie.PlayUrlInfo playUrlInfo = mMovie.getPlayUrl(mMovie.currentSource, pid);
 
         String url = playUrlInfo.url;
 
@@ -304,10 +313,15 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
     public void showLoadingView() {
 
+        mMovieName.setText(mMovie.getTitle());
+        mEpisodeName.setText(mMovie.getPlayUrl(mMovie.currentSource, mMovie.currentIndex).title);
+
+        mImageView.setVisibility(View.VISIBLE);
+        mLinearLayout.setVisibility(View.VISIBLE);
         mOverlayView.setVisibility(View.VISIBLE);
         mProgressCard.setVisibility(View.VISIBLE);
 
-        mLoading=true;
+        mLoading = true;
 
     }
 
@@ -319,13 +333,14 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
                 // Stuff that updates the UI
 
-//        mImageView.setVisibility(View.VISIBLE);
+                mImageView.setVisibility(View.INVISIBLE);
+                mLinearLayout.setVisibility(View.INVISIBLE);
                 mOverlayView.setVisibility(View.INVISIBLE);
                 mProgressCard.setVisibility(View.INVISIBLE);
             }
         });
 
-        mLoading=false;
+        mLoading = false;
 
     }
 
@@ -358,17 +373,20 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             }
         });
 
-        PlayerHelper playerHelper=VineyardApplication.get(this).getComponent().playerHelper();
+        PlayerHelper playerHelper = VineyardApplication.get(this).getComponent().playerHelper();
         int i = 0;
         for (String src : srcList) {
             menu.add(i, playerHelper.getPlayerName(src));
             i++;
         }
 
+        int idx = srcList.indexOf(mMovie.currentSource);
+
         mSourceMenu = menu;
 
         menu.show(mEpisodeSourceView);
 
+        menu.setSelectedPosition(idx);
 
     }
 
@@ -403,9 +421,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         int i = 0;
         for (Movie.PlayUrlInfo urlInfo : urlInfoList) {
 
-            MenuItem menuItem=menu.add(i, urlInfo.title);
+            MenuItem menuItem = menu.add(i, urlInfo.title);
 
-            if (i==mMovie.currentIndex){
+            if (i == mMovie.currentIndex) {
                 menuItem.setIcon(getDrawable(R.drawable.ic_play));
             }
 
@@ -415,6 +433,8 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 //        }
 
         menu.show(mEpisodeListView);
+        mEpisodeMenu.setSelectedPosition(mMovie.currentIndex);
+
 
     }
 
@@ -437,9 +457,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 case "playing": {
 
                     //hide loading view
-                    if(mLoading) {
-                        hideLoadingView();
-                    }
+//                    if(mLoading) {
+//                        hideLoadingView();
+//                    }
 
                 }
             }
@@ -460,6 +480,12 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                     double currentTime = jsonObject.getDouble("currentTime");
 
                     Timber.d("currentTime:" + currentTime);
+
+                    int intTime = (int) currentTime;
+
+                    if (intTime > 0 && mLoading) {
+                        hideLoadingView();
+                    }
 
 
                     paused = jsonObject.getBoolean("paused");
