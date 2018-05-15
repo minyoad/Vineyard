@@ -48,7 +48,7 @@ public class UpdateRecommendationsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Timber.i("Retrieving popular posts for recommendations...");
 
-        downloadPlayerInfo();
+//        downloadPlayerInfo();
 
         DataManager mDataManager = VineyardApplication.get(this).getComponent().dataManager();
 

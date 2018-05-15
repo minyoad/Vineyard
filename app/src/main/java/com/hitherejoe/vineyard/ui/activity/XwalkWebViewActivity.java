@@ -450,6 +450,17 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 case "ended": {
                     //play next video
 
+
+                    if (!mMovie.isLastEpisode())
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                play(mMovie.currentIndex+1);
+
+                            }
+                        });
+
                 }
                 break;
                 case "progress":

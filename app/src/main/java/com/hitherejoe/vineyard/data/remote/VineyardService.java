@@ -48,7 +48,7 @@ public interface VineyardService {
     @GET("index.php?s=plus-api-json")
     Observable<MovieResponse> getPopularPosts(@Query("page") String page, @Query("anchorStr") String anchor);
 
-    @GET("index.php?s=plus-api-json-order-vod_hits")
+    @GET("index.php?s=plus-api-json-cid-1-order-vod_year")
     Call<MovieResponse> getPopularPosts();
 
     @GET("timelines/promoted")

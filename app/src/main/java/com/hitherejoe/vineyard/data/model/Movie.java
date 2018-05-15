@@ -285,6 +285,10 @@ public class Movie implements Comparable<Movie>, Parcelable{
         return pattern.matcher(str).matches();
     }
 
+    public boolean isLastEpisode(){
+        return mPlaySrcList.size()<=currentIndex+1;
+    }
+
     public String getProxyUrlByPlayer(String playerName){
         String proxyurl="";
         switch (playerName){
