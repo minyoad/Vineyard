@@ -35,7 +35,7 @@ public class Category {
     }
     public String list_id;
     public String list_name;
-    public String list_extend;
+    public CategoryExtent list_extend;
 
 
 
@@ -43,7 +43,9 @@ public class Category {
 
         Gson gson=new Gson();
 
-        CategoryExtent categoryExtent=new Gson().fromJson(list_extend,CategoryExtent.class);
+//        CategoryExtent categoryExtent=new Gson().fromJson(list_extend,CategoryExtent.class);
+
+        CategoryExtent categoryExtent=list_extend;
 
         String value=categoryExtent.cate;
 
