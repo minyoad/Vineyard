@@ -198,9 +198,17 @@ public class PopupMenu {
         }
     }
 
-    public void setSelectedPosition(int position){
+    public void setSelectedPosition(final int position){
 
-        mItemsView.smoothScrollToPosition(position);
+        mItemsView.setSelection(position);
+//        mItemsView.smoothScrollToPosition(position);
+
+        mItemsView.post(new Runnable() {
+            @Override
+            public void run() {
+                mItemsView.smoothScrollToPosition(position);
+            }
+        });
 
     }
 
