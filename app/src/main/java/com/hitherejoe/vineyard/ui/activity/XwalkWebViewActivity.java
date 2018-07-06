@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.hitherejoe.vineyard.R;
 import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.local.PlayerHelper;
+import com.hitherejoe.vineyard.data.local.RecordHelper;
 import com.hitherejoe.vineyard.data.model.Movie;
 import com.mybacc.popupmenu.MenuItem;
 import com.mybacc.popupmenu.PopupMenu;
@@ -34,6 +35,8 @@ import org.xwalk.core.XWalkWebResourceResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -73,6 +76,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
     private boolean mLoading;
 
     private PopupMenu mSourceMenu, mEpisodeMenu;
+
+    @Inject
+    RecordHelper mRecordHelper;
 
     class MyResourceClient extends XWalkResourceClient {
         MyResourceClient(XWalkView view) {
@@ -259,6 +265,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_xwalkwebview);
         ButterKnife.bind(this);
+
+        mRecordHelper=VineyardApplication.get(this).getComponent().recordHelper();
+
         mXwalkView = findViewById(R.id.xwalkView);
         mXwalkView.setResourceClient(new MyResourceClient(mXwalkView));
         mXwalkView.setUIClient(new MyUIClient(mXwalkView));
@@ -309,6 +318,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         showLoadingView();
 
+        mRecordHelper.setCurrentPlaying((int) mMovie.getId(),mMovie.getSid(),pid);
+
+        Timber.d("playing did="+mMovie.getId()+",sid="+mMovie.getSid()+",pid="+pid);
 
     }
 
@@ -330,7 +342,17 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         String js = "javascript:getVideo().muted=false;";
         mXwalkView.loadUrl(js);
     }
+
+    private void seekTo(int pos){
+        Timber.d("seekTo="+pos);
+        String js = "javascript:getVideo().currentTime="+pos+";";
+        mXwalkView.loadUrl(js);
+    }
+
     public void hideLoadingView() {
+
+
+
         runOnUiThread(new Runnable() {
 
             @Override
@@ -342,6 +364,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 mLinearLayout.setVisibility(View.INVISIBLE);
                 mOverlayView.setVisibility(View.INVISIBLE);
                 mProgressCard.setVisibility(View.INVISIBLE);
+
                 unmuted();
             }
         });
@@ -470,14 +493,26 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
                 }
                 break;
-                case "progress":
-                case "canplay":
-                case "playing": {
+//                case "progress":
+//                case "canplay":
+//                case "playing":
+                case "loadeddata":
+                    {
 
-                    //hide loading view
-//                    if(mLoading) {
-//                        hideLoadingView();
-//                    }
+                    final int pos=mRecordHelper.getCurrentPosition();
+
+                    Timber.d("current pos="+pos);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (pos>0){
+                                seekTo(pos);
+                            }
+
+                        }
+                    });
+
 
                 }
             }
@@ -505,6 +540,12 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
                         hideLoadingView();
 
+                    }
+
+
+                    if(intTime%5==0){
+                        Timber.d("update position:"+intTime);
+                        mRecordHelper.updatePosition(intTime);
                     }
 
 

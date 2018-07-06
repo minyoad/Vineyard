@@ -5,24 +5,26 @@ import io.realm.annotations.PrimaryKey;
 
 public class Record extends RealmObject {
     @PrimaryKey
-    int record_id;
+    String record_id;
 
-    int record_uid;
+    int record_uid;//userid
+
     int record_sid;
 
-    int record_did;
-    int record_did_sid;
-    int record_did_pid;
+    int record_did; //vodid
+    int record_did_sid; //vod-source
+    int record_did_pid; //vod-sourde-program
+    int record_pos; //viewed position
 
     int record_type;
 
     long record_time;
 
-    public int getRecord_id() {
+    public String getRecord_id() {
         return record_id;
     }
 
-    public void setRecord_id(int record_id) {
+    public void setRecord_id(String record_id) {
         this.record_id = record_id;
     }
 
@@ -81,4 +83,13 @@ public class Record extends RealmObject {
     public void setRecord_time(long record_time) {
         this.record_time = record_time;
     }
+
+    public int getRecord_pos() {
+        return record_pos;
+    }
+
+    public void setRecord_pos(int record_pos) {
+        this.record_pos = record_pos;
+    }
+
 }

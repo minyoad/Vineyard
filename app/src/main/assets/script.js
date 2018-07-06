@@ -44,36 +44,36 @@ function init() {
 
 function config_video(){
 
-console.log("config_video");
+    console.log("config_video");
 
-var videoElem=document.getElementsByTagName("video");
+    var videoElem=document.getElementsByTagName("video");
 
-if(videoElem.length>0){
-    document._video= document.getElementsByTagName("video")[0];
+    if(videoElem.length>0){
+        document._video= document.getElementsByTagName("video")[0];
 }
 else{// not found video tag, find iframe.video
-var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
-        iframes = document.getElementsByTagName('iframe'), l = IMGelems.length,
-        m = iframes.length, i, j;
+    var IMGmatches = [], IMGelems = document.getElementsByTagName("video"),
+            iframes = document.getElementsByTagName('iframe'), l = IMGelems.length,
+            m = iframes.length, i, j;
 
-    for( i=0; i<l; i++) IMGmatches[i] = IMGelems[i];
-    for( j=0; j<m; j++) {
-        IMGelems = iframes[j].contentDocument.getElementsByTagName("video");
-        l = IMGelems.length;
-        for( i=0; i<l; i++) IMGmatches.push(IMGelems[i]);
+        for( i=0; i<l; i++) IMGmatches[i] = IMGelems[i];
+        for( j=0; j<m; j++) {
+            IMGelems = iframes[j].contentDocument.getElementsByTagName("video");
+            l = IMGelems.length;
+            for( i=0; i<l; i++) IMGmatches.push(IMGelems[i]);
+        }
+
+    //	document._video= document.getElementsByTagName("video")[0];
+
+        document._video=IMGmatches[0];
+
+        iframe0=iframes[0];
+        if(iframe0 !='undefined'){
+            iframe0.webkitRequestFullscreen();
+        }
+
+        console.log("iframe="+iframe0);
     }
-
-//	document._video= document.getElementsByTagName("video")[0];
-
-	document._video=IMGmatches[0];
-
-	iframe0=iframes[0];
-	if(iframe0 !='undefined'){
-	    iframe0.webkitRequestFullscreen();
-	}
-
-	console.log("iframe="+iframe0);
-}
 	media_properties_elts = {};
 
 	init_events(document._video, media_events);

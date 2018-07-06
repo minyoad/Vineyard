@@ -363,6 +363,11 @@ public class Movie implements Comparable<Movie>, Parcelable{
 
     }
 
+    //index of current source
+    public int getSid(){
+        return mPlaySrcList.indexOf(currentSource);
+    }
+
     @Override
     public int describeContents() {
         return 0;
