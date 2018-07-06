@@ -30,7 +30,9 @@ import rx.Observable;
 
 public interface VineyardService {
 
-    String ENDPOINT = "https://www.ssvip.cf/";
+//    String ENDPOINT = "https://www.ssvip.cf/";
+    String ENDPOINT = "http://ssvip.mybacc.com/";
+
 
     @FormUrlEncoded
     @POST("users/authenticate")

@@ -304,7 +304,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
 //                proxyurl="http://y.qin52.com/?url=";
 //                proxyurl="http://yun.baiyug.cn/vip/index.php?url=";
 //                proxyurl="http://jqaaa.com/jx.php?url=";
-                proxyurl="http://beaacc.com/api.php?url=";
+                proxyurl="https://beaacc.com/api.php?url=";
 //                proxyurl="http://www.dgua.xyz/webcloud/?url=";
 
                 break;

@@ -41,7 +41,7 @@ public class Category {
 
     public HashMap<String,String> getExtendValues(){
 
-        Gson gson=new Gson();
+//        Gson gson=new Gson();
 
 //        CategoryExtent categoryExtent=new Gson().fromJson(list_extend,CategoryExtent.class);
 
