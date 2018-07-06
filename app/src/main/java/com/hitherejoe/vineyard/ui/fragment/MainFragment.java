@@ -370,7 +370,7 @@ public class MainFragment extends BrowseFragment {
                 } else {
 //                    startActivity(GuidedStepActivity.getStartIntent(getActivity()));
 
-                    Intent intent=new Intent(getActivity().getBaseContext(), PageActivity.class);
+                    Intent intent=new Intent(getActivity(), PageActivity.class);
 
                     int index = mRowsAdapter.indexOf(row);
 

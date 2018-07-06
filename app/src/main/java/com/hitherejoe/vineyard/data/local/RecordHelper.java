@@ -21,7 +21,7 @@ public class RecordHelper {
 
     private Context mContext;
 
-    private Record currentRecord;
+//    private Record currentRecord;
 
     private String currentUUID;
 
@@ -39,10 +39,6 @@ public class RecordHelper {
     }
 
     public void updatePosition(int pos){
-
-//        if(this.currentRecord!=null){
-//            currentRecord.setRecord_pos(pos);
-//        }
 
         Realm  mRealm=Realm.getDefaultInstance();
 
@@ -83,18 +79,20 @@ public class RecordHelper {
 
         record.setRecord_time((new Date()).getTime());
 
-//        this.currentRecord=record;
-
         this.currentUUID=record.getRecord_id();
 
         realm.commitTransaction();
 
     }
 
-    public List<Integer> visitedPids(int did){
+    public List<Integer> visitedPids(int did,int sid){
         Realm realm=Realm.getDefaultInstance();
 
-        RealmResults<Record> records=realm.where(Record.class).equalTo("record_did",did).findAll();
+        RealmResults<Record> records=realm.where(Record.class)
+                .equalTo("record_did",did)
+                .and()
+                .equalTo("record_did_sid",sid)
+                .findAll();
 
         List<Integer> pidList=new ArrayList<>();
 
