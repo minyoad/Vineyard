@@ -28,7 +28,7 @@
 
     <LinearLayout
         android:id="@+id/loadingLayout"
-        android:layout_width="350dp"
+        android:layout_width="500dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
         android:gravity="center"

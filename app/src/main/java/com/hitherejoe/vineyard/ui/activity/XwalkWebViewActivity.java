@@ -130,6 +130,12 @@ public class XwalkWebViewActivity extends AppCompatActivity {
             mWalkView.loadUrl(js);
         }
 
+        private void muted(){
+            String js = "javascript:getVideo().muted=true;";
+            mWalkView.loadUrl(js);
+        }
+
+
 
         MyUIClient(XWalkView view) {
             super(view);
@@ -168,6 +174,8 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
             injectScriptFile(view, "script.js");
             view.loadUrl("javascript:init();");
+
+            muted();
 
             play();
 
@@ -325,6 +333,10 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
     }
 
+    private void unmuted(){
+        String js = "javascript:getVideo().muted=false;";
+        mXwalkView.loadUrl(js);
+    }
     public void hideLoadingView() {
         runOnUiThread(new Runnable() {
 
@@ -341,6 +353,7 @@ public class XwalkWebViewActivity extends AppCompatActivity {
         });
 
         mLoading = false;
+        unmuted();
 
     }
 
@@ -495,7 +508,9 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                     int intTime = (int) currentTime;
 
                     if (intTime > 0 && mLoading) {
+
                         hideLoadingView();
+
                     }
 
 
