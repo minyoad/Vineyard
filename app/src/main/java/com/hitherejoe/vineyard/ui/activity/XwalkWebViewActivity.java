@@ -291,13 +291,6 @@ public class XwalkWebViewActivity extends AppCompatActivity {
 
         play(pid);
 
-//        String proxy = mMovie.getProxyUrlByPlayer(mMovie.currentSource);
-//
-//
-//        Timber.d("URL=" + proxy + url);
-//        mXwalkView.loadUrl(proxy + url, null);
-//
-//        showLoadingView();
 
     }
 
@@ -349,11 +342,12 @@ public class XwalkWebViewActivity extends AppCompatActivity {
                 mLinearLayout.setVisibility(View.INVISIBLE);
                 mOverlayView.setVisibility(View.INVISIBLE);
                 mProgressCard.setVisibility(View.INVISIBLE);
+                unmuted();
             }
         });
 
         mLoading = false;
-        unmuted();
+
 
     }
 

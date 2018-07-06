@@ -297,7 +297,14 @@ public class Movie implements Comparable<Movie>, Parcelable{
 //            case "ckm3u8":
 
                 break;
-            default:
+            case "youku":
+            case "sohu":
+            case "iqiyi":
+            case "qq":
+            case "mgtv":
+            case "baofeng":
+            case "xunlei":
+
 //                proxyurl="http://jiexi.mybacc.com/jiexi.php?url=";
 //                proxyurl="http://jx.vgoodapi.com/jx.php?url=";
 //                proxyurl="http://api.kq1f.cn/vip/index.php?url=";
