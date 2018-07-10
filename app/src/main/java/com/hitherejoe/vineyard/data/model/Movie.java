@@ -60,7 +60,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     }
 
 
-//    public String vod_id;
+//    public String vodId;
     public String vod_cid;
 //    public String vod_name;
 //    public String vod_title;
@@ -97,7 +97,7 @@ public class Movie implements Comparable<Movie>, Parcelable{
     public String vod_series;
 //    public String list_name;
 
-    @SerializedName("vod_id")
+    @SerializedName("vodId")
     private long id;
     @SerializedName("vod_name")
     private String title;
