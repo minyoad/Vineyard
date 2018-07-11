@@ -31,6 +31,7 @@ import com.hitherejoe.vineyard.R;
 //import com.hitherejoe.vineyard.data.VideoProvider;
 import com.hitherejoe.vineyard.VineyardApplication;
 import com.hitherejoe.vineyard.data.DataManager;
+import com.hitherejoe.vineyard.data.local.FavouriteHelper;
 import com.hitherejoe.vineyard.data.model.Movie;
 //import com.hitherejoe.vineyard.ui.background.PicassoBackgroundManager;
 import com.hitherejoe.vineyard.data.remote.VineyardService;
@@ -72,6 +73,8 @@ public class VideoDetailsFragment extends DetailsFragment {
     private static final int ACTION_SHOW_EPISODE = 2;
     private static final int ACTION_SHOW_RELATED = 3;
     private static final int ACTION_ADD_FAVOURITE = 4;
+    private static final int ACTION_DELETE_FAVOURITE = 5;
+
 
 
     private static final int FULL_WIDTH_DETAIL_THUMB_WIDTH = 220;
@@ -320,8 +323,6 @@ public class VideoDetailsFragment extends DetailsFragment {
             return row;
         }
 
-
-
         @Override
         protected void onPostExecute(DetailsOverviewRow row) {
             Log.v(TAG, "DetailsRowBuilderTask onPostExecute");
@@ -339,8 +340,12 @@ public class VideoDetailsFragment extends DetailsFragment {
 
             sparseArrayObjectAdapter.set(ACTION_SHOW_RELATED, new Action(ACTION_SHOW_RELATED, "相关视频", ""));
 
-
-            sparseArrayObjectAdapter.set(ACTION_ADD_FAVOURITE, new Action(ACTION_ADD_FAVOURITE, "加入收藏", ""));
+            if(FavouriteHelper.isFavorite(mSelectedMovie.getId())){
+                sparseArrayObjectAdapter.set(ACTION_DELETE_FAVOURITE, new Action(ACTION_DELETE_FAVOURITE, "删除收藏", ""));
+            }
+            else {
+                sparseArrayObjectAdapter.set(ACTION_ADD_FAVOURITE, new Action(ACTION_ADD_FAVOURITE, "加入收藏", ""));
+            }
 
 
             row.setActionsAdapter(sparseArrayObjectAdapter);
@@ -382,6 +387,24 @@ public class VideoDetailsFragment extends DetailsFragment {
         }
     }
 
+    public void updateActions(){
+
+        DetailsOverviewRow row=(DetailsOverviewRow) mAdapter.get(0);
+        SparseArrayObjectAdapter sparseArrayObjectAdapter=(SparseArrayObjectAdapter)row.getActionsAdapter();
+
+        if(FavouriteHelper.isFavorite(mSelectedMovie.getId())){
+            sparseArrayObjectAdapter.clear(ACTION_ADD_FAVOURITE);
+            sparseArrayObjectAdapter.set(ACTION_DELETE_FAVOURITE, new Action(ACTION_DELETE_FAVOURITE, "删除收藏", ""));
+        }
+        else {
+            sparseArrayObjectAdapter.set(ACTION_ADD_FAVOURITE, new Action(ACTION_ADD_FAVOURITE, "加入收藏", ""));
+            sparseArrayObjectAdapter.clear(ACTION_DELETE_FAVOURITE);
+        }
+
+
+
+    }
+
     public class DetailsOverviewRowActionClickedListener implements OnActionClickedListener {
         @Override
         public void onActionClicked(Action action) {
@@ -405,6 +428,17 @@ public class VideoDetailsFragment extends DetailsFragment {
 
                 case ACTION_ADD_FAVOURITE:{
                     //add fav
+                    FavouriteHelper.addFavourite(mSelectedMovie.getId());
+                    updateActions();
+
+
+                }
+                break;
+                case ACTION_DELETE_FAVOURITE:{
+                    //delete from  fav
+                    FavouriteHelper.delFaourite(mSelectedMovie.getId());
+                    updateActions(); 
+
                 }
                 break;
             }
