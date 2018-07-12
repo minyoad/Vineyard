@@ -3,7 +3,7 @@
 
     <!-- Activity labels -->
     <string name="label_main">Vineyard</string>
-    <string name="related_posts">Related posts</string>
+    <string name="related_posts">Related Movies</string>
 
     <!-- Headers -->
     <string name="header_text_settings">Settings</string>
@@ -17,6 +17,9 @@
     <string name="header_text_latest_series">最新剧集</string>
 
     <string name="header_text_editors_picks">编辑推荐</string>
+    <string name="favourite">收藏</string>
+    <string name="history">已看过</string>
+    <string name="personal_settings">用户信息</string>
 
     <!-- Connect Activity -->
     <string name="text_hint_username">Username</string>
@@ -24,7 +27,7 @@
 
     <!-- Search -->
     <string name="text_search_results">Search results</string>
-    <string name="text_post_results_title">Posts for %s</string>
+    <string name="text_post_results_title">Movies for %s</string>
     <string name="text_no_results">No results</string>
 
     <!-- Guided Step -->
@@ -64,7 +67,7 @@
     <string name="error_message_sign_in_blank">Oops, username and password can\'t be empty!</string>
     <string name="error_message_sign_in_blank_username">Oops, username can\'t be empty!</string>
     <string name="error_message_sign_in_blank_password">Oops, password can\'t be empty!</string>
-    <string name="error_message_loading_more_posts">Sorry, there was an error loading more posts</string>
+    <string name="error_message_loading_more_posts">Sorry, there was an error loading more Movies</string>
     <string name="error_message_retrieving_results">Sorry, there was an error retrieving the results</string>
     <string name="title_oops">Oops</string>
     <string name="title_no_videos">No videos</string>

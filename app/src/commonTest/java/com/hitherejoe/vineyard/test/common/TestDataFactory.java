@@ -97,35 +97,35 @@ public class TestDataFactory {
         return post;
     }
 
-    public static List<Post> createMockListOfPosts(int count) {
-        List<Post> mockPosts = new ArrayList<>(count);
+    public static List<Post> createMockListOfMovies(int count) {
+        List<Post> mockMovies = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            mockPosts.add(createMockPost());
+            mockMovies.add(createMockPost());
         }
-        return mockPosts;
+        return mockMovies;
     }
 
     public static List<Tag> createMockListOfTags(int count, String tag) {
-        List<Tag> mockPosts = new ArrayList<>(count);
+        List<Tag> mockMovies = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            mockPosts.add(createMockTag(tag));
+            mockMovies.add(createMockTag(tag));
         }
-        return mockPosts;
+        return mockMovies;
     }
 
     public static List<Tag> createMockListOfTags(int count) {
-        List<Tag> mockPosts = new ArrayList<>(count);
+        List<Tag> mockMovies = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            mockPosts.add(createMockTag());
+            mockMovies.add(createMockTag());
         }
-        return mockPosts;
+        return mockMovies;
     }
 
     public static List<User> createMockListOfUsers(int count) {
-        List<User> mockPosts = new ArrayList<>(count);
+        List<User> mockMovies = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            mockPosts.add(createMockUser());
+            mockMovies.add(createMockUser());
         }
-        return mockPosts;
+        return mockMovies;
     }
 }

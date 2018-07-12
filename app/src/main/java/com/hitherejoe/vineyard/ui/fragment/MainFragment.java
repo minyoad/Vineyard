@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -23,7 +24,10 @@ import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -48,7 +52,9 @@ import com.hitherejoe.vineyard.ui.activity.SearchActivity;
 import com.hitherejoe.vineyard.ui.adapter.OptionsAdapter;
 import com.hitherejoe.vineyard.ui.adapter.PaginationAdapter;
 import com.hitherejoe.vineyard.ui.adapter.MovieAdapter;
+import com.hitherejoe.vineyard.ui.presenter.EpisodePresenter;
 import com.hitherejoe.vineyard.ui.presenter.IconHeaderItemPresenter;
+import com.hitherejoe.vineyard.ui.presenter.IconItemPresenter;
 import com.hitherejoe.vineyard.util.NetworkUtil;
 import com.hitherejoe.vineyard.util.ToastFactory;
 import com.squareup.otto.Bus;
@@ -71,6 +77,8 @@ import timber.log.Timber;
 public class MainFragment extends BrowseFragment {
 
     private static final int BACKGROUND_UPDATE_DELAY = 300;
+    private static final int GRID_ITEM_WIDTH = 200;
+    private static final int GRID_ITEM_HEIGHT = 200;
 
     @Inject Bus mEventBus;
     @Inject CompositeSubscription mCompositeSubscription;
@@ -86,8 +94,6 @@ public class MainFragment extends BrowseFragment {
     private OptionsAdapter mOptionsAdapter;
     private Runnable mBackgroundRunnable;
 
-//    private String mPopularText;
-//    private String mEditorsPicksText;
     private boolean mIsStopping;
     private HashMap<String, String> mCategoryMap;
 
@@ -211,7 +217,7 @@ public class MainFragment extends BrowseFragment {
         });
     }
 
-    private void loadPosts() {
+    private void loadMovies() {
 
         Category category=mDataManager.getCategoryById(Category.INDEX);
 
@@ -229,13 +235,22 @@ public class MainFragment extends BrowseFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    loadPostsFromCategory(entry.getKey(),0);
+                    loadMoviesFromCategory(entry.getKey(),0);
                     startEntranceTransition();
                 }
 
         });
 
         }
+
+        HeaderItem gridHeader = new HeaderItem(0, "用户");
+
+//        IconItemPresenter mGridPresenter = new IconItemPresenter();
+        ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(new GridItemPresenter());
+        gridRowAdapter.add(getResources().getString(R.string.favourite));
+        gridRowAdapter.add(getResources().getString(R.string.history));
+        gridRowAdapter.add(getResources().getString(R.string.personal_settings));
+        mRowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
 
 //        boolean shouldAutoLoop = mPreferencesHelper.getShouldAutoLoop();
 //        String optionValue = shouldAutoLoop
@@ -248,7 +263,7 @@ public class MainFragment extends BrowseFragment {
 //                R.drawable.lopp);
 //
 //
-//        HeaderItem gridHeader =
+//        HeaderItem gridHeader =OptionsAdapter
 //                new HeaderItem(mRowsAdapter.size(), getString(R.string.header_text_options));
 //        mOptionsAdapter = new OptionsAdapter(getActivity());
 //        mOptionsAdapter.addOption(mAutoLoopOption);
@@ -256,7 +271,7 @@ public class MainFragment extends BrowseFragment {
 
     }
 
-    private void loadPostsFromCategory(String tag, int headerPosition) {
+    private void loadMoviesFromCategory(String tag, int headerPosition) {
         MovieAdapter listRowAdapter = new MovieAdapter(getActivity(), String.valueOf(headerPosition));
 
         listRowAdapter.setAnchor(mCategoryMap.get(tag));
@@ -430,7 +445,7 @@ public class MainFragment extends BrowseFragment {
                     @Override
                     public void onCompleted() {
 
-                        loadPosts();
+                        loadMovies();
 
                     }
 
@@ -453,6 +468,30 @@ public class MainFragment extends BrowseFragment {
 
                     }
                 });
+    }
+
+    private class GridItemPresenter extends Presenter {
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent) {
+            TextView view = new TextView(parent.getContext());
+            view.setLayoutParams(new ViewGroup.LayoutParams(GRID_ITEM_WIDTH, GRID_ITEM_HEIGHT));
+            view.setFocusable(true);
+            view.setFocusableInTouchMode(true);
+            view.setBackgroundColor(
+                    ContextCompat.getColor(getActivity(), R.color.default_background));
+            view.setTextColor(Color.WHITE);
+            view.setGravity(Gravity.CENTER);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, Object item) {
+            ((TextView) viewHolder.view).setText((String) item);
+        }
+
+        @Override
+        public void onUnbindViewHolder(ViewHolder viewHolder) {
+        }
     }
 
 }

@@ -72,12 +72,12 @@ public class MockModelsUtil {
 //        return post;
 //    }
 //
-//    public static List<Post> createMockListOfPosts(int count) {
-//        List<Post> mockPosts = new ArrayList<>(count);
+//    public static List<Post> createMockListOfMovies(int count) {
+//        List<Post> mockMovies = new ArrayList<>(count);
 //        for (int i = 0; i < count; i++) {
-//            mockPosts.add(createMockPost());
+//            mockMovies.add(createMockPost());
 //        }
-//        return mockPosts;
+//        return mockMovies;
 //    }
 
 }

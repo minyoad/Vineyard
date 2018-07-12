@@ -121,7 +121,7 @@ public class SearchActivityTest {
         onView(withText(R.string.text_search_results))
                 .check(matches(isDisplayed()));
 
-        onView(withText("Posts for " + by))
+        onView(withText("Movies for " + by))
                 .check(matches(isDisplayed()));
     }
 
@@ -187,18 +187,18 @@ public class SearchActivityTest {
         when(component.getMockDataManager().search(anyString(), anyString(), anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(keywordSearchResponse));
 
-        List<Post> mockPostsOne = TestDataFactory.createMockListOfPosts(5);
-        Collections.sort(mockPostsOne);
+        List<Post> mockMoviesOne = TestDataFactory.createMockListOfMovies(5);
+        Collections.sort(mockMoviesOne);
         VineyardService.MovieResponse movieResponseOne = new VineyardService.MovieResponse();
         VineyardService.MovieResponse.Data dataOne = new VineyardService.MovieResponse.Data();
-        dataOne.records = mockPostsOne;
+        dataOne.records = mockMoviesOne;
         movieResponseOne.data = dataOne;
 
-        List<Post> mockPostsTwo = TestDataFactory.createMockListOfPosts(5);
-        Collections.sort(mockPostsTwo);
+        List<Post> mockMoviesTwo = TestDataFactory.createMockListOfMovies(5);
+        Collections.sort(mockMoviesTwo);
         VineyardService.MovieResponse movieResponseTwo = new VineyardService.MovieResponse();
         VineyardService.MovieResponse.Data dataTwo = new VineyardService.MovieResponse.Data();
-        dataTwo.records = mockPostsTwo;
+        dataTwo.records = mockMoviesTwo;
         movieResponseTwo.data = dataTwo;
 
         String tag = tags.get(0).tag;
@@ -218,14 +218,14 @@ public class SearchActivityTest {
 
         onView(withText(tag))
                 .perform(click());
-        for (int n = 0; n < mockPostsTwo.size(); n++) {
-            checkItemAtPosition(mockPostsTwo.get(n));
+        for (int n = 0; n < mockMoviesTwo.size(); n++) {
+            checkItemAtPosition(mockMoviesTwo.get(n));
         }
 
         onView(withText(user.username))
                 .perform(click());
-        for (int n = 0; n < mockPostsOne.size(); n++) {
-            checkItemAtPosition(mockPostsOne.get(n));
+        for (int n = 0; n < mockMoviesOne.size(); n++) {
+            checkItemAtPosition(mockMoviesOne.get(n));
         }
 
         onView(withText(user.username))
@@ -291,10 +291,10 @@ public class SearchActivityTest {
     }
 
     private void stubTagUserAndPostData(ArrayList<Object> list) {
-        List<Post> mockPosts = TestDataFactory.createMockListOfPosts(10);
+        List<Post> mockMovies = TestDataFactory.createMockListOfMovies(10);
         VineyardService.MovieResponse movieResponse = new VineyardService.MovieResponse();
         VineyardService.MovieResponse.Data data = new VineyardService.MovieResponse.Data();
-        data.records = mockPosts;
+        data.records = mockMovies;
         movieResponse.data = data;
 
         when(component.getMockDataManager().getVideosByActor(anyString(), anyString(), anyString()))

@@ -20,4 +20,7 @@
     <color name="black">#000000</color>
 
     <color name="search_opaque">#808BC34A</color>
+    <color name="background_gradient_start">#000000</color>
+    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="default_background">#3d3d3d</color>
 </resources>

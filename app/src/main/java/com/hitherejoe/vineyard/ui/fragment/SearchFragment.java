@@ -235,14 +235,14 @@ public class SearchFragment extends android.support.v17.leanback.app.SearchFragm
                 || (!TextUtils.isEmpty(query) && !query.equals("nil"))) {
             if (NetworkUtil.isNetworkConnected(getActivity())) {
                 mSearchQuery = query;
-                searchTaggedPosts(query);
+                searchTaggedMovies(query);
             } else {
                 ToastFactory.createWifiErrorToast(getActivity()).show();
             }
         }
     }
 
-    private void searchTaggedPosts(String tag) {
+    private void searchTaggedMovies(String tag) {
         mSearchResultsAdapter.setTag(tag);
         mResultsAdapter.clear();
         mResultsHeader = new HeaderItem(0, getString(R.string.text_search_results));

@@ -56,7 +56,7 @@ public class PlaybackActivity extends BaseActivity {
         PLAYING, PAUSED, IDLE
     }
 
-    private ArrayList<Movie> mPostsList;
+    private ArrayList<Movie> mMoviesList;
     private LeanbackPlaybackState mPlaybackState;
     private MediaPlayer mMediaPlayer;
     private MediaSession mSession;
@@ -93,10 +93,10 @@ public class PlaybackActivity extends BaseActivity {
             throw new IllegalArgumentException("PlaybackActivity requires a Movie object!");
         }
 
-        mPostsList = getIntent().getExtras().getParcelableArrayList(POST_LIST);
-        if (mPostsList != null) {
-            for (int i = 0; i < mPostsList.size(); i++) {
-                if (mCurrentPost.equals(mPostsList.get(i))) mCurrentItem = i;
+        mMoviesList = getIntent().getExtras().getParcelableArrayList(POST_LIST);
+        if (mMoviesList != null) {
+            for (int i = 0; i < mMoviesList.size(); i++) {
+                if (mCurrentPost.equals(mMoviesList.get(i))) mCurrentItem = i;
             }
         }
         loadViews();
@@ -327,7 +327,7 @@ public class PlaybackActivity extends BaseActivity {
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
             if (mWasSkipPressed || !mIsAutoLoopEnabled) {
                 if (NetworkUtil.isNetworkConnected(PlaybackActivity.this)) {
-                    for (Movie post : mPostsList) {
+                    for (Movie post : mMoviesList) {
                         if (String.valueOf(post.getId()).equals(mediaId)) {
                             mCurrentPost = post;
                             setVideoPath(mCurrentPost.getVideoUrl());
@@ -351,14 +351,14 @@ public class PlaybackActivity extends BaseActivity {
                 stateBuilder.setState(PlaybackState.STATE_SKIPPING_TO_NEXT, 0, 1.0f);
                 mSession.setPlaybackState(stateBuilder.build());
                 mCurrentItem++;
-                if (mCurrentItem == mPostsList.size()) {
+                if (mCurrentItem == mMoviesList.size()) {
                     mCurrentItem = 0;
                 }
 
                 Bundle bundle = new Bundle(1);
                 bundle.putBoolean(PlaybackActivity.AUTO_PLAY, true);
 
-                String nextId = String.valueOf(mPostsList.get(mCurrentItem).getId());
+                String nextId = String.valueOf(mMoviesList.get(mCurrentItem).getId());
                 getMediaController().getTransportControls().playFromMediaId(nextId, bundle);
             }
         }
@@ -371,11 +371,11 @@ public class PlaybackActivity extends BaseActivity {
                 stateBuilder.setState(PlaybackState.STATE_SKIPPING_TO_PREVIOUS, 0, 1.0f);
                 mSession.setPlaybackState(stateBuilder.build());
 
-                if (mCurrentItem-- < 0) mCurrentItem = mPostsList.size() - 1;
+                if (mCurrentItem-- < 0) mCurrentItem = mMoviesList.size() - 1;
                 Bundle bundle = new Bundle(1);
                 bundle.putBoolean(PlaybackActivity.AUTO_PLAY, true);
 
-                String prevId = String.valueOf(mPostsList.get(mCurrentItem).getId());
+                String prevId = String.valueOf(mMoviesList.get(mCurrentItem).getId());
                 getMediaController().getTransportControls().playFromMediaId(prevId, bundle);
             }
         }

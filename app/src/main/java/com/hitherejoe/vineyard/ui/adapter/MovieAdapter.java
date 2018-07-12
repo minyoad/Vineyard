@@ -17,16 +17,16 @@ public class MovieAdapter extends PaginationAdapter {
 
     @Override
     public void addAllItems(List<?> items) {
-        List<Movie> currentPosts = getAllItems();
+        List<Movie> currentMovies = getAllItems();
         ArrayList<Movie> posts = new ArrayList<>();
         for (int i = 0; i < items.size(); i++) {
             Object object = items.get(i);
-            if (object instanceof Movie && !currentPosts.contains(object)) {
+            if (object instanceof Movie && !currentMovies.contains(object)) {
                 posts.add((Movie) object);
             }
         }
         Collections.sort(posts);
-        addPosts(posts);
+        addMovies(posts);
     }
 
     @Override

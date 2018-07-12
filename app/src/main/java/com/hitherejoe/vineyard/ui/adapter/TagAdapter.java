@@ -16,7 +16,7 @@ public class TagAdapter extends PaginationAdapter {
 
     @Override
     public void addAllItems(List<?> items) {
-        addPosts(items);
+        addMovies(items);
     }
 
     @Override

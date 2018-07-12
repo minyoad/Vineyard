@@ -100,48 +100,48 @@ public class DataManagerTest {
     }
 
     @Test
-    public void shouldGetPopularPosts() throws Exception {
+    public void shouldGetPopularMovies() throws Exception {
         String page = "1";
         String anchor = "anchor";
 
-//        List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
+//        List<Post> mockPostLists = MockModelsUtil.createMockListOfMovies(20);
 //        VineyardService.MovieResponse popularResponse = new VineyardService.MovieResponse();
 //        popularResponse.data = new VineyardService.MovieResponse.Data();
 //        popularResponse.data.records = mockPostLists;
-//        when(mMockVineyardService.getPopularPosts(eq(page), eq(anchor)))
+//        when(mMockVineyardService.getPopularMovies(eq(page), eq(anchor)))
 //                .thenReturn(Observable.just(popularResponse));
 //
 //        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
-//        mDataManager.getPopularPosts(page, anchor).subscribe(result);
+//        mDataManager.getPopularMovies(page, anchor).subscribe(result);
 //        result.assertNoErrors();
 //        result.assertValue(popularResponse);
     }
 
     @Test
-    public void shouldGetEditorsPicksPosts() throws Exception {
+    public void shouldGetEditorsPicksMovies() throws Exception {
         String page = "1";
         String anchor = "anchor";
 
-//        List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
+//        List<Post> mockPostLists = MockModelsUtil.createMockListOfMovies(20);
 //        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
 //        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
 //        editorsPicksResponse.data.records = mockPostLists;
-//        when(mMockVineyardService.getEditorsPicksPosts(eq(page), eq(anchor)))
+//        when(mMockVineyardService.getEditorsPicksMovies(eq(page), eq(anchor)))
 //                .thenReturn(Observable.just(editorsPicksResponse));
 
         TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
-        mDataManager.getEditorsPicksPosts(page, anchor).subscribe(result);
+        mDataManager.getEditorsPicksMovies(page, anchor).subscribe(result);
         result.assertNoErrors();
 //        result.assertValue(editorsPicksResponse);
     }
 
     @Test
-    public void shouldGetPostsByTag() throws Exception {
+    public void shouldGetMoviesByTag() throws Exception {
         String tag = "tag";
         String page = "1";
         String anchor = "anchor";
 
-//        List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
+//        List<Post> mockPostLists = MockModelsUtil.createMockListOfMovies(20);
 //        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
 //        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
 //        editorsPicksResponse.data.records = mockPostLists;
@@ -155,12 +155,12 @@ public class DataManagerTest {
     }
 
     @Test
-    public void shouldGetPostsByUser() throws Exception {
+    public void shouldGetMoviesByUser() throws Exception {
         String userId = "userId";
         String page = "1";
         String anchor = "anchor";
 
-//        List<Post> mockPostLists = MockModelsUtil.createMockListOfPosts(20);
+//        List<Post> mockPostLists = MockModelsUtil.createMockListOfMovies(20);
 //        VineyardService.MovieResponse editorsPicksResponse = new VineyardService.MovieResponse();
 //        editorsPicksResponse.data = new VineyardService.MovieResponse.Data();
 //        editorsPicksResponse.data.records = mockPostLists;
@@ -168,7 +168,7 @@ public class DataManagerTest {
 //                .thenReturn(Observable.just(editorsPicksResponse));
 //
 //        TestSubscriber<VineyardService.MovieResponse> result = new TestSubscriber<>();
-//        mDataManager.getPostsByUser(userId, page, anchor).subscribe(result);
+//        mDataManager.getMoviesByUser(userId, page, anchor).subscribe(result);
 //        result.assertNoErrors();
 //        result.assertValue(editorsPicksResponse);
     }

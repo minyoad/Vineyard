@@ -52,9 +52,9 @@ public class UpdateRecommendationsService extends IntentService {
 
         DataManager mDataManager = VineyardApplication.get(this).getComponent().dataManager();
 
-        Call<VineyardService.MovieResponse> popularPosts = mDataManager.getPopularPostsSynchronous();
+        Call<VineyardService.MovieResponse> popularMovies = mDataManager.getPopularMoviesSynchronous();
         try {
-            Response<VineyardService.MovieResponse> response = popularPosts.execute();
+            Response<VineyardService.MovieResponse> response = popularMovies.execute();
             VineyardService.MovieResponse movieResponse = response.body();
             handleRecommendations(movieResponse.data);
         } catch (IOException e) {

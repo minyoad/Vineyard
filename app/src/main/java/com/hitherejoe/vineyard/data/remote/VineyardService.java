@@ -48,16 +48,16 @@ public interface VineyardService {
     Observable<MovieResponse> getUserTimeline(@Path("userid") String userId, @Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("index.php?s=plus-api-json")
-    Observable<MovieResponse> getPopularPosts(@Query("page") String page, @Query("anchorStr") String anchor);
+    Observable<MovieResponse> getPopularMovies(@Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("index.php?s=plus-api-json-cid-1-order-vod_year")
-    Call<MovieResponse> getPopularPosts();
+    Call<MovieResponse> getPopularMovies();
 
     @GET("timelines/promoted")
-    Observable<MovieResponse> getEditorsPicksPosts(@Query("page") String page, @Query("anchorStr") String anchor);
+    Observable<MovieResponse> getEditorsPicksMovies(@Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("timelines/tags/{tag}")
-    Observable<MovieResponse> getPostsByTag(@Path("tag") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
+    Observable<MovieResponse> getMoviesByTag(@Path("tag") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("search/tags/{tag}")
     Observable<TagResponse> searchByTag(@Path("tag") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
@@ -66,7 +66,7 @@ public interface VineyardService {
     Observable<UserResponse> searchByUser(@Path("query") String tag, @Query("page") String page, @Query("anchorStr") String anchor);
 
     @GET("index.php")
-    Observable<MovieResponse> getPosts(@Query("s") String params);
+    Observable<MovieResponse> getMovies(@Query("s") String params);
 
 
     @GET("index.php?s=plus-api-category")

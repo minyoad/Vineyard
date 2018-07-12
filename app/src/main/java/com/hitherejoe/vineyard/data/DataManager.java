@@ -76,17 +76,17 @@ public class DataManager {
         return mVineyardService.getUser(userId);
     }
 
-    public Observable<VineyardService.MovieResponse> getPopularPosts(String page, String anchor) {
+    public Observable<VineyardService.MovieResponse> getPopularMovies(String page, String anchor) {
         String wd = anchor != null ? "-cid-" + anchor : "";
-        return mVineyardService.getPosts("plus-api-json-order-vod_hits-p-" + page + wd);
+        return mVineyardService.getMovies("plus-api-json-order-vod_hits-p-" + page + wd);
     }
 
     public Observable<VineyardService.MovieResponse> getMovies(String page, String anchor) {
-        return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page);
+        return mVineyardService.getMovies("plus-api-json" + anchor + "-p-" + page);
     }
 
     public Observable<VineyardService.MovieResponse> getMovies(String page, String anchor,int limit) {
-        return mVineyardService.getPosts("plus-api-json" + anchor + "-p-" + page+"-limit-"+limit);
+        return mVineyardService.getMovies("plus-api-json" + anchor + "-p-" + page+"-limit-"+limit);
     }
 
     public Observable<VineyardService.MovieResponse>getRelatedMovies(Movie movie){
@@ -110,21 +110,21 @@ public class DataManager {
         return null;
     }
 
-    public Call<VineyardService.MovieResponse> getPopularPostsSynchronous() {
-        return mVineyardService.getPopularPosts();
+    public Call<VineyardService.MovieResponse> getPopularMoviesSynchronous() {
+        return mVineyardService.getPopularMovies();
     }
 
     public Call<VineyardService.PlayerResponse> getPlayerList(){
         return mVineyardService.getPlayerList();
     }
 
-    public Observable<VineyardService.MovieResponse> getEditorsPicksPosts(String page, String anchor) {
-        return mVineyardService.getEditorsPicksPosts(page, anchor);
+    public Observable<VineyardService.MovieResponse> getEditorsPicksMovies(String page, String anchor) {
+        return mVineyardService.getEditorsPicksMovies(page, anchor);
     }
 
     public Observable<VineyardService.MovieResponse> getVideosByTag(String tag, String page, String anchor) {
         String wd = anchor != null ? "-cid-" + anchor : "";
-        return mVineyardService.getPosts("plus-api-json-type-" + tag + "-p-" + page + wd);
+        return mVineyardService.getMovies("plus-api-json-type-" + tag + "-p-" + page + wd);
 
     }
 

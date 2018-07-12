@@ -95,7 +95,7 @@ public abstract class PaginationAdapter extends ArrayObjectAdapter {
         mAnchor = anchor;
     }
 
-    public void addPosts(List<?> posts) {
+    public void addMovies(List<?> posts) {
         if (posts.size() > 0) {
             addAll(size(), posts);
         } else {
