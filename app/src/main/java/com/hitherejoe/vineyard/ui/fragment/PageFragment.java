@@ -152,7 +152,7 @@ public class PageFragment extends BrowseFragment {
                 createRows();
                 startEntranceTransition();
             }
-        }, 2000);
+        }, 200);
     }
 
     private void createRows() {
